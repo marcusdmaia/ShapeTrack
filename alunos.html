@@ -71,6 +71,25 @@
             overflow-y: auto;
         }
 
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar {
+                width: 100%; padding: 10px; position: fixed; bottom: 0; left: 0;
+                flex-direction: row; justify-content: space-around; z-index: 1000; height: 70px;
+            }
+            .sidebar .logo { display: none; }
+            .nav-item { margin-bottom: 0; padding: 8px; font-size: 0.7rem; text-align: center; flex: 1; }
+            .main-content { padding: 20px; padding-bottom: 90px; height: auto; }
+            .page-title { font-size: 1.6rem; }
+        }
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -214,22 +233,24 @@
             <button class="btn-invite" onclick="showInviteModal()">+ Gerar Convite</button>
         </div>
 
-        <table class="alunos-table">
-            <thead>
-                <tr>
-                    <th width="50"></th>
-                    <th>Nome do Aluno</th>
-                    <th>E-mail</th>
-                    <th>Desde</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody id="alunos-list">
-                <tr>
-                    <td colspan="5" class="empty-state">Carregando lista de alunos...</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table class="alunos-table">
+                <thead>
+                    <tr>
+                        <th width="50"></th>
+                        <th>Nome do Aluno</th>
+                        <th>E-mail</th>
+                        <th>Desde</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="alunos-list">
+                    <tr>
+                        <td colspan="5" class="empty-state">Carregando lista de alunos...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Modal Convite -->

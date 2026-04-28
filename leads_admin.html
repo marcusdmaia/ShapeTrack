@@ -69,6 +69,26 @@
             overflow-y: auto;
         }
 
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar {
+                width: 100%; padding: 10px; position: fixed; bottom: 0; left: 0;
+                flex-direction: row; justify-content: space-around; z-index: 1000; height: 70px;
+            }
+            .sidebar .logo { display: none; }
+            .nav-item { margin-bottom: 0; padding: 8px; font-size: 0.7rem; text-align: center; flex: 1; }
+            .main-content { padding: 20px; padding-bottom: 90px; height: auto; }
+            .page-title { font-size: 1.6rem; }
+            .header { flex-direction: column; align-items: flex-start; gap: 15px; }
+        }
+
         .header {
             margin-bottom: 40px;
             border-bottom: 1px solid #e0e0e0;
@@ -168,22 +188,24 @@
             <button class="btn-copy" onclick="copyFunnelLink()">Copiar Link do Funil</button>
         </div>
 
-        <table class="leads-table">
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Nome do Lead</th>
-                    <th>Objetivo</th>
-                    <th>Calorias/Fibras</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody id="leads-list">
-                <tr>
-                    <td colspan="5" class="empty-state">Carregando seus leads...</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table class="leads-table">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Nome do Lead</th>
+                        <th>Objetivo</th>
+                        <th>Calorias/Fibras</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="leads-list">
+                    <tr>
+                        <td colspan="5" class="empty-state">Carregando seus leads...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>

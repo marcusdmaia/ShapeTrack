@@ -69,6 +69,44 @@
             padding: 40px;
         }
 
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                flex-direction: row;
+                justify-content: space-around;
+                z-index: 1000;
+                height: 70px;
+                margin-bottom: 0;
+            }
+            .sidebar .logo {
+                display: none;
+            }
+            .nav-item {
+                margin-bottom: 0;
+                padding: 10px;
+                font-size: 0.8rem;
+                text-align: center;
+            }
+            .main-content {
+                padding: 20px;
+                padding-bottom: 100px;
+            }
+            #welcome-msg {
+                font-size: 1.5rem;
+            }
+            .grid-stats {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
         .header {
             display: flex;
             justify-content: space-between;
