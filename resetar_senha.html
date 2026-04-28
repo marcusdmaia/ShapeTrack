@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Definir Nova Senha | ShapeTrack</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f6f5;
+            --primary-color: #2F5948;
+            --accent-color: #D96C2B;
+            --card-bg: #ffffff;
+        }
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        .logo span { color: var(--accent-color); }
+        h1 { font-size: 1.2rem; color: #333; margin-bottom: 20px; }
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        #message { margin-top: 15px; font-size: 0.9rem; }
+        .success { color: #2F5948; font-weight: 700; }
+        .error { color: #e63946; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo">SHAPE<span>TRACK</span></div>
+    <h1>Nova Senha</h1>
+    <p style="font-size: 0.9rem; color: #666; margin-bottom: 25px;">Digite sua nova senha abaixo.</p>
+    
+    <input type="password" id="new_password" placeholder="Mínimo 6 caracteres">
+    <button id="resetBtn">Salvar Nova Senha</button>
+    
+    <div id="message"></div>
+</div>
+
+<script>
+    const _supabase = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
+
+    document.getElementById('resetBtn').onclick = async () => {
+        const password = document.getElementById('new_password').value;
+        const msg = document.getElementById('message');
+        const btn = document.getElementById('resetBtn');
+
+        if(password.length < 6) { alert('A senha deve ter pelo menos 6 caracteres'); return; }
+
+        btn.disabled = true;
+        btn.textContent = 'Salvando...';
+
+        const { error } = await _supabase.auth.updateUser({ password: password });
+
+        if (error) {
+            msg.textContent = 'Erro: ' + error.message;
+            msg.className = 'error';
+            btn.disabled = false;
+            btn.textContent = 'Salvar Nova Senha';
+        } else {
+            msg.textContent = 'Senha alterada com sucesso! Redirecionando...';
+            msg.className = 'success';
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+    };
+</script>
+</body>
+</html>

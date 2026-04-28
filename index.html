@@ -132,6 +132,9 @@
             margin-top: 24px;
             font-size: 0.85rem;
             color: var(--text-dim);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .footer-links a {
@@ -139,6 +142,46 @@
             text-decoration: none;
             font-weight: 600;
         }
+
+        .btn-google {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #444;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+
+        .btn-google:hover {
+            background: #f5f5f5;
+        }
+
+        .divider {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #ccc;
+            font-size: 0.8rem;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #eee;
+        }
+
+        .divider:not(:empty)::before { margin-right: .5em; }
+        .divider:not(:empty)::after { margin-left: .5em; }
 
         #message {
             margin-top: 15px;
@@ -185,7 +228,8 @@
     <div id="message"></div>
 
     <div class="footer-links">
-        Ainda não tem conta? <a href="#">Fale com seu mentor</a>
+        <a href="recuperar_senha.html" style="margin-bottom: 10px; display: block;">Esqueci minha senha</a>
+        <span>Ainda não tem conta? <a href="#">Fale com seu mentor</a></span>
     </div>
 </div>
 
