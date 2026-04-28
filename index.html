@@ -36,28 +36,35 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
+            font-family: 'Inter', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
             overflow: hidden;
         }
 
-        .login-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 40px;
-            background: var(--card-bg);
-            border-radius: 12px;
-            border: 1px solid rgba(47, 89, 72, 0.1);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
-            text-align: center;
-            animation: fadeIn 0.8s ease-out;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .login-container {
+            background: var(--card-bg);
+            padding: 50px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         .logo {
@@ -116,16 +123,23 @@
             background: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(47, 89, 72, 0.2);
             margin-top: 10px;
         }
 
         .btn-login:hover {
             background: #234538;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(47, 89, 72, 0.3);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
         }
 
         .footer-links {

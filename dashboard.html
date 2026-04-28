@@ -24,6 +24,23 @@
             display: flex;
             min-height: 100vh;
             margin: 0;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Sidebar */
@@ -150,26 +167,43 @@
             gap: 24px;
         }
 
-        .card {
+        .stat-card {
             background: var(--card-bg);
-            padding: 24px;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fadeInUp 0.6s ease-out forwards;
+            animation-delay: 0.2s;
+            opacity: 0;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+        }
+
+        .stat-card:nth-child(2) { animation-delay: 0.3s; }
+        .stat-card:nth-child(3) { animation-delay: 0.4s; }
+
+        .btn-action {
+            background: var(--sidebar-bg);
+            color: white;
+            padding: 12px 24px;
             border-radius: 12px;
-            border: 1px solid rgba(47, 89, 72, 0.1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-            transition: transform 0.2s;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-        }
-
-        .card h3 {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.3rem;
+            text-decoration: none;
             font-weight: 700;
-            margin-bottom: 10px;
-            color: var(--sidebar-bg);
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(47, 89, 72, 0.2);
+        }
+
+        .btn-action:hover {
+            background: var(--accent);
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(217, 108, 43, 0.3);
         }
 
         .card p {
