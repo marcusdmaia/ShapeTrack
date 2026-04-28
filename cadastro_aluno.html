@@ -3,17 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Aluno | ShapeTrack</title>
+    <title>Cadastro | ShapeTrack</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #f4f6f5;
-            --card-bg: #ffffff;
-            --primary-color: #2F5948;
-            --accent-color: #D96C2B;
-            --text-main: #1a1a1a;
-            --text-dim: #666666;
+            --bg-color: #f8faf9;
+            --primary: #2F5948;
+            --primary-light: #3d755e;
+            --accent: #D96C2B;
+            --text-main: #1a1c1b;
+            --text-dim: #64748b;
+            --white: #ffffff;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
@@ -23,44 +33,46 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 20px;
+            padding: 24px;
         }
 
-        .signup-container {
+        .signup-card {
             width: 100%;
-            max-width: 450px;
-            padding: 40px;
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            max-width: 440px;
+            background: var(--white);
+            padding: 48px 40px;
+            border-radius: 32px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.02);
             text-align: center;
+            animation: fadeIn 0.8s ease-out;
         }
 
         .logo {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 8px;
-            color: var(--primary-color);
+            letter-spacing: -1.5px;
+            color: var(--primary);
+            margin-bottom: 12px;
         }
 
-        .logo span { color: var(--accent-color); }
+        .logo span { color: var(--accent); }
 
-        .mentor-badge {
-            display: inline-block;
-            background: #f0f4f2;
-            padding: 8px 15px;
-            border-radius: 20px;
+        .mentor-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f1f5f9;
+            padding: 10px 20px;
+            border-radius: 50px;
             font-size: 0.85rem;
-            color: var(--primary-color);
-            font-weight: 600;
-            margin-bottom: 30px;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 32px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             text-align: left;
         }
 
@@ -68,88 +80,113 @@
             display: block;
             font-size: 0.85rem;
             font-weight: 700;
+            color: var(--primary);
             margin-bottom: 8px;
-            color: var(--primary-color);
         }
 
         input {
             width: 100%;
-            padding: 14px;
-            background: #fafafa;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            padding: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
             font-size: 1rem;
-            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(47, 89, 72, 0.05);
         }
 
         .btn-signup {
             width: 100%;
-            padding: 15px;
-            background: var(--primary-color);
+            padding: 18px;
+            background: var(--primary);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 14px;
             font-size: 1rem;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
+            transition: all 0.3s;
             margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(47, 89, 72, 0.2);
+        }
+
+        .btn-signup:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(47, 89, 72, 0.3);
         }
 
         #message {
-            margin-top: 15px;
-            font-size: 0.85rem;
+            margin-top: 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            min-height: 20px;
+        }
+
+        .success { color: #059669; }
+        .error { color: #dc2626; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .signup-card { padding: 40px 24px; border-radius: 24px; }
         }
     </style>
 </head>
 <body>
 
-<div class="signup-container">
+<div class="signup-card">
     <div class="logo">SHAPE<span>TRACK</span></div>
-    <div id="mentor-info" class="mentor-badge">Carregando convite...</div>
+    <div id="mentor-info" class="mentor-info">
+        <i class="fas fa-spinner fa-spin"></i> Validando convite...
+    </div>
     
-    <p style="color: var(--text-dim); margin-bottom: 30px; font-size: 0.9rem;">Crie sua conta para acessar seus treinos, materiais e avaliações.</p>
+    <p style="color: var(--text-dim); margin-bottom: 32px; font-size: 0.95rem; line-height: 1.6;">Bem-vindo! Complete seu cadastro para iniciar sua jornada de evolução.</p>
 
     <div class="form-group">
-        <label for="name">Nome Completo</label>
+        <label>Nome Completo</label>
         <input type="text" id="name" placeholder="Como quer ser chamado?">
     </div>
 
     <div class="form-group">
-        <label for="email">E-mail</label>
+        <label>E-mail</label>
         <input type="email" id="email" placeholder="seu@email.com">
     </div>
 
     <div class="form-group">
-        <label for="password">Crie uma Senha</label>
-        <input type="password" id="password" placeholder="No mínimo 6 caracteres">
+        <label>Senha de Acesso</label>
+        <input type="password" id="password" placeholder="Mínimo 6 caracteres">
     </div>
 
-    <button class="btn-signup" id="signupBtn">Começar Mentoria</button>
+    <button class="btn-signup" id="signupBtn">Criar minha conta</button>
     <div id="message"></div>
 </div>
 
 <script>
-    const SUPABASE_URL = 'https://xsgjttyrxhwmtxlvbdoa.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU';
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
 
     const urlParams = new URLSearchParams(window.location.search);
     const mentorId = urlParams.get('ref');
 
     async function checkMentor() {
         if (!mentorId) {
-            document.body.innerHTML = '<h1>Convite inválido. Peça um novo link ao seu mentor.</h1>';
+            document.body.innerHTML = '<div style="text-align:center; padding:40px;"><h1>Convite Inválido</h1><p>Peça um novo link ao seu mentor.</p></div>';
             return;
         }
 
-        const { data: mentor, error } = await supabaseClient
-            .from('profiles')
-            .select('full_name')
-            .eq('id', mentorId)
-            .single();
+        const { data: mentor } = await sb.from('profiles').select('full_name').eq('id', mentorId).single();
 
         if (mentor) {
-            document.getElementById('mentor-info').textContent = `Convite de: ${mentor.full_name}`;
+            document.getElementById('mentor-info').innerHTML = `<i class="fas fa-user-check"></i> Convite de: ${mentor.full_name}`;
         }
     }
 
@@ -158,42 +195,38 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         const msg = document.getElementById('message');
+        const btn = document.getElementById('signupBtn');
 
         if (!name || !email || !password) {
-            msg.textContent = 'Preencha todos os campos.';
+            msg.innerHTML = '<span class="error">Preencha todos os campos.</span>';
             return;
         }
 
-        // 1. Criar usuário na autenticação
-        const { data, error } = await supabaseClient.auth.signUp({
-            email: email,
-            password: password
-        });
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Criando conta...';
+
+        const { data, error } = await sb.auth.signUp({ email, password });
 
         if (error) {
-            msg.textContent = 'Erro: ' + error.message;
+            msg.innerHTML = `<span class="error">Erro: ${error.message}</span>`;
+            btn.disabled = false;
+            btn.innerHTML = 'Criar minha conta';
             return;
         }
 
         if (data.user) {
-            // 2. Criar perfil vinculado ao mentor
-            const { error: profileError } = await supabaseClient
-                .from('profiles')
-                .insert([
-                    { 
-                        id: data.user.id, 
-                        full_name: name, 
-                        role: 'client', 
-                        mentor_id: mentorId 
-                    }
-                ]);
+            const { error: profileError } = await sb.from('profiles').insert([{ 
+                id: data.user.id, 
+                full_name: name, 
+                role: 'client', 
+                mentor_id: mentorId 
+            }]);
 
             if (profileError) {
-                msg.textContent = 'Erro ao vincular mentor: ' + profileError.message;
+                msg.innerHTML = `<span class="error">Erro ao vincular perfil: ${profileError.message}</span>`;
             } else {
-                msg.style.color = 'green';
-                msg.textContent = 'Conta criada! Redirecionando para seu painel...';
-                setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+                msg.innerHTML = '<span class="success">Sucesso! Redirecionando...</span>';
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
             }
         }
     });

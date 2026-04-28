@@ -5,46 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lançar Avaliação | ShapeTrack</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
+            --bg-color: #f8faf9;
             --primary: #2F5948;
+            --primary-light: #3d755e;
             --accent: #D96C2B;
-            --bg: #f4f6f5;
+            --text-main: #1a1c1b;
+            --text-dim: #64748b;
+            --white: #ffffff;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --nav-bg: rgba(255, 255, 255, 0.8);
         }
-        body { 
-            background: var(--bg); 
-            font-family: 'Inter', sans-serif; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
             min-height: 100vh;
         }
+
+        /* Sidebar Desktop */
+        .sidebar {
+            width: 280px;
+            background: var(--primary);
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            transition: all 0.3s ease;
+        }
+
         .logo {
             font-size: 1.8rem;
             font-weight: 800;
-            letter-spacing: -1px;
-            color: var(--primary);
-            margin-bottom: 30px;
+            letter-spacing: -1.5px;
+            margin-bottom: 48px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
         }
+
         .logo span { color: var(--accent); }
-        .box { 
-            background: white; 
-            padding: 40px; 
-            border-radius: 16px; 
-            width: 100%; 
-            max-width: 500px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-        h1 { color: var(--primary); text-align: center; font-weight: 800; margin-bottom: 30px; font-size: 1.5rem; }
-        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-        label { display: block; font-size: 0.8rem; font-weight: 700; color: #666; margin-bottom: 8px; text-transform: uppercase; }
-        input { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1px solid #ddd; 
             border-radius: 8px; 
             box-sizing: border-box; 
             font-size: 1rem;

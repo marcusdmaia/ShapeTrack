@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShapeTrack | Premium Mentorship</title>
-    <!-- SEO & Social Media Meta Tags -->
+    <title>ShapeTrack | Login</title>
+    
     <meta name="description" content="Plataforma de mentoria fitness premium. Acompanhe sua evolução e alcance sua melhor versão.">
     <meta property="og:title" content="ShapeTrack | Sua Melhor Versão">
     <meta property="og:description" content="Acesse sua área de aluno e acompanhe sua evolução física.">
-    <meta property="og:image" content="https://xsgjttyrxhwmtxlvbdoa.supabase.co/storage/v1/object/public/assets/og-image.png">
     <meta property="og:type" content="website">
     <meta name="theme-color" content="#2F5948">
-    <link rel="icon" type="image/png" href="https://xsgjttyrxhwmtxlvbdoa.supabase.co/storage/v1/object/public/assets/favicon.png">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --bg-color: #f4f6f5; /* Fundo clínico/clean */
-            --card-bg: #ffffff;
-            --primary-color: #2F5948; /* Verde ShapeHouse */
-            --accent-color: #D96C2B; /* Laranja ShapeHouse */
-            --text-main: #1a1a1a;
-            --text-dim: #666666;
-            --error-color: #e63946;
+            --bg-color: #f8faf9;
+            --primary: #2F5948;
+            --primary-light: #3d755e;
+            --accent: #D96C2B;
+            --text-main: #1a1c1b;
+            --text-dim: #64748b;
+            --white: #ffffff;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
         }
 
         * {
@@ -36,289 +37,194 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: 'Inter', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
+            min-height: 100vh;
+            padding: 24px;
+            background: linear-gradient(135deg, #f8faf9 0%, #edf2f0 100%);
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .login-container {
-            background: var(--card-bg);
-            padding: 50px;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        .login-card {
             width: 100%;
             max-width: 420px;
+            background: var(--white);
+            padding: 56px 40px;
+            border-radius: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255,255,255,0.7);
             text-align: center;
-            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeIn 0.8s ease-out;
         }
 
         .logo {
-            font-family: 'Inter', sans-serif;
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             font-weight: 800;
-            letter-spacing: -1px;
+            letter-spacing: -1.8px;
+            color: var(--primary);
             margin-bottom: 8px;
-            color: var(--primary-color);
         }
 
-        .logo span {
-            color: var(--accent-color);
-        }
+        .logo span { color: var(--accent); }
 
         .subtitle {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-dim);
-            margin-bottom: 32px;
+            margin-bottom: 40px;
+            font-weight: 500;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             text-align: left;
         }
 
         label {
             display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
             margin-bottom: 8px;
-            color: var(--primary-color);
         }
 
         input {
             width: 100%;
-            padding: 14px;
-            background: #fafafa;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            color: var(--text-main);
+            padding: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
             font-size: 1rem;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
         input:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(47, 89, 72, 0.1);
-            background: #ffffff;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(47, 89, 72, 0.05);
         }
 
         .btn-login {
             width: 100%;
-            padding: 14px;
-            background: var(--primary-color);
+            padding: 18px;
+            background: var(--primary);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 1rem;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
             transition: all 0.3s;
+            margin-top: 8px;
             box-shadow: 0 4px 15px rgba(47, 89, 72, 0.2);
-            margin-top: 10px;
         }
 
         .btn-login:hover {
-            background: #234538;
+            background: var(--primary-light);
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(47, 89, 72, 0.3);
         }
 
-        .btn-login:active {
-            transform: translateY(0);
-        }
-
         .footer-links {
-            margin-top: 24px;
-            font-size: 0.85rem;
-            color: var(--text-dim);
+            margin-top: 32px;
+            font-size: 0.9rem;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .footer-links a {
-            color: var(--accent-color);
+            color: var(--accent);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
         }
-
-        .btn-google {
-            width: 100%;
-            padding: 12px;
-            background: white;
-            color: #444;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-            transition: 0.2s;
-        }
-
-        .btn-google:hover {
-            background: #f5f5f5;
-        }
-
-        .divider {
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: #ccc;
-            font-size: 0.8rem;
-        }
-
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #eee;
-        }
-
-        .divider:not(:empty)::before { margin-right: .5em; }
-        .divider:not(:empty)::after { margin-left: .5em; }
 
         #message {
-            margin-top: 15px;
-            font-size: 0.85rem;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
             min-height: 20px;
         }
 
-        .error { color: var(--error-color); }
-        .success { color: var(--primary-color); font-weight: 600; }
+        .error { color: #dc2626; }
+        .success { color: #059669; }
 
-        .loader {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(47, 89, 72, 0.2);
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s ease-in-out infinite;
-            margin: 0 auto;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 480px) {
+            .login-card { padding: 48px 24px; border-radius: 24px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="login-container">
+<div class="login-card">
     <div class="logo">SHAPE<span>TRACK</span></div>
-    <p class="subtitle">Acesse sua plataforma de mentoria</p>
+    <p class="subtitle">Sua jornada de evolução começa aqui.</p>
 
     <div class="form-group">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" placeholder="seu@email.com">
+        <label>E-mail de acesso</label>
+        <input type="email" id="email" placeholder="seu@email.com" required>
     </div>
 
     <div class="form-group">
-        <label for="password">Senha</label>
-        <input type="password" id="password" placeholder="••••••••">
+        <label>Sua senha</label>
+        <input type="password" id="password" placeholder="••••••••" required>
     </div>
 
-    <button class="btn-login" id="loginBtn">Entrar</button>
-    <div id="loader" class="loader"></div>
+    <button class="btn-login" id="loginBtn">Acessar Plataforma</button>
     
     <div id="message"></div>
 
     <div class="footer-links">
-        <a href="recuperar_senha.html" style="margin-bottom: 10px; display: block;">Esqueci minha senha</a>
-        <span>Ainda não tem conta? <a href="#">Fale com seu mentor</a></span>
+        <a href="recuperar_senha.html">Esqueceu a senha?</a>
+        <p style="color: var(--text-dim)">Não possui conta? <a href="#">Fale com seu mentor</a></p>
     </div>
 </div>
 
 <script>
-    // Configurações do Supabase (Capturadas pelo Antigravity)
-    const SUPABASE_URL = 'https://xsgjttyrxhwmtxlvbdoa.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU';
-
-    // Usando um nome diferente para a variável para não dar conflito
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
 
     async function checkSession() {
-        const { data: { session } } = await _supabase.auth.getSession();
-        if (session) {
-            window.location.href = 'dashboard.html';
-        }
+        const { data: { session } } = await sb.auth.getSession();
+        if (session) window.location.href = 'dashboard.html';
     }
     checkSession();
 
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
     const loginBtn = document.getElementById('loginBtn');
-    const messageDiv = document.getElementById('message');
-    const loader = document.getElementById('loader');
+    const msg = document.getElementById('message');
 
     loginBtn.addEventListener('click', async () => {
-        const email = emailInput.value;
-        const password = passwordInput.value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
         if (!email || !password) {
-            showMessage('Preencha todos os campos', 'error');
+            msg.innerHTML = '<span class="error">Preencha todos os campos.</span>';
             return;
         }
 
-        setLoading(true);
-        showMessage('', '');
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Entrando...';
+        msg.innerHTML = '';
         
-        try {
-            const { data, error } = await _supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
+        const { error } = await sb.auth.signInWithPassword({ email, password });
 
-            setLoading(false);
-
-            if (error) {
-                showMessage('Erro: ' + error.message, 'error');
-                console.error(error);
-            } else {
-                showMessage('Login realizado! Redirecionando...', 'success');
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-            }
-        } catch (err) {
-            setLoading(false);
-            showMessage('Erro inesperado de conexão.', 'error');
-            console.error(err);
+        if (error) {
+            msg.innerHTML = `<span class="error">Erro: ${error.message}</span>`;
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = 'Acessar Plataforma';
+        } else {
+            msg.innerHTML = '<span class="success">Login realizado! Redirecionando...</span>';
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
         }
     });
+</script>
 
-    function showMessage(msg, type) {
-        messageDiv.textContent = msg;
-        messageDiv.className = type;
-    }
-
-    function setLoading(isLoading) {
-        if (isLoading) {
-            loginBtn.style.display = 'none';
-            loader.style.display = 'block';
-        } else {
-            loginBtn.style.display = 'block';
-            loader.style.display = 'none';
-        }
-    }
+</body>
+</html>   }
 </script>
 
 </body>
