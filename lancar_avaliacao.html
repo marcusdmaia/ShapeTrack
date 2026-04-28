@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lançar Avaliação | ShapeTrack</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2F5948;
+            --accent: #D96C2B;
+            --bg: #f4f6f5;
+        }
+        body { 
+            background: var(--bg); 
+            font-family: 'Inter', sans-serif; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            min-height: 100vh;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--primary);
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+        .logo span { color: var(--accent); }
+        .box { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 16px; 
+            width: 100%; 
+            max-width: 500px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        h1 { color: var(--primary); text-align: center; font-weight: 800; margin-bottom: 30px; font-size: 1.5rem; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        label { display: block; font-size: 0.8rem; font-weight: 700; color: #666; margin-bottom: 8px; text-transform: uppercase; }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 1rem;
+            background: #fafafa;
+        }
+        input:focus { outline: none; border-color: var(--primary); background: white; }
+        .actions { display: flex; flex-direction: column; gap: 10px; margin-top: 30px; }
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-secondary { background: #eee; color: #666; }
+    </style>
+</head>
+<body>
+<div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
+<div class="box">
+    <h1 id="title">Carregando...</h1>
+    <div class="row">
+        <div><label>Peso (kg)</label><input type="number" id="w" step="0.1" placeholder="0.0"></div>
+        <div><label>IMC</label><input type="number" id="imc" step="0.1" placeholder="0.0"></div>
+    </div>
+    <div class="row">
+        <div><label>% Gordura</label><input type="number" id="fat" step="0.1" placeholder="0.0"></div>
+        <div><label>Visceral</label><input type="number" id="visc" step="1" placeholder="0"></div>
+    </div>
+    <div class="row">
+        <div><label>% Músculo</label><input type="number" id="musc" step="0.1" placeholder="0.0"></div>
+        <div><label>Idade Corp.</label><input type="number" id="age" step="1" placeholder="0"></div>
+    </div>
+    <div style="margin-bottom:15px"><label>Metabolismo</label><input type="number" id="met" step="1" placeholder="0"></div>
+    
+    <div class="actions">
+        <button id="save">Salvar Avaliação</button>
+        <button class="btn-secondary" onclick="window.location.href='alunos.html'">Cancelar</button>
+    </div>
+</div>
+<script>
+    const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
+    const id = new URLSearchParams(location.search).get('alunoId');
+    if(!id) window.location.href = 'alunos.html';
+
+    sb.from('profiles').select('full_name').eq('id', id).single().then(r => {
+        if(r.data) document.getElementById('title').textContent = 'Avaliação: ' + r.data.full_name;
+    });
+
+    document.getElementById('save').onclick = async () => {
+        const btn = document.getElementById('save');
+        btn.disabled = true;
+        btn.textContent = 'Salvando...';
+
+        const d = {
+            client_id: id, 
+            weight: parseFloat(document.getElementById('w').value || 0),
+            imc: parseFloat(document.getElementById('imc').value || 0),
+            fat_percentage: parseFloat(document.getElementById('fat').value || 0),
+            visceral_fat: parseFloat(document.getElementById('visc').value || 0),
+            muscle_percentage: parseFloat(document.getElementById('musc').value || 0),
+            body_age: parseInt(document.getElementById('age').value || 0),
+            basal_metabolism: parseInt(document.getElementById('met').value || 0)
+        };
+
+        const { error } = await sb.from('assessments').insert([d]);
+        if(error) {
+            alert('Erro ao salvar: ' + error.message);
+            btn.disabled = false;
+            btn.textContent = 'Salvar Avaliação';
+        } else { 
+            alert('Avaliação salva com sucesso!'); 
+            window.location.href='alunos.html'; 
+        }
+    };
+</script>
+</body>
+</html>

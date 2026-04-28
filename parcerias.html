@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parcerias | ShapeTrack</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f6f5;
+            --sidebar-bg: #2F5948;
+            --accent: #D96C2B;
+            --text-main: #1a1a1a;
+            --text-dim: #666666;
+            --sidebar-text: #ffffff;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            color: var(--sidebar-text);
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            display: block;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--sidebar-bg);
+            margin: 0;
+        }
+
+        .section-title {
+            font-weight: 800;
+            margin: 30px 0 20px 0;
+            color: var(--sidebar-bg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border-radius: 20px;
+            background: #e0e0e0;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .tab.active {
+            background: var(--sidebar-bg);
+            color: white;
+        }
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(47, 89, 72, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .video-thumb {
+            width: 100%;
+            height: 160px;
+            background: #ddd;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .mentor-name {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .video-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .btn-colab {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--sidebar-bg);
+            background: white;
+            color: var(--sidebar-bg);
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-colab:hover {
+            background: var(--sidebar-bg);
+            color: white;
+        }
+
+        .btn-colab.pending {
+            background: #f0f0f0;
+            color: #888;
+            border-color: #ddd;
+            cursor: not-allowed;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-dim);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
+        <nav id="nav-links">
+            <a href="dashboard.html" class="nav-item">Dashboard</a>
+            <a href="videos.html" class="nav-item">Vídeos</a>
+            <a href="parcerias.html" class="nav-item active">Parcerias</a>
+            <a href="alunos.html" class="nav-item">Alunos</a>
+            <a href="leads_admin.html" class="nav-item">Leads do Funil</a>
+            <a href="configuracoes.html" class="nav-item">Configurações</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1 class="page-title">Parcerias (Colab)</h1>
+            <p style="color: var(--text-dim); margin-top: 10px;">Explore conteúdos de outros mentores e compartilhe os seus.</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="loadMarketplace()">Explorar Conteúdos</div>
+            <div class="tab" onclick="loadMyRequests()">Minhas Solicitações</div>
+        </div>
+
+        <div id="video-grid" class="video-grid">
+            <div class="empty-state">Buscando parceiros...</div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://xsgjttyrxhwmtxlvbdoa.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentUser = null;
+
+        async function init() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = 'index.html';
+                return;
+            }
+            currentUser = session.user;
+            loadMarketplace();
+        }
+
+        function getYouTubeID(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        async function loadMarketplace() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab')[0].classList.add('active');
+
+            // Buscar vídeos públicos que NÃO são meus
+            const { data: videos, error } = await supabaseClient
+                .from('videos')
+                .select('*, profiles(full_name)')
+                .eq('is_public_to_mentors', true)
+                .neq('mentor_id', currentUser.id);
+
+            // Buscar minhas solicitações já feitas
+            const { data: myRequests } = await supabaseClient
+                .from('shared_videos')
+                .select('video_id')
+                .eq('target_mentor_id', currentUser.id);
+
+            const requestedIds = myRequests ? myRequests.map(r => r.video_id) : [];
+
+            const grid = document.getElementById('video-grid');
+            grid.innerHTML = '';
+
+            if (videos.length === 0) {
+                grid.innerHTML = '<div class="empty-state">Nenhum mentor disponibilizou vídeos ainda.</div>';
+                return;
+            }
+
+            videos.forEach(video => {
+                const ytId = getYouTubeID(video.youtube_url);
+                const thumbUrl = ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : '';
+                const isRequested = requestedIds.includes(video.id);
+                
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <div class="video-thumb" style="background-image: url('${thumbUrl}')"></div>
+                    <div class="video-info">
+                        <div class="mentor-name">MENTOR: ${video.profiles?.full_name || 'Desconhecido'}</div>
+                        <div class="video-title">${video.title}</div>
+                        <button class="btn-colab ${isRequested ? 'pending' : ''}" 
+                                onclick="${isRequested ? '' : `requestAccess('${video.id}', '${video.mentor_id}')`}">
+                            ${isRequested ? 'Solicitado' : 'Solicitar para meus Alunos'}
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function requestAccess(videoId, ownerMentorId) {
+            const { error } = await supabaseClient
+                .from('shared_videos')
+                .insert([
+                    { video_id: videoId, source_mentor_id: ownerMentorId, target_mentor_id: currentUser.id, status: 'pending' }
+                ]);
+
+            if (!error) {
+                alert('Solicitação enviada! Aguarde a aprovação do outro mentor.');
+                loadMarketplace();
+            }
+        }
+
+        async function loadMyRequests() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab')[1].classList.add('active');
+
+            const grid = document.getElementById('video-grid');
+            grid.innerHTML = '<div class="empty-state">Carregando...</div>';
+
+            const { data: myRequests } = await supabaseClient
+                .from('shared_videos')
+                .select('*, videos(*), sourceProfile:profiles!source_mentor_id(full_name)')
+                .eq('target_mentor_id', currentUser.id)
+                .order('created_at', { ascending: false });
+
+            const { data: requestsToMe } = await supabaseClient
+                .from('shared_videos')
+                .select('*, videos(*), targetProfile:profiles!target_mentor_id(full_name)')
+                .eq('source_mentor_id', currentUser.id)
+                .order('created_at', { ascending: false });
+
+            grid.innerHTML = '';
+
+            if ((!myRequests || myRequests.length === 0) && (!requestsToMe || requestsToMe.length === 0)) {
+                grid.innerHTML = '<div class="empty-state">Nenhuma solicitação ainda.</div>';
+                return;
+            }
+
+            if (myRequests && myRequests.length > 0) {
+                const sectionTitle = document.createElement('h3');
+                sectionTitle.className = 'section-title';
+                sectionTitle.textContent = 'Minhas Solicitações';
+                grid.appendChild(sectionTitle);
+                
+                myRequests.forEach(req => {
+                    const video = req.videos;
+                    if (!video) return;
+                    const ytId = getYouTubeID(video.youtube_url);
+                    const thumbUrl = ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : '';
+                    const statusBadge = req.status === 'approved' 
+                        ? '<span style="color: green; font-weight: bold;">✓ Aprovado</span>' 
+                        : '<span style="color: orange; font-weight: bold;">⏳ Pendente</span>';
+
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <div class="video-thumb" style="background-image: url('${thumbUrl}')"></div>
+                        <div class="video-info">
+                            <div class="mentor-name">DE: ${req.sourceProfile?.full_name || 'Desconhecido'}</div>
+                            <div class="video-title">${video.title}</div>
+                            <div style="font-weight: 600;">Status: ${statusBadge}</div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            if (requestsToMe && requestsToMe.length > 0) {
+                const sectionTitle = document.createElement('h3');
+                sectionTitle.className = 'section-title';
+                sectionTitle.style.marginTop = '40px';
+                sectionTitle.textContent = 'Solicitações Recebidas';
+                grid.appendChild(sectionTitle);
+                
+                requestsToMe.forEach(req => {
+                    const video = req.videos;
+                    if (!video) return;
+                    const ytId = getYouTubeID(video.youtube_url);
+                    const thumbUrl = ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : '';
+                    const statusBadge = req.status === 'approved' 
+                        ? '<span style="color: green; font-weight: bold;">✓ Aprovado</span>' 
+                        : req.status === 'rejected'
+                        ? '<span style="color: red; font-weight: bold;">✗ Recusado</span>'
+                        : `<button class="btn-colab" onclick="approveRequest('${req.id}', true)">Aprovar</button>
+                           <button class="btn-colab" style="margin-top:5px; background:#fee; color:#c00; border-color:#c00;" onclick="approveRequest('${req.id}', false)">Recusar</button>`;
+
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <div class="video-thumb" style="background-image: url('${thumbUrl}')"></div>
+                        <div class="video-info">
+                            <div class="mentor-name">DE: ${req.targetProfile?.full_name || 'Desconhecido'}</div>
+                            <div class="video-title">${video.title}</div>
+                            <div style="font-weight: 600;">Status: ${statusBadge}</div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        }
+
+        async function approveRequest(requestId, approved) {
+            const { error } = await supabaseClient
+                .from('shared_videos')
+                .update({ status: approved ? 'approved' : 'rejected' })
+                .eq('id', requestId);
+
+            if (!error) {
+                loadMyRequests();
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

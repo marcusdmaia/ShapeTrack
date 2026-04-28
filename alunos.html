@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alunos | ShapeTrack</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f6f5;
+            --sidebar-bg: #2F5948;
+            --accent: #D96C2B;
+            --text-main: #1a1a1a;
+            --text-dim: #666666;
+            --sidebar-text: #ffffff;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            color: var(--sidebar-text);
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            display: block;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--sidebar-bg);
+            margin: 0;
+        }
+
+        .btn-invite {
+            background: var(--accent);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        /* Alunos Table */
+        .alunos-table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            border-collapse: collapse;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .alunos-table th {
+            text-align: left;
+            padding: 18px;
+            background: #fafafa;
+            color: var(--sidebar-bg);
+            font-weight: 700;
+            border-bottom: 1px solid #eee;
+        }
+
+        .alunos-table td {
+            padding: 18px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .alunos-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .avatar-circle {
+            width: 35px;
+            height: 35px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--sidebar-bg);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            background: white;
+            transition: 0.2s;
+        }
+
+        .btn-small:hover {
+            border-color: var(--sidebar-bg);
+            color: var(--sidebar-bg);
+        }
+
+        /* Modal Invite */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .invite-link-box {
+            background: #f4f6f5;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed var(--sidebar-bg);
+            margin: 20px 0;
+            font-family: monospace;
+            word-break: break-all;
+            color: var(--sidebar-bg);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-dim);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
+        <nav id="nav-links">
+            <a href="dashboard.html" class="nav-item">Dashboard</a>
+            <a href="videos.html" class="nav-item">Vídeos</a>
+            <a href="parcerias.html" class="nav-item">Parcerias</a>
+            <a href="alunos.html" class="nav-item active">Alunos</a>
+            <a href="leads_admin.html" class="nav-item">Leads do Funil</a>
+            <a href="configuracoes.html" class="nav-item">Configurações</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1 class="page-title">Gestão de Alunos</h1>
+            <button class="btn-invite" onclick="showInviteModal()">+ Gerar Convite</button>
+        </div>
+
+        <table class="alunos-table">
+            <thead>
+                <tr>
+                    <th width="50"></th>
+                    <th>Nome do Aluno</th>
+                    <th>E-mail</th>
+                    <th>Desde</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="alunos-list">
+                <tr>
+                    <td colspan="5" class="empty-state">Carregando lista de alunos...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal Convite -->
+    <div id="inviteModal" class="modal">
+        <div class="modal-content">
+            <h2 style="font-weight: 800; color: var(--sidebar-bg);">Link de Convite</h2>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Envie este link para seu novo aluno. Ao se cadastrar, ele será automaticamente vinculado à sua mentoria.</p>
+            
+            <div id="invite-link" class="invite-link-box">Gerando link...</div>
+            
+            <button class="btn-invite" onclick="copyInviteLink()">Copiar Link</button>
+            <button class="btn-small" style="margin-top: 15px; display: block; width: 100%;" onclick="closeModal()">Fechar</button>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://xsgjttyrxhwmtxlvbdoa.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentUser = null;
+
+        async function init() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = 'index.html';
+                return;
+            }
+            currentUser = session.user;
+            loadAlunos();
+        }
+
+        async function loadAlunos() {
+            const { data: alunos, error } = await supabaseClient
+                .from('profiles')
+                .select('*')
+                .eq('mentor_id', currentUser.id)
+                .eq('role', 'client');
+
+            const tbody = document.getElementById('alunos-list');
+            tbody.innerHTML = '';
+
+            if (error) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Erro ao carregar.</td></tr>';
+                return;
+            }
+
+            if (alunos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Você ainda não tem alunos vinculados. Envie um convite!</td></tr>';
+                return;
+            }
+
+            alunos.forEach(aluno => {
+                const tr = document.createElement('tr');
+                const initials = aluno.full_name ? aluno.full_name.charAt(0).toUpperCase() : '?';
+                
+                tr.innerHTML = `
+                    <td><div class="avatar-circle">${initials}</div></td>
+                    <td style="font-weight: 600;">${aluno.full_name || 'Novo Aluno'}</td>
+                    <td style="color: var(--text-dim);">${aluno.id}</td>
+                    <td style="color: var(--text-dim);">${new Date(aluno.created_at).toLocaleDateString('pt-BR')}</td>
+                    <td>
+                        <button class="btn-small" onclick="window.location.href='lancar_avaliacao.html?alunoId=${aluno.id}'" style="background: var(--sidebar-bg); color: white; border: none;">Lançar Dados</button>
+                        <button class="btn-small" onclick="window.location.href='relatorio.html?alunoId=${aluno.id}'">Ver Relatório</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showInviteModal() {
+            const baseUrl = window.location.href.split('/').slice(0, -1).join('/');
+            const inviteUrl = `${baseUrl}/cadastro_aluno.html?ref=${currentUser.id}`;
+            document.getElementById('invite-link').textContent = inviteUrl;
+            document.getElementById('inviteModal').style.display = 'flex';
+        }
+
+        function copyInviteLink() {
+            const link = document.getElementById('invite-link').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Link copiado para a área de transferência!');
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('inviteModal').style.display = 'none';
+        }
+
+        init();
+    </script>
+</body>
+</html>

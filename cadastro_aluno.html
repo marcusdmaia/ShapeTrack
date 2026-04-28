@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Aluno | ShapeTrack</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f6f5;
+            --card-bg: #ffffff;
+            --primary-color: #2F5948;
+            --accent-color: #D96C2B;
+            --text-main: #1a1a1a;
+            --text-dim: #666666;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .signup-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .logo span { color: var(--accent-color); }
+
+        .mentor-badge {
+            display: inline-block;
+            background: #f0f4f2;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .btn-signup {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="signup-container">
+    <div class="logo">SHAPE<span>TRACK</span></div>
+    <div id="mentor-info" class="mentor-badge">Carregando convite...</div>
+    
+    <p style="color: var(--text-dim); margin-bottom: 30px; font-size: 0.9rem;">Crie sua conta para acessar seus treinos, materiais e avaliações.</p>
+
+    <div class="form-group">
+        <label for="name">Nome Completo</label>
+        <input type="text" id="name" placeholder="Como quer ser chamado?">
+    </div>
+
+    <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="seu@email.com">
+    </div>
+
+    <div class="form-group">
+        <label for="password">Crie uma Senha</label>
+        <input type="password" id="password" placeholder="No mínimo 6 caracteres">
+    </div>
+
+    <button class="btn-signup" id="signupBtn">Começar Mentoria</button>
+    <div id="message"></div>
+</div>
+
+<script>
+    const SUPABASE_URL = 'https://xsgjttyrxhwmtxlvbdoa.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const mentorId = urlParams.get('ref');
+
+    async function checkMentor() {
+        if (!mentorId) {
+            document.body.innerHTML = '<h1>Convite inválido. Peça um novo link ao seu mentor.</h1>';
+            return;
+        }
+
+        const { data: mentor, error } = await supabaseClient
+            .from('profiles')
+            .select('full_name')
+            .eq('id', mentorId)
+            .single();
+
+        if (mentor) {
+            document.getElementById('mentor-info').textContent = `Convite de: ${mentor.full_name}`;
+        }
+    }
+
+    document.getElementById('signupBtn').addEventListener('click', async () => {
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const msg = document.getElementById('message');
+
+        if (!name || !email || !password) {
+            msg.textContent = 'Preencha todos os campos.';
+            return;
+        }
+
+        // 1. Criar usuário na autenticação
+        const { data, error } = await supabaseClient.auth.signUp({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            msg.textContent = 'Erro: ' + error.message;
+            return;
+        }
+
+        if (data.user) {
+            // 2. Criar perfil vinculado ao mentor
+            const { error: profileError } = await supabaseClient
+                .from('profiles')
+                .insert([
+                    { 
+                        id: data.user.id, 
+                        full_name: name, 
+                        role: 'client', 
+                        mentor_id: mentorId 
+                    }
+                ]);
+
+            if (profileError) {
+                msg.textContent = 'Erro ao vincular mentor: ' + profileError.message;
+            } else {
+                msg.style.color = 'green';
+                msg.textContent = 'Conta criada! Redirecionando para seu painel...';
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+            }
+        }
+    });
+
+    checkMentor();
+</script>
+
+</body>
+</html>

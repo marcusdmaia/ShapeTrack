@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | ShapeTrack</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f6f5; /* Fundo clínico/clean */
+            --sidebar-bg: #2F5948; /* Verde ShapeHouse */
+            --accent: #D96C2B; /* Laranja ShapeHouse */
+            --text-main: #1a1a1a;
+            --text-dim: #666666;
+            --sidebar-text: #ffffff;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            color: var(--sidebar-text);
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            display: block;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 20px;
+        }
+
+        #welcome-msg {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--sidebar-bg);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(47, 89, 72, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .card h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--sidebar-bg);
+        }
+
+        .card p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .btn-action {
+            background: #f4f6f5;
+            color: var(--sidebar-bg);
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: 1px solid var(--sidebar-bg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: var(--sidebar-bg);
+            color: white;
+        }
+
+        #admin-panel, #client-panel { display: none; }
+
+        .logout {
+            margin-top: auto;
+            color: #ffb3b3;
+            cursor: pointer;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            transition: 0.2s;
+        }
+        
+        .logout:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
+        <nav id="nav-links">
+            <!-- Os links serão inseridos dinamicamente pelo JS -->
+        </nav>
+        <div class="logout" id="logoutBtn">Sair da conta</div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1 id="welcome-msg">Carregando...</h1>
+            <div class="user-info">
+                <span id="user-name">Usuário</span>
+                <div class="avatar" id="user-avatar">?</div>
+            </div>
+        </div>
+
+        <!-- Painel para Mentores (Admins) -->
+        <div id="admin-panel">
+            <div class="grid">
+                <div class="card">
+                    <h3>Gerenciar Alunos</h3>
+                    <p>Adicione novos clientes e visualize o progresso deles.</p>
+                    <button class="btn-action" onclick="window.location.href='alunos.html'">Ver Alunos</button>
+                </div>
+                <div class="card">
+                    <h3>Minha Biblioteca</h3>
+                    <p>Suba novos vídeos do YouTube e compartilhe com parceiros.</p>
+                    <button class="btn-action" onclick="window.location.href='videos.html'">Acessar Biblioteca</button>
+                </div>
+                <div class="card">
+                    <h3>Solicitações de Parceria</h3>
+                    <p>Veja vídeos enviados por outros mentores para seus alunos.</p>
+                    <button class="btn-action" onclick="window.location.href='parcerias.html'">Ver Pedidos</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel para Alunos (Clientes) -->
+        <div id="client-panel">
+            <h2 style="font-family: 'Inter', serif; font-weight: 800; font-size: 1.8rem; margin-bottom: 20px; color: var(--sidebar-bg);">Meus Treinos e Materiais</h2>
+            <div id="client-video-grid" class="grid">
+                <!-- Vídeos do mentor aparecerão aqui -->
+            </div>
+            
+            <h2 style="font-family: 'Inter', serif; font-weight: 800; font-size: 1.8rem; margin-top: 40px; margin-bottom: 20px; color: var(--sidebar-bg);">Minha Evolução</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Relatório de Progresso</h3>
+                    <p>Veja seus dados de peso, medidas e fotos lançados pelo seu mentor.</p>
+                    <button class="btn-action" onclick="window.location.href='relatorio.html'">Ver Minha Evolução</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal do Player de Vídeo -->
+    <div id="playerModal" class="modal" style="background: rgba(0,0,0,0.9);">
+        <div class="modal-content" style="max-width: 800px; padding: 10px; background: black;">
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                <iframe id="videoIframe" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <button class="btn-action" style="width: 100%; margin-top: 10px;" onclick="closePlayer()">Fechar Vídeo</button>
+        </div>
+    </div>
+
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+        }
+    </style>
+
+    <script>
+        const SUPABASE_URL = 'https://xsgjttyrxhwmtxlvbdoa.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function checkSession() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            
+            if (!session) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const user = session.user;
+            
+            const { data: profile, error } = await supabaseClient
+                .from('profiles')
+                .select('*')
+                .eq('id', user.id)
+                .single();
+
+            if (error || !profile) {
+                setupInitialProfile(user);
+                return;
+            }
+
+            renderDashboard(profile);
+        }
+
+        function renderDashboard(profile) {
+            document.getElementById('user-name').textContent = profile.full_name || 'Usuário';
+            document.getElementById('welcome-msg').textContent = `Olá, ${profile.full_name.split(' ')[0]}!`;
+            document.getElementById('user-avatar').textContent = profile.full_name.charAt(0).toUpperCase();
+
+            const nav = document.getElementById('nav-links');
+            nav.innerHTML = '<a href="dashboard.html" class="nav-item active">Dashboard</a>';
+
+            if (profile.role === 'admin' || profile.role === 'superadmin') {
+                document.getElementById('admin-panel').style.display = 'block';
+                nav.innerHTML += `
+                    <a href="videos.html" class="nav-item">Vídeos</a>
+                    <a href="parcerias.html" class="nav-item">Parcerias</a>
+                    <a href="alunos.html" class="nav-item">Alunos</a>
+                    <a href="leads_admin.html" class="nav-item">Leads do Funil</a>
+                    <a href="configuracoes.html" class="nav-item">Configurações</a>
+                `;
+            } else {
+                document.getElementById('client-panel').style.display = 'block';
+                nav.innerHTML += `
+                    <a href="relatorio.html" class="nav-item">Minha Evolução</a>
+                `;
+                loadClientVideos(profile.mentor_id);
+            }
+        }
+
+        async function loadClientVideos(mentorId) {
+            if (!mentorId) return;
+
+            const { data: videos } = await supabaseClient
+                .from('videos')
+                .select('*')
+                .eq('mentor_id', mentorId);
+
+            const grid = document.getElementById('client-video-grid');
+            grid.innerHTML = '';
+
+            if (!videos || videos.length === 0) {
+                grid.innerHTML = '<p style="color: var(--text-dim)">Nenhum vídeo disponível ainda.</p>';
+                return;
+            }
+
+            videos.forEach(video => {
+                const ytId = video.youtube_url.includes('v=') ? video.youtube_url.split('v=')[1].split('&')[0] : video.youtube_url.split('/').pop();
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.padding = '0';
+                card.style.overflow = 'hidden';
+                card.innerHTML = `
+                    <img src="https://img.youtube.com/vi/${ytId}/mqdefault.jpg" style="width: 100%; display: block;">
+                    <div style="padding: 15px;">
+                        <h3 style="margin-bottom: 5px;">${video.title}</h3>
+                        <button onclick="openPlayer('${ytId}')" class="btn-action" style="width: 100%; margin-top: 10px;">Assistir Vídeo</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openPlayer(ytId) {
+            const iframe = document.getElementById('videoIframe');
+            iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1`;
+            document.getElementById('playerModal').style.display = 'flex';
+        }
+
+        function closePlayer() {
+            const iframe = document.getElementById('videoIframe');
+            iframe.src = '';
+            document.getElementById('playerModal').style.display = 'none';
+        }
+
+        async function setupInitialProfile(user) {
+            try {
+                // Isso é apenas para você conseguir entrar na primeira vez como Admin
+                const { data, error } = await supabaseClient
+                    .from('profiles')
+                    .insert([
+                        { id: user.id, full_name: 'Mentor Admin', role: 'admin' }
+                    ]);
+                
+                if (error) {
+                    console.error("Erro ao criar perfil:", error);
+                    document.getElementById('welcome-msg').textContent = "Erro de Permissão (RLS). Aguarde o ajuste no banco.";
+                    document.getElementById('welcome-msg').style.color = "red";
+                    return;
+                }
+                
+                window.location.reload();
+            } catch (err) {
+                console.error("Erro fatal:", err);
+                document.getElementById('welcome-msg').textContent = "Erro de conexão com o banco.";
+            }
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await supabaseClient.auth.signOut();
+            window.location.href = 'index.html';
+        });
+
+        checkSession();
+    </script>
+</body>
+</html>

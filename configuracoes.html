@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações | ShapeTrack</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f6f5;
+            --sidebar-bg: #2F5948;
+            --accent: #D96C2B;
+            --text-main: #1a1a1a;
+            --sidebar-text: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            color: var(--sidebar-text);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+        .logo span { color: var(--accent); }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            display: block;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            max-width: 800px;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--sidebar-bg);
+            margin: 0;
+        }
+
+        .config-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--sidebar-bg);
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .btn-save {
+            background: var(--sidebar-bg);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .btn-save:hover {
+            opacity: 0.9;
+        }
+
+        #message {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
+        <nav>
+            <a href="dashboard.html" class="nav-item">Dashboard</a>
+            <a href="videos.html" class="nav-item">Vídeos</a>
+            <a href="parcerias.html" class="nav-item">Parcerias</a>
+            <a href="alunos.html" class="nav-item">Alunos</a>
+            <a href="leads_admin.html" class="nav-item">Leads do Funil</a>
+            <a href="configuracoes.html" class="nav-item active">Configurações</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1 class="page-title">Configurações do Perfil</h1>
+            <p style="color: #666; margin-top: 10px;">Configure seus dados para automação do funil de vendas.</p>
+        </div>
+
+        <div class="config-card">
+            <div class="form-group">
+                <label for="full_name">Nome de Exibição</label>
+                <input type="text" id="full_name" placeholder="Ex: Dr. Samuel Dalle Laste">
+            </div>
+
+            <div class="form-group">
+                <label for="whatsapp">WhatsApp para Receber Leads</label>
+                <input type="tel" id="whatsapp" placeholder="Ex: 51999999999 (Apenas números)">
+                <small style="color: #888; display: block; margin-top: 5px;">Digite o número com DDD, sem espaços ou parênteses.</small>
+            </div>
+
+            <button class="btn-save" id="saveBtn">Salvar Configurações</button>
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <script>
+        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
+        
+        async function loadProfile() {
+            const { data: { session } } = await sb.auth.getSession();
+            if (!session) { window.location.href = 'index.html'; return; }
+
+            const { data: profile } = await sb
+                .from('profiles')
+                .select('*')
+                .eq('id', session.user.id)
+                .single();
+
+            if (profile) {
+                document.getElementById('full_name').value = profile.full_name || '';
+                document.getElementById('whatsapp').value = profile.whatsapp || '';
+            }
+        }
+
+        document.getElementById('saveBtn').onclick = async () => {
+            const btn = document.getElementById('saveBtn');
+            const msg = document.getElementById('message');
+            const name = document.getElementById('full_name').value;
+            const wa = document.getElementById('whatsapp').value;
+
+            btn.disabled = true;
+            btn.textContent = 'Salvando...';
+
+            const { data: { session } } = await sb.auth.getSession();
+            
+            const { error } = await sb
+                .from('profiles')
+                .update({ full_name: name, whatsapp: wa })
+                .eq('id', session.user.id);
+
+            btn.disabled = false;
+            btn.textContent = 'Salvar Configurações';
+
+            if (error) {
+                msg.textContent = 'Erro ao salvar: ' + error.message;
+                msg.style.color = 'red';
+            } else {
+                msg.textContent = 'Configurações salvas com sucesso!';
+                msg.style.color = 'green';
+            }
+        };
+
+        loadProfile();
+    </script>
+</body>
+</html>

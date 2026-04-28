@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vídeos | ShapeTrack</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f6f5;
+            --sidebar-bg: #2F5948;
+            --accent: #D96C2B;
+            --text-main: #1a1a1a;
+            --text-dim: #666666;
+            --sidebar-text: #ffffff;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            color: var(--sidebar-text);
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            display: block;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 20px;
+        }
+
+        .page-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--sidebar-bg);
+            margin: 0;
+        }
+
+        .btn-primary {
+            background: var(--sidebar-bg);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #234538;
+        }
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(47, 89, 72, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .video-thumb {
+            width: 100%;
+            height: 180px;
+            background: #e0e0e0;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .video-info {
+            padding: 20px;
+        }
+
+        .video-info h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--sidebar-bg);
+            margin-bottom: 8px;
+        }
+
+        .video-info p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 15px;
+        }
+
+        .btn-delete {
+            background: none;
+            border: none;
+            color: #e63946;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h2 {
+            font-weight: 800;
+            color: var(--sidebar-bg);
+            margin-bottom: 20px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-cancel {
+            background: #f0f0f0;
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-dim);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
+        <nav id="nav-links">
+            <a href="dashboard.html" class="nav-item">Dashboard</a>
+            <a href="videos.html" class="nav-item active">Vídeos</a>
+            <a href="parcerias.html" class="nav-item">Parcerias</a>
+            <a href="alunos.html" class="nav-item">Alunos</a>
+            <a href="leads_admin.html" class="nav-item">Leads do Funil</a>
+            <a href="configuracoes.html" class="nav-item">Configurações</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1 class="page-title">Minha Biblioteca</h1>
+            <button class="btn-primary" onclick="openModal()">+ Novo Vídeo</button>
+        </div>
+
+        <div id="video-grid" class="video-grid">
+            <div class="empty-state">Carregando seus vídeos...</div>
+        </div>
+    </div>
+
+    <!-- Modal Adicionar -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <h2>Adicionar Vídeo</h2>
+            <input type="text" id="videoTitle" placeholder="Ex: Treino de Inferiores Avançado">
+            <input type="text" id="videoUrl" placeholder="Link do YouTube">
+            
+            <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="isPublic" style="width: auto; margin: 0;">
+                <label for="isPublic" style="font-size: 0.9rem; color: var(--sidebar-bg); cursor: pointer;">
+                    Disponibilizar para parcerias (Colab)
+                </label>
+            </div>
+
+            <div id="modal-error" style="color: red; font-size: 0.85rem; margin-bottom: 10px;"></div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                <button class="btn-primary" onclick="handleSave()" id="btnSave">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://xsgjttyrxhwmtxlvbdoa.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentUser = null;
+        let editingVideoId = null;
+
+        async function init() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = 'index.html';
+                return;
+            }
+            currentUser = session.user;
+            loadVideos();
+        }
+
+        // Extrai o ID do YouTube de qualquer formato de link
+        function getYouTubeID(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        async function loadVideos() {
+            const { data: videos, error } = await supabaseClient
+                .from('videos')
+                .select('*')
+                .eq('mentor_id', currentUser.id)
+                .order('created_at', { ascending: false });
+
+            const grid = document.getElementById('video-grid');
+            grid.innerHTML = '';
+
+            if (error) {
+                console.error(error);
+                grid.innerHTML = '<div class="empty-state">Erro ao carregar vídeos.</div>';
+                return;
+            }
+
+            if (videos.length === 0) {
+                grid.innerHTML = '<div class="empty-state">Sua biblioteca está vazia. Adicione o seu primeiro vídeo!</div>';
+                return;
+            }
+
+            videos.forEach(video => {
+                const ytId = getYouTubeID(video.youtube_url);
+                const thumbUrl = ytId ? `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg` : '';
+                const publicBadge = video.is_public_to_mentors ? '<span style="background: var(--accent); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; position: absolute; top: 10px; right: 10px; font-weight: bold;">COLAB ATIVA</span>' : '';
+                
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <div class="video-thumb" style="background-image: url('${thumbUrl}')">
+                        ${publicBadge}
+                    </div>
+                    <div class="video-info">
+                        <h3>${video.title}</h3>
+                        <p>Adicionado em ${new Date(video.created_at).toLocaleDateString('pt-BR')}</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                            <button class="btn-small" onclick='openEditModal(${JSON.stringify(video)})' style="border: 1px solid #ddd; padding: 5px 10px; border-radius: 4px; font-weight: 600; cursor: pointer;">Editar</button>
+                            <button class="btn-delete" onclick="deleteVideo('${video.id}')">Excluir</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function handleSave() {
+            if (editingVideoId) {
+                await updateVideo();
+            } else {
+                await saveVideo();
+            }
+        }
+
+        async function saveVideo() {
+            const title = document.getElementById('videoTitle').value;
+            const url = document.getElementById('videoUrl').value;
+            const isPublic = document.getElementById('isPublic').checked;
+            const errorDiv = document.getElementById('modal-error');
+
+            if (!title || !url) {
+                errorDiv.textContent = 'Preencha todos os campos.';
+                return;
+            }
+
+            if (!getYouTubeID(url)) {
+                errorDiv.textContent = 'Link do YouTube inválido.';
+                return;
+            }
+
+            document.getElementById('btnSave').textContent = 'Salvando...';
+
+            const { error } = await supabaseClient
+                .from('videos')
+                .insert([
+                    { 
+                        mentor_id: currentUser.id, 
+                        title: title, 
+                        youtube_url: url,
+                        is_public_to_mentors: isPublic 
+                    }
+                ]);
+
+            if (error) {
+                errorDiv.textContent = 'Erro ao salvar: ' + error.message;
+                document.getElementById('btnSave').textContent = 'Salvar';
+            } else {
+                closeModal();
+                loadVideos();
+            }
+        }
+
+        async function updateVideo() {
+            const title = document.getElementById('videoTitle').value;
+            const url = document.getElementById('videoUrl').value;
+            const isPublic = document.getElementById('isPublic').checked;
+            const errorDiv = document.getElementById('modal-error');
+
+            document.getElementById('btnSave').textContent = 'Atualizando...';
+
+            const { error } = await supabaseClient
+                .from('videos')
+                .update({ 
+                    title: title, 
+                    youtube_url: url,
+                    is_public_to_mentors: isPublic 
+                })
+                .eq('id', editingVideoId);
+
+            if (error) {
+                errorDiv.textContent = 'Erro ao atualizar: ' + error.message;
+                document.getElementById('btnSave').textContent = 'Salvar';
+            } else {
+                closeModal();
+                loadVideos();
+            }
+        }
+
+        function openEditModal(video) {
+            editingVideoId = video.id;
+            document.getElementById('videoModal').querySelector('h2').textContent = 'Editar Vídeo';
+            document.getElementById('videoTitle').value = video.title;
+            document.getElementById('videoUrl').value = video.youtube_url;
+            document.getElementById('isPublic').checked = video.is_public_to_mentors;
+            document.getElementById('modal-error').textContent = '';
+            document.getElementById('videoModal').style.display = 'flex';
+        }
+
+        async function deleteVideo(id) {
+            if(confirm('Tem certeza que deseja excluir este vídeo?')) {
+                await supabaseClient.from('videos').delete().eq('id', id);
+                loadVideos();
+            }
+        }
+
+        function openModal() {
+            editingVideoId = null;
+            document.getElementById('videoModal').querySelector('h2').textContent = 'Adicionar Vídeo';
+            document.getElementById('videoTitle').value = '';
+            document.getElementById('videoUrl').value = '';
+            document.getElementById('isPublic').checked = false;
+            document.getElementById('modal-error').textContent = '';
+            document.getElementById('videoModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('videoModal').style.display = 'none';
+        }
+
+        init();
+    </script>
+</body>
+</html>

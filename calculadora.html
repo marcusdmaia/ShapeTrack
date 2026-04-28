@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Inteligente | ShapeTrack</title>
+    <!-- SEO & Social Media Meta Tags -->
+    <meta name="description" content="Descubra sua meta ideal de calorias, proteínas, carboidratos e gorduras em poucos segundos.">
+    <meta property="og:title" content="Calculadora de Macros Inteligente | ShapeTrack">
+    <meta property="og:description" content="Saiba exatamente o que comer para alcançar seu objetivo físico.">
+    <meta property="og:image" content="https://xsgjttyrxhwmtxlvbdoa.supabase.co/storage/v1/object/public/assets/og-image-funnel.png">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#2F5948">
+    <link rel="icon" type="image/png" href="https://xsgjttyrxhwmtxlvbdoa.supabase.co/storage/v1/object/public/assets/favicon.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --bg: #f4f6f5; 
+            --primary: #2F5948; 
+            --accent: #D96C2B; 
+            --text: #1a1a1a; 
+        }
+        body { 
+            background: var(--bg); 
+            font-family: 'Inter', sans-serif; 
+            color: var(--text); 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            overflow: hidden; 
+        }
+        .quiz-container { 
+            width: 100%; 
+            max-width: 480px; 
+            background: white; 
+            padding: 40px; 
+            border-radius: 24px; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1); 
+            margin: 20px; 
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .logo { 
+            text-align: center; 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            color: var(--primary); 
+            margin-bottom: 30px; 
+            letter-spacing: -0.5px; 
+        }
+        .logo span { color: var(--accent); }
+        .progress-bar { 
+            width: 100%; 
+            height: 6px; 
+            background: #eee; 
+            border-radius: 10px; 
+            margin-bottom: 40px; 
+            overflow: hidden; 
+        }
+        .progress-fill { 
+            height: 100%; 
+            background: var(--accent); 
+            width: 0%; 
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        .step { 
+            display: none; 
+            animation: slideIn 0.5s ease; 
+        }
+        .step.active { display: block; }
+        
+        @keyframes slideIn { 
+            from { opacity: 0; transform: translateX(20px); } 
+            to { opacity: 1; transform: translateX(0); } 
+        }
+
+        h2 { 
+            font-weight: 800; 
+            font-size: 1.8rem; 
+            color: var(--primary); 
+            text-align: center; 
+            margin-bottom: 25px; 
+            letter-spacing: -0.5px;
+        }
+        p.desc { text-align: center; color: #666; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.5; }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn { 
+            width: 100%; 
+            padding: 20px; 
+            background: #fff; 
+            border: 2px solid #eee; 
+            border-radius: 16px; 
+            font-size: 1.05rem; 
+            font-weight: 600; 
+            color: var(--text); 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            text-align: center;
+        }
+        .option-btn:hover { 
+            border-color: var(--primary); 
+            background: rgba(47, 89, 72, 0.03); 
+            transform: translateY(-2px);
+        }
+        
+        input { 
+            width: 100%; 
+            padding: 20px; 
+            border: 2px solid #eee; 
+            border-radius: 16px; 
+            font-size: 1.4rem; 
+            font-family: 'Inter', sans-serif; 
+            box-sizing: border-box; 
+            text-align: center; 
+            margin-bottom: 20px; 
+            outline: none; 
+            transition: border-color 0.2s; 
+        }
+        input:focus { border-color: var(--primary); }
+
+        .btn-next { 
+            width: 100%; 
+            padding: 20px; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 16px; 
+            font-size: 1.1rem; 
+            font-weight: 800; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            margin-top: 10px;
+        }
+        .btn-next:hover { 
+            opacity: 0.9; 
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(47, 89, 72, 0.2);
+        }
+
+        /* Results */
+        .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+        .res-box { background: #f9f9f9; padding: 20px 15px; border-radius: 15px; text-align: center; border: 1px solid #eee; }
+        .res-label { font-size: 0.8rem; font-weight: 700; color: #888; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 1px; }
+        .res-val { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
+
+        .gift-card {
+            background: linear-gradient(135deg, rgba(217, 108, 43, 0.1) 0%, rgba(217, 108, 43, 0.05) 100%);
+            padding: 25px;
+            border-radius: 20px;
+            border: 2px dashed var(--accent);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .btn-whatsapp { 
+            background: #25D366; 
+            color: white; 
+            width: 100%; 
+            padding: 20px; 
+            border-radius: 16px; 
+            border: none; 
+            font-weight: 800; 
+            font-size: 1.1rem; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            text-decoration: none; 
+            transition: 0.2s; 
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.2);
+        }
+        .btn-whatsapp:hover { background: #1ebe57; transform: translateY(-2px); }
+
+        .input-label {
+            display: block;
+            text-align: left;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            padding-left: 5px;
+        }
+
+        #mentor-welcome {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 20px;
+            background: rgba(47, 89, 72, 0.05);
+            padding: 10px;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="logo">SHAPE<span>TRACK</span></div>
+    <div id="mentor-welcome" style="display: none;"></div>
+    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+    <!-- Passo 1: Sexo -->
+    <div class="step active" id="s1">
+        <h2>Qual seu sexo?</h2>
+        <div class="options-grid">
+            <button class="option-btn" onclick="select(1, 'gender', 'male')">Masculino</button>
+            <button class="option-btn" onclick="select(1, 'gender', 'female')">Feminino</button>
+        </div>
+    </div>
+
+    <!-- Passo 2: Peso -->
+    <div class="step" id="s2">
+        <h2>Qual seu peso atual?</h2>
+        <p class="desc">Isso nos ajuda a calcular sua taxa metabólica base.</p>
+        <input type="number" id="weight" placeholder="Ex: 75" step="0.1">
+        <button class="btn-next" onclick="nextStep(2)">Continuar</button>
+    </div>
+
+    <!-- Passo 3: Altura -->
+    <div class="step" id="s3">
+        <h2>Qual sua altura?</h2>
+        <p class="desc">Em centímetros (ex: 175 para 1,75m)</p>
+        <input type="number" id="height" placeholder="Ex: 175">
+        <button class="btn-next" onclick="nextStep(3)">Continuar</button>
+    </div>
+
+    <!-- Passo 4: Idade -->
+    <div class="step" id="s4">
+        <h2>Qual sua idade?</h2>
+        <input type="number" id="age" placeholder="Ex: 28">
+        <button class="btn-next" onclick="nextStep(4)">Continuar</button>
+    </div>
+
+    <!-- Passo 5: Atividade -->
+    <div class="step" id="s5">
+        <h2>Qual sua rotina de exercícios?</h2>
+        <div class="options-grid">
+            <button class="option-btn" onclick="select(5, 'act', '1.2')">Sedentário (Não treino)</button>
+            <button class="option-btn" onclick="select(5, 'act', '1.375')">Leve (1 a 3x na semana)</button>
+            <button class="option-btn" onclick="select(5, 'act', '1.55')">Moderado (3 a 5x na semana)</button>
+            <button class="option-btn" onclick="select(5, 'act', '1.725')">Intenso (Todos os dias)</button>
+        </div>
+    </div>
+
+    <!-- Passo 6: Objetivo -->
+    <div class="step" id="s6">
+        <h2>Qual o seu principal objetivo?</h2>
+        <div class="options-grid">
+            <button class="option-btn" onclick="select(6, 'goal', 'loss')">Emagrecer / Definir</button>
+            <button class="option-btn" onclick="select(6, 'goal', 'maintain')">Manter o Peso</button>
+            <button class="option-btn" onclick="select(6, 'goal', 'gain')">Ganhar Massa Muscular</button>
+        </div>
+    </div>
+
+    <!-- Passo 7: Dieta -->
+    <div class="step" id="s7">
+        <h2>Qual estilo de dieta prefere?</h2>
+        <div class="options-grid">
+            <button class="option-btn" onclick="select(7, 'diet', 'trad')">Tradicional (Balanceada)</button>
+            <button class="option-btn" onclick="select(7, 'diet', 'low')">Low Carb (Pouco Carbo)</button>
+            <button class="option-btn" onclick="select(7, 'diet', 'high')">High Carb (Mais Carbo)</button>
+        </div>
+    </div>
+
+    <!-- Passo 8: Lead Capture -->
+    <div class="step" id="s8">
+        <h2>Quase lá!</h2>
+        <p class="desc">Coloque seu whatsapp para receber de forma automatica os seus dados e montar sua dieta personalizada</p>
+        
+        <label class="input-label">Nome Completo</label>
+        <input type="text" id="lead_name" placeholder="Seu Nome" style="text-align: left; font-size: 1.1rem; padding: 15px;">
+        
+        <label class="input-label">WhatsApp</label>
+        <input type="tel" id="lead_whatsapp" placeholder="DDD + Número" style="text-align: left; font-size: 1.1rem; padding: 15px;">
+        
+        <button class="btn-next" style="background: var(--accent);" id="btn-reveal" onclick="finishQuiz()">REVELAR MEU RESULTADO</button>
+    </div>
+
+    <!-- Passo 9: Resultado Final -->
+    <div class="step" id="s9">
+        <h2>Suas Metas Diárias</h2>
+        <p class="desc" style="margin-bottom: 20px;">Calculamos a distribuição ideal para seu corpo e objetivo:</p>
+        
+        <div class="res-grid">
+            <div class="res-box"><span class="res-label">Proteínas</span><div class="res-val" id="r-prot">--g</div></div>
+            <div class="res-box"><span class="res-label">Carboidratos</span><div class="res-val" id="r-carb">--g</div></div>
+            <div class="res-box"><span class="res-label">Gorduras</span><div class="res-val" id="r-fat">--g</div></div>
+            <div class="res-box"><span class="res-label">Fibras</span><div class="res-val" id="r-fib">--g</div></div>
+            <div class="res-box"><span class="res-label">Calorias</span><div class="res-val" id="r-cal" style="color: var(--accent);">--</div></div>
+            <div class="res-box"><span class="res-label">Água/Dia</span><div class="res-val" id="r-water" style="color: #2980b9;">--L</div></div>
+        </div>
+
+        <div class="gift-card">
+            <span style="font-weight: 800; color: var(--accent); font-size: 1.1rem; display: block; margin-bottom: 10px;">🎁 PARABÉNS! VOCÊ GANHOU UM PRESENTE.</span>
+            <p style="font-size: 0.9rem; color: #555; margin-bottom: 20px;">Preparamos um <b>Guia de Alimentação</b> exclusivo para você montar sua dieta hoje mesmo.</p>
+            <a href="#" id="wa-link" target="_blank" class="btn-whatsapp">
+                PEGAR MEU MATERIAL NO WHATSAPP
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
+    const mentorId = new URLSearchParams(window.location.search).get('ref');
+    
+    let answers = { gender: '', weight: 0, height: 0, age: 0, act: 0, goal: '', diet: '' };
+    let totalSteps = 9;
+
+    async function initMentor() {
+        if(mentorId) {
+            const { data: profile } = await sb.from('profiles').select('full_name').eq('id', mentorId).single();
+            if(profile) {
+                const welcome = document.getElementById('mentor-welcome');
+                welcome.textContent = `Mentoria: ${profile.full_name}`;
+                welcome.style.display = 'block';
+            }
+        }
+    }
+
+    function updateProgress(step) {
+        document.getElementById('progress').style.width = ((step - 1) / (totalSteps - 1)) * 100 + '%';
+    }
+
+    function goToStep(curr, next) {
+        document.getElementById('s' + curr).classList.remove('active');
+        document.getElementById('s' + next).classList.add('active');
+        updateProgress(next);
+    }
+
+    function select(step, key, val) {
+        answers[key] = val;
+        goToStep(step, step + 1);
+    }
+
+    function nextStep(step) {
+        if(step === 2) { 
+            answers.weight = parseFloat(document.getElementById('weight').value); 
+            if(!answers.weight) { alert('Informe seu peso.'); return; }
+        }
+        if(step === 3) { 
+            answers.height = parseFloat(document.getElementById('height').value); 
+            if(!answers.height) { alert('Informe sua altura.'); return; }
+        }
+        if(step === 4) { 
+            answers.age = parseInt(document.getElementById('age').value); 
+            if(!answers.age) { alert('Informe sua idade.'); return; }
+        }
+        goToStep(step, step + 1);
+    }
+
+    async function finishQuiz() {
+        const name = document.getElementById('lead_name').value;
+        const wa = document.getElementById('lead_whatsapp').value;
+        if(!name || !wa) { alert('Preencha seu Nome e WhatsApp para ver o resultado!'); return; }
+
+        document.getElementById('btn-reveal').textContent = 'CALCULANDO...';
+
+        // 1. Cálculos de Macros
+        // Taxa Metabólica Basal (Mifflin-St Jeor)
+        let bmr = (10 * answers.weight) + (6.25 * answers.height) - (5 * answers.age);
+        bmr = (answers.gender === 'male') ? bmr + 5 : bmr - 161;
+        
+        // Gasto Calórico Total
+        let tdee = bmr * parseFloat(answers.act);
+        
+        // Ajuste por Objetivo
+        if(answers.goal === 'loss') tdee -= 500;
+        if(answers.goal === 'gain') tdee += 400;
+
+        const cal = Math.round(tdee);
+        const prot = Math.round(answers.weight * 2.2); // 2.2g/kg de proteína
+        
+        // Gordura baseada na dieta
+        let fatMult = 0.8;
+        if(answers.diet === 'low') fatMult = 1.2;
+        if(answers.diet === 'high') fatMult = 0.6;
+        const fat = Math.round(answers.weight * fatMult);
+
+        // Carboidratos (Restante)
+        let carbCals = cal - (prot * 4) - (fat * 9);
+        let carb = Math.round(carbCals > 0 ? carbCals / 4 : 0);
+        
+        // Fibras (Média 14g por 1000kcal)
+        const fib = Math.round((cal / 1000) * 14);
+
+        // Água (40ml por kg)
+        const water = (answers.weight * 0.04).toFixed(1);
+
+        const resultsData = { calories: cal, protein: prot, carbs: carb, fats: fat, fibers: fib, water: water };
+
+        // 2. Salvar Lead no Supabase
+        const { error: insertError } = await sb.from('leads').insert([{ 
+            mentor_id: mentorId, 
+            full_name: name, 
+            whatsapp: wa, 
+            goal: answers.goal, 
+            calculated_data: resultsData 
+        }]);
+
+        if (insertError) {
+            console.error("Erro ao salvar lead:", insertError);
+            alert("Erro ao salvar seus dados: " + insertError.message);
+        }
+
+        // 3. Buscar WhatsApp do Mentor para o botão
+        let mentorPhone = '';
+        let mentorName = 'seu mentor';
+        if(mentorId) {
+            const { data: profile } = await sb.from('profiles').select('whatsapp, full_name').eq('id', mentorId).single();
+            if(profile) {
+                if(profile.whatsapp) mentorPhone = profile.whatsapp.replace(/\D/g, '');
+                if(profile.full_name) mentorName = profile.full_name;
+            }
+        }
+
+        // 4. Configurar UI Final
+        document.getElementById('r-prot').textContent = prot + 'g';
+        document.getElementById('r-carb').textContent = carb + 'g';
+        document.getElementById('r-fat').textContent = fat + 'g';
+        document.getElementById('r-fib').textContent = fib + 'g';
+        document.getElementById('r-cal').textContent = cal + ' kcal';
+        document.getElementById('r-water').textContent = water + 'L';
+
+        const textMsg = encodeURIComponent(`Olá ${mentorName}! Acabei de fazer o teste na Calculadora ShapeTrack. Meu resultado foi:\n🔥 Calorias: ${cal} kcal\n🥩 Proteína: ${prot}g\n🍞 Carbo: ${carb}g\n🥑 Gordura: ${fat}g\n💧 Água: ${water}L\n\nQuero meu presente (Guia de Alimentação)!`);
+        
+        const waLink = document.getElementById('wa-link');
+        if (mentorPhone) {
+            waLink.href = `https://wa.me/55${mentorPhone}?text=${textMsg}`;
+        } else {
+            waLink.onclick = (e) => {
+                e.preventDefault();
+                alert('O mentor ainda não configurou o WhatsApp, mas seus dados foram salvos!');
+            };
+        }
+
+        goToStep(8, 9);
+    }
+
+    initMentor();
+</script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leads | ShapeTrack</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f6f5;
+            --sidebar-bg: #2F5948;
+            --accent: #D96C2B;
+            --text-main: #1a1a1a;
+            --text-dim: #666666;
+            --sidebar-text: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            color: var(--sidebar-text);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            display: block;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--sidebar-bg);
+            margin: 0;
+        }
+
+        .btn-copy {
+            background: var(--accent);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Leads Table */
+        .leads-table {
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            border-collapse: collapse;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .leads-table th {
+            text-align: left;
+            padding: 18px;
+            background: #fafafa;
+            color: var(--sidebar-bg);
+            font-weight: 700;
+        }
+
+        .leads-table td {
+            padding: 18px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .btn-whatsapp {
+            background: #25d366;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .badge-goal {
+            background: #f0f4f2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--sidebar-bg);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-dim);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
+        <nav id="nav-links">
+            <a href="dashboard.html" class="nav-item">Dashboard</a>
+            <a href="videos.html" class="nav-item">Vídeos</a>
+            <a href="parcerias.html" class="nav-item">Parcerias</a>
+            <a href="alunos.html" class="nav-item">Alunos</a>
+            <a href="leads_admin.html" class="nav-item active">Leads do Funil</a>
+            <a href="configuracoes.html" class="nav-item">Configurações</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div>
+                <h1 class="page-title">Gestão de Leads</h1>
+                <p style="color: var(--text-dim); margin-top: 5px;">Pessoas que usaram seu calculador de macros.</p>
+            </div>
+            <button class="btn-copy" onclick="copyFunnelLink()">Copiar Link do Funil</button>
+        </div>
+
+        <table class="leads-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Nome do Lead</th>
+                    <th>Objetivo</th>
+                    <th>Calorias/Fibras</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="leads-list">
+                <tr>
+                    <td colspan="5" class="empty-state">Carregando seus leads...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
+        
+        let currentUser = null;
+
+        async function init() {
+            const { data: { session } } = await sb.auth.getSession();
+            if (!session) { window.location.href = 'index.html'; return; }
+            currentUser = session.user;
+            loadLeads();
+        }
+
+        async function loadLeads() {
+            const tbody = document.getElementById('leads-list');
+            
+            const { data: leads, error } = await sb
+                .from('leads')
+                .select('*')
+                .eq('mentor_id', currentUser.id)
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error("Erro ao carregar leads:", error);
+                tbody.innerHTML = `<tr><td colspan="5" class="empty-state">Erro ao carregar dados: ${error.message}</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+
+            if (!leads || leads.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum lead capturado ainda. Divulgue seu link!</td></tr>';
+                return;
+            }
+
+            leads.forEach(lead => {
+                const tr = document.createElement('tr');
+                const date = new Date(lead.created_at).toLocaleDateString('pt-BR');
+                const macros = lead.calculated_data;
+                
+                tr.innerHTML = `
+                    <td style="font-size: 0.85rem; color: #888;">${date}</td>
+                    <td style="font-weight: 700;">${lead.full_name}</td>
+                    <td><span class="badge-goal">${lead.goal === 'loss' ? 'Emagrecimento' : (lead.goal === 'gain' ? 'Hipertrofia' : 'Manutenção')}</span></td>
+                    <td style="font-size: 0.85rem;">${macros.calories} kcal | ${macros.water}L Água</td>
+                    <td>
+                        <a href="https://wa.me/55${lead.whatsapp.replace(/\D/g,'')}" target="_blank" class="btn-whatsapp">Chamar Whats</a>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function copyFunnelLink() {
+            const baseUrl = window.location.href.split('/').slice(0, -1).join('/');
+            const funnelUrl = `${baseUrl}/calculadora.html?ref=${currentUser.id}`;
+            navigator.clipboard.writeText(funnelUrl).then(() => {
+                alert('Link do seu Funil de Vendas copiado!');
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
