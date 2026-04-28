@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Diagnóstico do Sistema | ShapeTrack</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f0f4f2; padding: 40px; color: #1a1c1b; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 800px; margin: 0 auto; }
+        h1 { color: #2F5948; margin-bottom: 10px; }
+        .status { padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; font-weight: 600; }
+        .ok { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+        .error { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+        .warning { background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
+        pre { background: #1a1c1b; color: #00ff00; padding: 20px; border-radius: 10px; overflow-x: auto; font-size: 13px; }
+        button { background: #2F5948; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>🔍 Check-up do Sistema</h1>
+        <p>Verificando conexão com Supabase e integridade das tabelas...</p>
+        <hr style="margin: 20px 0; opacity: 0.1;">
+        
+        <div id="results">
+            <p>Iniciando testes...</p>
+        </div>
+
+        <div id="sql-fix" style="display: none; margin-top: 30px;">
+            <h3>🛠️ Como corrigir erros:</h3>
+            <p>Se algum teste falhou, copie o código abaixo e cole no <b>SQL Editor</b> do seu Supabase:</p>
+            <pre id="sql-code">
+-- Comandos de correção serão gerados aqui
+            </pre>
+            <button onclick="window.location.href='dashboard.html'">Ir para o Sistema</button>
+        </div>
+    </div>
+
+    <script>
+        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
+        const results = document.getElementById('results');
+        const sqlFix = document.getElementById('sql-fix');
+        const sqlCode = document.getElementById('sql-code');
+
+        async function runTests() {
+            results.innerHTML = '';
+            let hasErrors = false;
+            let missingCols = [];
+
+            // 1. Testar Conexão Base
+            try {
+                const { data, error } = await sb.from('profiles').select('count', { count: 'exact', head: true });
+                if(error) throw error;
+                addResult('Conexão com Supabase', 'OK', 'ok');
+            } catch(e) {
+                addResult('Conexão com Supabase', 'FALHOU: ' + e.message, 'error');
+                hasErrors = true;
+            }
+
+            // 2. Testar Colunas de CRM em Profiles
+            try {
+                const { data, error } = await sb.from('profiles').select('birthday, business_presented, next_assessment_date').limit(1);
+                if(error) {
+                    addResult('Colunas CRM (Profiles)', 'FALTANDO: ' + error.message, 'warning');
+                    missingCols.push('ALTER TABLE profiles ADD COLUMN IF NOT EXISTS birthday DATE, ADD COLUMN IF NOT EXISTS business_presented BOOLEAN DEFAULT FALSE, ADD COLUMN IF NOT EXISTS next_assessment_date DATE;');
+                    hasErrors = true;
+                } else {
+                    addResult('Colunas CRM (Profiles)', 'TODAS OK', 'ok');
+                }
+            } catch(e) {}
+
+            // 3. Testar Tabela de Vendas
+            try {
+                const { error } = await sb.from('sales').select('*').limit(1);
+                if(error) {
+                    addResult('Tabela de Vendas', 'NÃO ENCONTRADA OU SEM ACESSO', 'error');
+                    missingCols.push('-- Criar tabela de vendas\nCREATE TABLE IF NOT EXISTS sales (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  created_at TIMESTAMPTZ DEFAULT NOW(),\n  client_id UUID REFERENCES profiles(id),\n  mentor_id UUID REFERENCES profiles(id),\n  total_price NUMERIC,\n  total_pv NUMERIC,\n  payment_status TEXT,\n  amount_paid NUMERIC,\n  due_date DATE,\n  items JSONB\n);');
+                    hasErrors = true;
+                } else {
+                    addResult('Tabela de Vendas', 'OK', 'ok');
+                }
+            } catch(e) {}
+
+            if(hasErrors) {
+                sqlFix.style.display = 'block';
+                sqlCode.textContent = missingCols.join('\n\n');
+            } else {
+                results.innerHTML += '<div class="status ok">✅ TUDO PRONTO! Seu sistema está 100% operacional.</div>';
+                results.innerHTML += '<button onclick="window.location.href=\'dashboard.html\'" style="margin-top:20px">Acessar Sistema</button>';
+            }
+        }
+
+        function addResult(test, msg, style) {
+            results.innerHTML += `<div class="status ${style}"><b>${test}:</b> ${msg}</div>`;
+        }
+
+        runTests();
+    </script>
+</body>
+</html>

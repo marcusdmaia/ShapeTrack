@@ -289,31 +289,8 @@
 
     <aside class="sidebar">
         <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
-        <nav class="nav-links">
-            <a href="dashboard.html" class="nav-item">
-                <i class="fas fa-home"></i>
-                <span>Início</span>
-            </a>
-            <a href="videos.html" class="nav-item">
-                <i class="fas fa-play-circle"></i>
-                <span>Vídeos</span>
-            </a>
-            <a href="parcerias.html" class="nav-item">
-                <i class="fas fa-handshake"></i>
-                <span>Parcerias</span>
-            </a>
-            <a href="alunos.html" class="nav-item">
-                <i class="fas fa-users"></i>
-                <span>Alunos</span>
-            </a>
-            <a href="leads_admin.html" class="nav-item active">
-                <i class="fas fa-filter"></i>
-                <span>Leads</span>
-            </a>
-            <a href="configuracoes.html" class="nav-item">
-                <i class="fas fa-cog"></i>
-                <span>Ajustes</span>
-            </a>
+        <nav id="nav-links" class="nav-links">
+            <!-- Dynamic Nav -->
         </nav>
     </aside>
 
@@ -323,10 +300,16 @@
                 <h1 class="page-title">Gestão de Leads</h1>
                 <p style="color: var(--text-dim);">Pessoas que calcularam seus macros através do seu link.</p>
             </div>
-            <button class="btn-copy" onclick="copyFunnelLink()">
-                <i class="fas fa-link"></i>
-                Link do Funil
-            </button>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="search-box-container" style="background: white; padding: 10px 15px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 10px; width: 250px;">
+                    <i class="fas fa-search" style="color: var(--text-dim);"></i>
+                    <input type="text" id="search-leads" placeholder="Buscar lead..." oninput="filterLeads()" style="border: none; outline: none; width: 100%; font-size: 0.9rem;">
+                </div>
+                <button class="btn-copy" onclick="copyFunnelLink()">
+                    <i class="fas fa-link"></i>
+                    Link do Funil
+                </button>
+            </div>
         </header>
 
         <div id="leads-list" class="leads-grid">
@@ -346,12 +329,36 @@
             const { data: { session } } = await sb.auth.getSession();
             if (!session) { window.location.href = 'index.html'; return; }
             currentUser = session.user;
+
+            const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+            if (profile) setupNav(profile);
+
             loadLeads();
         }
 
+        function setupNav(profile) {
+            const nav = document.getElementById('nav-links');
+            let navHtml = `
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
+                <a href="crm_dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Gestão 360</span></a>
+                <a href="vendas.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Vendas</span></a>
+            `;
+
+            if (profile.role === 'admin' || profile.role === 'superadmin') {
+                navHtml += `
+                    <a href="videos.html" class="nav-item"><i class="fas fa-play-circle"></i><span>Vídeos</span></a>
+                    <a href="parcerias.html" class="nav-item"><i class="fas fa-handshake"></i><span>Parcerias</span></a>
+                    <a href="alunos.html" class="nav-item"><i class="fas fa-users"></i><span>Alunos</span></a>
+                    <a href="leads_admin.html" class="nav-item active"><i class="fas fa-filter"></i><span>Leads</span></a>
+                    <a href="configuracoes.html" class="nav-item"><i class="fas fa-cog"></i><span>Ajustes</span></a>
+                `;
+            }
+            nav.innerHTML = navHtml;
+        }
+
+        let allLeads = [];
+
         async function loadLeads() {
-            const container = document.getElementById('leads-list');
-            
             const { data: leads, error } = await sb
                 .from('leads')
                 .select('*')
@@ -359,18 +366,33 @@
                 .order('created_at', { ascending: false });
 
             if (error) {
-                container.innerHTML = `<div class="empty-state">Erro ao carregar leads: ${error.message}</div>`;
+                document.getElementById('leads-list').innerHTML = `<div class="empty-state">Erro ao carregar leads: ${error.message}</div>`;
                 return;
             }
 
+            allLeads = leads || [];
+            renderLeadsList(allLeads);
+        }
+
+        function filterLeads() {
+            const query = document.getElementById('search-leads').value.toLowerCase();
+            const filtered = allLeads.filter(l => 
+                (l.full_name || '').toLowerCase().includes(query) || 
+                (l.whatsapp || '').includes(query)
+            );
+            renderLeadsList(filtered);
+        }
+
+        function renderLeadsList(list) {
+            const container = document.getElementById('leads-list');
             container.innerHTML = '';
 
-            if (!leads || leads.length === 0) {
-                container.innerHTML = '<div class="empty-state">Nenhum lead capturado ainda. Divulgue seu link do funil!</div>';
+            if (list.length === 0) {
+                container.innerHTML = '<div class="empty-state">Nenhum lead encontrado.</div>';
                 return;
             }
 
-            leads.forEach(lead => {
+            list.forEach(lead => {
                 const date = new Date(lead.created_at).toLocaleDateString('pt-BR');
                 const macros = lead.calculated_data;
                 const goalText = lead.goal === 'loss' ? 'Emagrecimento' : (lead.goal === 'gain' ? 'Hipertrofia' : 'Manutenção');
@@ -395,12 +417,38 @@
                             </div>
                         </div>
                     </div>
-                    <a href="https://wa.me/55${lead.whatsapp.replace(/\D/g,'')}" target="_blank" class="btn-whatsapp">
-                        <i class="fab fa-whatsapp"></i> Chamar no Whats
-                    </a>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-copy" style="background: var(--primary);" onclick='convertLeadToStudent(${JSON.stringify(lead)})'>
+                            <i class="fas fa-user-graduate"></i> Virar Aluno
+                        </button>
+                        <a href="https://wa.me/55${lead.whatsapp.replace(/\D/g,'')}" target="_blank" class="btn-whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
                 `;
                 container.appendChild(card);
             });
+        }
+
+        async function convertLeadToStudent(lead) {
+            if(!confirm(`Deseja transformar ${lead.full_name} em aluno oficial?`)) return;
+
+            // 1. Criar perfil do aluno (Sem email/senha por enquanto, apenas registro para bioimpedância)
+            const { data, error } = await sb.from('profiles').insert([{
+                full_name: lead.full_name,
+                role: 'client',
+                mentor_id: currentUser.id,
+                whatsapp: lead.whatsapp
+            }]);
+
+            if (error) {
+                alert('Erro ao converter: ' + error.message);
+            } else {
+                // 2. Opcional: Remover da lista de leads para não duplicar
+                await sb.from('leads').delete().eq('id', lead.id);
+                alert(`${lead.full_name} agora é seu aluno! Você já pode lançar avaliações para ele.`);
+                loadLeads();
+            }
         }
 
         function copyFunnelLink() {

@@ -256,31 +256,7 @@
 
     <aside class="sidebar">
         <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
-        <nav class="nav-links">
-            <a href="dashboard.html" class="nav-item">
-                <i class="fas fa-home"></i>
-                <span>Início</span>
-            </a>
-            <a href="videos.html" class="nav-item">
-                <i class="fas fa-play-circle"></i>
-                <span>Vídeos</span>
-            </a>
-            <a href="parcerias.html" class="nav-item">
-                <i class="fas fa-handshake"></i>
-                <span>Parcerias</span>
-            </a>
-            <a href="alunos.html" class="nav-item">
-                <i class="fas fa-users"></i>
-                <span>Alunos</span>
-            </a>
-            <a href="leads_admin.html" class="nav-item">
-                <i class="fas fa-filter"></i>
-                <span>Leads</span>
-            </a>
-            <a href="configuracoes.html" class="nav-item active">
-                <i class="fas fa-cog"></i>
-                <span>Ajustes</span>
-            </a>
+        <nav id="nav-links" class="nav-links">
         </nav>
     </aside>
 
@@ -324,8 +300,32 @@
             const { data: { session } } = await sb.auth.getSession();
             if (!session) { window.location.href = 'index.html'; return; }
             currentUser = session.user;
+            
+            const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+            if (profile) setupNav(profile);
+
             document.getElementById('email_display').value = currentUser.email;
             loadProfile();
+        }
+
+        function setupNav(profile) {
+            const nav = document.getElementById('nav-links');
+            let navHtml = `
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
+                <a href="crm_dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Gestão 360</span></a>
+                <a href="vendas.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Vendas</span></a>
+            `;
+
+            if (profile.role === 'admin' || profile.role === 'superadmin') {
+                navHtml += `
+                    <a href="videos.html" class="nav-item"><i class="fas fa-play-circle"></i><span>Vídeos</span></a>
+                    <a href="parcerias.html" class="nav-item"><i class="fas fa-handshake"></i><span>Parcerias</span></a>
+                    <a href="alunos.html" class="nav-item"><i class="fas fa-users"></i><span>Alunos</span></a>
+                    <a href="leads_admin.html" class="nav-item"><i class="fas fa-filter"></i><span>Leads</span></a>
+                    <a href="configuracoes.html" class="nav-item active"><i class="fas fa-cog"></i><span>Ajustes</span></a>
+                `;
+            }
+            nav.innerHTML = navHtml;
         }
 
         async function loadProfile() {

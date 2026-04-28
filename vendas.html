@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM de Vendas | ShapeTrack</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #f8faf9;
+            --primary: #2F5948;
+            --primary-light: #3d755e;
+            --accent: #D96C2B;
+            --text-main: #1a1c1b;
+            --text-dim: #64748b;
+            --white: #ffffff;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            --nav-bg: rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Desktop */
+        .sidebar {
+            width: 280px;
+            background: var(--primary);
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 48px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span { color: var(--accent); }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 14px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 48px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .grid-vendas {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 32px;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 14px 18px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(47, 89, 72, 0.05);
+        }
+
+        /* Product Search & List */
+        .product-search-container {
+            position: relative;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 100;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .search-item {
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-item:hover {
+            background: #f8fafc;
+        }
+
+        .search-item .name { font-weight: 600; font-size: 0.9rem; }
+        .search-item .sku { color: var(--text-dim); font-size: 0.8rem; }
+
+        /* Cart */
+        .cart-list {
+            margin-top: 24px;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 40px;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .cart-item .name { font-weight: 600; font-size: 0.9rem; }
+        .cart-item .price { font-weight: 700; color: var(--primary); }
+        .cart-item .qty-input { padding: 8px; text-align: center; }
+
+        .btn-remove {
+            color: #ef4444;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        /* Summary */
+        .summary {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 2px dashed #f1f5f9;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .summary-total {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 12px;
+        }
+
+        .btn-finish {
+            width: 100%;
+            padding: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 32px;
+            box-shadow: 0 4px 15px rgba(47, 89, 72, 0.2);
+        }
+
+        .btn-finish:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(47, 89, 72, 0.3);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 1024px) {
+            .grid-vendas { grid-template-columns: 1fr; }
+            .sidebar { width: 80px; padding: 40px 15px; }
+            .logo { font-size: 0; margin-bottom: 40px; justify-content: center; }
+            .logo span { font-size: 1.8rem; }
+            .nav-item span { display: none; }
+            .nav-item { justify-content: center; padding: 15px; }
+            .main-content { padding: 24px; }
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar {
+                width: 100%; height: 72px; padding: 0; position: fixed; bottom: 0; left: 0;
+                flex-direction: row; background: var(--nav-bg); backdrop-filter: blur(20px);
+                border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000;
+            }
+            .logo { display: none; }
+            .nav-links { flex-direction: row; width: 100%; height: 100%; gap: 0; }
+            .nav-item { flex: 1; flex-direction: column; gap: 5px; padding: 10px 0; border-radius: 0; color: #94a3b8; font-size: 0.65rem; font-weight: 600; }
+            .nav-item i { font-size: 1.3rem; }
+            .nav-item.active { background: transparent; color: var(--primary); }
+            .main-content { padding: 24px; padding-bottom: 100px; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
+        <nav id="nav-links" class="nav-links">
+            <!-- Dinâmico -->
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div>
+                <h1 class="page-title">Nova Venda</h1>
+                <p style="color: var(--text-dim);">Registre o consumo e venda de produtos Herbalife.</p>
+            </div>
+        </header>
+
+        <div class="grid-vendas">
+            <div class="card">
+                <h2 class="section-title"><i class="fas fa-shopping-basket"></i> Produtos e Descontos</h2>
+                
+                <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label>Cliente / Aluno</label>
+                        <input type="text" id="client-search" placeholder="🔍 Filtrar cliente..." oninput="filterClientList()" style="margin-bottom: 8px; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; width: 100%;">
+                        <select id="select-client">
+                            <option value="">Selecione um cliente...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Nível de Desconto</label>
+                        <select id="select-discount">
+                            <optgroup label="Cliente Premium">
+                                <option value="bronze">Bronze (14%)</option>
+                                <option value="silver">Prata (23%)</option>
+                                <option value="gold">Ouro (32%)</option>
+                            </optgroup>
+                            <optgroup label="Consultor">
+                                <option value="c25">Consultor (25%)</option>
+                                <option value="c35">Sênior (35%)</option>
+                                <option value="c42">Sucesso (42%)</option>
+                                <option value="c50">Supervisor (50%)</option>
+                            </optgroup>
+                            <option value="consumer" selected>Preço Cheio (Venda Direta)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group product-search-container">
+                    <label>Buscar Produto (Nome ou SKU)</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="product-input" placeholder="Ex: Shake Baunilha, Protein Crunch..." style="flex: 1;">
+                        <button class="btn-action" onclick="toggleCustomProduct()" title="Adicionar Item Manual"><i class="fas fa-plus"></i></button>
+                    </div>
+                    <div id="search-results" class="search-results"></div>
+                </div>
+
+                <!-- Painel de Produto Customizado (Escondido por padrão) -->
+                <div id="custom-product-form" style="display: none; background: #f1f5f9; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px dashed var(--primary);">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px;">
+                        <input type="text" id="custom-name" placeholder="Nome do Item">
+                        <input type="number" id="custom-price" placeholder="R$ Preço">
+                        <input type="number" id="custom-pv" placeholder="PV">
+                    </div>
+                    <button class="btn-action" style="width: 100%; margin-top: 10px; background: var(--primary); color: white;" onclick="addCustomItem()">Adicionar Item Especial</button>
+                </div>
+
+                <div class="cart-list" id="cart-list">
+                    <p style="text-align: center; color: var(--text-dim); padding: 40px;">Seu carrinho está vazio.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title"><i class="fas fa-receipt"></i> Resumo e Pagamento</h2>
+                
+                <div class="form-group">
+                    <label>Forma de Pagamento</label>
+                    <select id="payment-type" onchange="togglePartialPayment()">
+                        <option value="total">Pago Integralmente</option>
+                        <option value="partial">Pagamento Parcial (Entrada)</option>
+                        <option value="later">Pagar Depois (Fiado)</option>
+                    </select>
+                </div>
+
+                <div id="partial-fields" style="display: none; background: #fff7ed; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Valor Pago Agora</label>
+                            <input type="number" id="amount-paid" placeholder="0.00">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Data p/ Saldo</label>
+                            <input type="date" id="due-date">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 20px 0; display: flex; align-items: center; gap: 10px; background: #f0fdf4; padding: 12px; border-radius: 10px;">
+                    <input type="checkbox" id="business-presented" style="width: 20px; height: 20px;">
+                    <label style="margin-bottom: 0;">Apresentei a oportunidade de negócio hoje?</label>
+                </div>
+
+                <div class="summary">
+                    <div class="summary-row">
+                        <span>Volume de Pontos (PV):</span>
+                        <span id="total-pv">0.00</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total a Cobrar:</span>
+                        <span id="total-price">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <button class="btn-finish" id="btn-finish">Finalizar e Registrar Venda</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
+
+        // ... (Mesma lista de produtos anterior)
+
+        function toggleCustomProduct() {
+            const form = document.getElementById('custom-product-form');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addCustomItem() {
+            const name = document.getElementById('custom-name').value;
+            const price = parseFloat(document.getElementById('custom-price').value);
+            const pv = parseFloat(document.getElementById('custom-pv').value);
+
+            if (!name || isNaN(price)) return alert('Preencha os dados do produto.');
+
+            cart.push({
+                sku: 'CUSTOM-' + Date.now(),
+                name: name,
+                pv: pv || 0,
+                consumer: price,
+                custom: true,
+                qty: 1
+            });
+
+            renderCart();
+            toggleCustomProduct();
+            document.getElementById('custom-name').value = '';
+            document.getElementById('custom-price').value = '';
+            document.getElementById('custom-pv').value = '';
+        }
+
+        function togglePartialPayment() {
+            const type = document.getElementById('payment-type').value;
+            document.getElementById('partial-fields').style.display = (type === 'partial' || type === 'later') ? 'block' : 'none';
+        }
+
+        // ... (Mesma lógica de renderCart anterior, ajustada para preços customizados)
+        function renderCart() {
+            const container = document.getElementById('cart-list');
+            const discountLevel = document.getElementById('select-discount').value;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-dim); padding: 40px;">Seu carrinho está vazio.</p>';
+                updateSummary(0, 0, 0, 0);
+                return;
+            }
+
+            let totalPV = 0;
+            let totalPrice = 0;
+            let totalCost = 0;
+
+            container.innerHTML = cart.map(item => {
+                const price = item.custom ? item.consumer : (item[discountLevel] || item.consumer);
+                totalPV += item.pv * item.qty;
+                totalPrice += price * item.qty;
+                totalCost += (item.custom ? price * 0.5 : item.c50) * item.qty;
+
+                return `
+                    <div class="cart-item">
+                        <div class="name">${item.name} ${item.custom ? '⭐' : ''}</div>
+                        <input type="number" class="qty-input" value="${item.qty}" min="1" onchange="updateQty('${item.sku}', this.value)">
+                        <div class="price">R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                        <div class="btn-remove" onclick="removeFromCart('${item.sku}')"><i class="fas fa-trash-alt"></i></div>
+                    </div>
+                `;
+            }).join('');
+
+            updateSummary(cart.length, totalPV, totalPrice, totalCost);
+        }
+
+        function updateSummary(items, pv, price, cost) {
+            document.getElementById('total-items').textContent = items;
+            document.getElementById('total-pv').textContent = pv.toFixed(2);
+            document.getElementById('total-price').textContent = `R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+            
+            // Lucro estimado: Preço cobrado - Custo Supervisor (estimativa conservadora)
+            const profit = price - cost;
+            document.getElementById('est-profit').textContent = `R$ ${Math.max(0, profit).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+        }
+
+        document.getElementById('select-discount').addEventListener('change', renderCart);
+
+        document.getElementById('btn-finish').addEventListener('click', async () => {
+            const btn = document.getElementById('btn-finish');
+            if (cart.length === 0) return alert('Adicione produtos ao carrinho.');
+            
+            const clientId = document.getElementById('select-client').value;
+            if (!clientId) return alert('Selecione um cliente.');
+
+            const paymentType = document.getElementById('payment-type').value;
+            const amountPaid = parseFloat(document.getElementById('amount-paid').value) || 0;
+            const dueDate = document.getElementById('due-date').value;
+            const businessPresented = document.getElementById('business-presented').checked;
+
+            btn.disabled = true;
+            btn.textContent = 'Processando...';
+
+            try {
+                const { data: { session } } = await sb.auth.getSession();
+                
+                // 1. Salvar a Venda
+                const { error: saleError } = await sb.from('sales').insert([{
+                    client_id: clientId,
+                    mentor_id: session.user.id,
+                    total_price: parseFloat(document.getElementById('total-price').textContent.replace('R$ ', '').replace('.', '').replace(',', '.')),
+                    total_pv: parseFloat(document.getElementById('total-pv').textContent),
+                    payment_status: paymentType === 'total' ? 'Pago' : (paymentType === 'partial' ? 'Parcial' : 'Pendente'),
+                    amount_paid: amountPaid,
+                    due_date: dueDate || null,
+                    discount_level: document.getElementById('select-discount').value,
+                    items: cart
+                }]);
+
+                if (saleError) throw saleError;
+
+                // 2. Atualizar Status de Negócio do Cliente
+                if (businessPresented) {
+                    await sb.from('profiles').update({ business_presented: true }).eq('id', clientId);
+                }
+
+                alert('Venda registrada com sucesso! O Dashboard CRM já foi atualizado.');
+                cart = [];
+                renderCart();
+                window.location.href = 'crm_dashboard.html';
+
+            } catch (err) {
+                console.error(err);
+                alert('Erro ao salvar venda: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Finalizar e Registrar Venda';
+            }
+        });
+
+        async function init() {
+            const { data: { session } } = await sb.auth.getSession();
+            if (!session) { window.location.href = 'index.html'; return; }
+
+            const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+            if (profile) setupNav(profile);
+
+            loadClients();
+            setupSearch();
+        }
+
+        function setupNav(profile) {
+            const nav = document.getElementById('nav-links');
+            let navHtml = `
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
+                <a href="crm_dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Gestão 360</span></a>
+                <a href="vendas.html" class="nav-item active"><i class="fas fa-shopping-cart"></i><span>Vendas</span></a>
+            `;
+
+            if (profile.role === 'admin' || profile.role === 'superadmin') {
+                navHtml += `
+                    <a href="videos.html" class="nav-item"><i class="fas fa-play-circle"></i><span>Vídeos</span></a>
+                    <a href="parcerias.html" class="nav-item"><i class="fas fa-handshake"></i><span>Parcerias</span></a>
+                    <a href="alunos.html" class="nav-item"><i class="fas fa-users"></i><span>Alunos</span></a>
+                    <a href="leads_admin.html" class="nav-item"><i class="fas fa-filter"></i><span>Leads</span></a>
+                    <a href="configuracoes.html" class="nav-item"><i class="fas fa-cog"></i><span>Ajustes</span></a>
+                `;
+            }
+            nav.innerHTML = navHtml;
+        }
+
+        let allClients = [];
+
+        async function loadClients() {
+            const { data: clients } = await sb.from('profiles').select('id, full_name').eq('role', 'client');
+            allClients = clients || [];
+            renderClientOptions(allClients);
+        }
+
+        function renderClientOptions(list) {
+            const select = document.getElementById('select-client');
+            select.innerHTML = '<option value="">Selecione um cliente...</option>';
+            list.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.full_name;
+                select.appendChild(opt);
+            });
+        }
+
+        function filterClientList() {
+            const query = document.getElementById('client-search').value.toLowerCase();
+            const filtered = allClients.filter(c => c.full_name.toLowerCase().includes(query));
+            renderClientOptions(filtered);
+        }
+
+        function setupSearch() {
+            const input = document.getElementById('product-input');
+            const results = document.getElementById('search-results');
+
+            input.addEventListener('input', (e) => {
+                const val = e.target.value.toLowerCase();
+                if (val.length < 2) { results.style.display = 'none'; return; }
+
+                const filtered = products.filter(p => p.name.toLowerCase().includes(val) || p.sku.toLowerCase().includes(val));
+                results.innerHTML = filtered.map(p => `
+                    <div class="search-item" onclick="addToCart('${p.sku}')">
+                        <div>
+                            <div class="name">${p.name}</div>
+                            <div class="sku">${p.sku} | ${p.pv} PV</div>
+                        </div>
+                        <i class="fas fa-plus-circle" style="color: var(--primary);"></i>
+                    </div>
+                `).join('');
+                results.style.display = filtered.length ? 'block' : 'none';
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.product-search-container')) results.style.display = 'none';
+            });
+        }
+
+        function addToCart(sku) {
+            const product = products.find(p => p.sku === sku);
+            const existing = cart.find(item => item.sku === sku);
+
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            renderCart();
+            document.getElementById('product-input').value = '';
+            document.getElementById('search-results').style.display = 'none';
+        }
+
+        function removeFromCart(sku) {
+            cart = cart.filter(item => item.sku !== sku);
+            renderCart();
+        }
+
+        function updateQty(sku, qty) {
+            const item = cart.find(i => i.sku === sku);
+            if (item) {
+                item.qty = parseInt(qty) || 1;
+                renderCart();
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

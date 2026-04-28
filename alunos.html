@@ -141,6 +141,27 @@
             box-shadow: 0 8px 25px rgba(217, 108, 43, 0.4);
         }
 
+        .search-box-container {
+            position: relative;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 300px;
+        }
+
+        .search-box-container i { color: var(--text-dim); }
+        .search-box-container input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 0.9rem;
+            background: transparent;
+        }
+
         /* Alunos List */
         .alunos-grid {
             display: grid;
@@ -324,31 +345,7 @@
 
     <aside class="sidebar">
         <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
-        <nav class="nav-links">
-            <a href="dashboard.html" class="nav-item">
-                <i class="fas fa-home"></i>
-                <span>Início</span>
-            </a>
-            <a href="videos.html" class="nav-item">
-                <i class="fas fa-play-circle"></i>
-                <span>Vídeos</span>
-            </a>
-            <a href="parcerias.html" class="nav-item">
-                <i class="fas fa-handshake"></i>
-                <span>Parcerias</span>
-            </a>
-            <a href="alunos.html" class="nav-item active">
-                <i class="fas fa-users"></i>
-                <span>Alunos</span>
-            </a>
-            <a href="leads_admin.html" class="nav-item">
-                <i class="fas fa-filter"></i>
-                <span>Leads</span>
-            </a>
-            <a href="configuracoes.html" class="nav-item">
-                <i class="fas fa-cog"></i>
-                <span>Ajustes</span>
-            </a>
+        <nav id="nav-links" class="nav-links">
         </nav>
     </aside>
 
@@ -358,10 +355,16 @@
                 <h1 class="page-title">Meus Alunos</h1>
                 <p style="color: var(--text-dim);">Gerencie os acessos e acompanhe a evolução de cada aluno.</p>
             </div>
-            <button class="btn-invite" onclick="showInviteModal()">
-                <i class="fas fa-user-plus"></i>
-                Gerar Convite
-            </button>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <div class="search-box-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-alunos" placeholder="Buscar aluno..." oninput="filterAlunos()">
+                </div>
+                <button class="btn-invite" onclick="showInviteModal()">
+                    <i class="fas fa-user-plus"></i>
+                    Gerar Convite
+                </button>
+            </div>
         </header>
 
         <div id="alunos-list" class="alunos-grid">
@@ -402,8 +405,34 @@
                 return;
             }
             currentUser = session.user;
+
+            const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', currentUser.id).single();
+            if (profile) setupNav(profile);
+
             loadAlunos();
         }
+
+        function setupNav(profile) {
+            const nav = document.getElementById('nav-links');
+            let navHtml = `
+                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
+                <a href="crm_dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Gestão 360</span></a>
+                <a href="vendas.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Vendas</span></a>
+            `;
+
+            if (profile.role === 'admin' || profile.role === 'superadmin') {
+                navHtml += `
+                    <a href="videos.html" class="nav-item"><i class="fas fa-play-circle"></i><span>Vídeos</span></a>
+                    <a href="parcerias.html" class="nav-item"><i class="fas fa-handshake"></i><span>Parcerias</span></a>
+                    <a href="alunos.html" class="nav-item active"><i class="fas fa-users"></i><span>Alunos</span></a>
+                    <a href="leads_admin.html" class="nav-item"><i class="fas fa-filter"></i><span>Leads</span></a>
+                    <a href="configuracoes.html" class="nav-item"><i class="fas fa-cog"></i><span>Ajustes</span></a>
+                `;
+            }
+            nav.innerHTML = navHtml;
+        }
+
+        let allAlunos = [];
 
         async function loadAlunos() {
             const { data: alunos, error } = await supabaseClient
@@ -413,20 +442,31 @@
                 .eq('role', 'client')
                 .order('created_at', { ascending: false });
 
+            if (error) {
+                document.getElementById('alunos-list').innerHTML = '<div class="empty-state">Erro ao carregar lista de alunos.</div>';
+                return;
+            }
+
+            allAlunos = alunos || [];
+            renderAlunosList(allAlunos);
+        }
+
+        function filterAlunos() {
+            const query = document.getElementById('search-alunos').value.toLowerCase();
+            const filtered = allAlunos.filter(a => (a.full_name || '').toLowerCase().includes(query));
+            renderAlunosList(filtered);
+        }
+
+        function renderAlunosList(list) {
             const container = document.getElementById('alunos-list');
             container.innerHTML = '';
 
-            if (error) {
-                container.innerHTML = '<div class="empty-state">Erro ao carregar lista de alunos.</div>';
+            if (list.length === 0) {
+                container.innerHTML = '<div class="empty-state">Nenhum aluno encontrado.</div>';
                 return;
             }
 
-            if (alunos.length === 0) {
-                container.innerHTML = '<div class="empty-state">Você ainda não tem alunos vinculados. Comece gerando um convite!</div>';
-                return;
-            }
-
-            alunos.forEach(aluno => {
+            list.forEach(aluno => {
                 const initials = aluno.full_name ? aluno.full_name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0,2) : '?';
                 const date = new Date(aluno.created_at).toLocaleDateString('pt-BR');
                 
@@ -441,7 +481,10 @@
                         </div>
                     </div>
                     <div class="aluno-actions">
-                        <a href="lancar_avaliacao.html?alunoId=${aluno.id}" class="btn-small primary">
+                        <button class="btn-small primary" onclick='openCRMModal(${JSON.stringify(aluno)})'>
+                            <i class="fas fa-user-edit"></i> CRM
+                        </button>
+                        <a href="lancar_avaliacao.html?alunoId=${aluno.id}" class="btn-small">
                             <i class="fas fa-plus"></i> Dados
                         </a>
                         <a href="relatorio.html?alunoId=${aluno.id}" class="btn-small">
@@ -451,6 +494,45 @@
                 `;
                 container.appendChild(card);
             });
+        }
+
+        // --- NOVO: Modal CRM ---
+        let selectedClientId = null;
+
+        function openCRMModal(aluno) {
+            selectedClientId = aluno.id;
+            document.getElementById('crm-name').textContent = aluno.full_name;
+            document.getElementById('crm-birthday').value = aluno.birthday || '';
+            document.getElementById('crm-business').checked = aluno.business_presented || false;
+            document.getElementById('crmModal').style.display = 'flex';
+        }
+
+        async function saveCRMData() {
+            const birthday = document.getElementById('crm-birthday').value;
+            const business = document.getElementById('crm-business').checked;
+            const btn = document.getElementById('btn-save-crm');
+
+            btn.disabled = true;
+            btn.textContent = 'Salvando...';
+
+            const { error } = await supabaseClient.from('profiles').update({
+                birthday: birthday || null,
+                business_presented: business
+            }).eq('id', selectedClientId);
+
+            if (!error) {
+                alert('Dados atualizados com sucesso!');
+                closeCRMModal();
+                loadAlunos();
+            } else {
+                alert('Erro ao salvar: ' + error.message);
+            }
+            btn.disabled = false;
+            btn.textContent = 'Salvar Alterações';
+        }
+
+        function closeCRMModal() {
+            document.getElementById('crmModal').style.display = 'none';
         }
 
         function showInviteModal() {
@@ -476,5 +558,28 @@
 
         init();
     </script>
+
+    <!-- Modal CRM -->
+    <div id="crmModal" class="modal">
+        <div class="modal-content">
+            <h2 style="font-weight: 800; color: var(--primary); margin-bottom: 5px;">Perfil CRM</h2>
+            <p id="crm-name" style="color: var(--accent); font-weight: 700; margin-bottom: 20px;"></p>
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Data de Aniversário</label>
+                <input type="date" id="crm-birthday" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0;">
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 25px;">
+                <input type="checkbox" id="crm-business" style="width: 20px; height: 20px;">
+                <label style="margin-bottom: 0;">Já apresentou o plano de negócio?</label>
+            </div>
+            
+            <button class="btn-invite" style="width: 100%; justify-content: center;" id="btn-save-crm" onclick="saveCRMData()">
+                Salvar Alterações
+            </button>
+            <button class="btn-small" style="margin-top: 15px; display: flex; width: 100%; justify-content: center; border: none; color: #94a3b8;" onclick="closeCRMModal()">Cancelar</button>
+        </div>
+    </div>
 </body>
 </html>
