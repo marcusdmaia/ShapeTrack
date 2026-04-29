@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard CRM | ShapeTrack</title>
+    <title>Gestão 360 | ShapeTrack</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -19,16 +18,12 @@
             --white: #ffffff;
             --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
             --nav-bg: rgba(255, 255, 255, 0.8);
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --success: #10b981;
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
             font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -49,6 +44,7 @@
             position: sticky;
             top: 0;
             height: 100vh;
+            transition: all 0.3s ease;
         }
 
         .logo {
@@ -57,16 +53,12 @@
             letter-spacing: -1.5px;
             margin-bottom: 48px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
         }
-
         .logo span { color: var(--accent); }
 
-        .nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
+        .nav-links { display: flex; flex-direction: column; gap: 8px; }
         .nav-item {
             padding: 14px 18px;
             border-radius: 12px;
@@ -79,19 +71,14 @@
             gap: 12px;
             font-weight: 500;
         }
-
-        .nav-item i { width: 24px; text-align: center; }
-
-        .nav-item.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
+        .nav-item.active { background: rgba(255, 255, 255, 0.1); color: white; }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
 
         /* Main Content */
         .main-content {
             flex: 1;
             padding: 48px;
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -99,73 +86,47 @@
             margin-bottom: 40px;
             display: flex;
             justify-content: space-between;
-            align-items: flex-end;
+            align-items: center;
         }
 
         .page-title {
             font-size: 2.2rem;
             font-weight: 800;
             color: var(--primary);
+            letter-spacing: -1px;
         }
 
-        /* CRM Cards Grid */
-        .grid-crm {
+        /* Stats Grid */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 24px;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
         }
 
-        .card-stat {
+        .stat-card {
             background: var(--white);
             padding: 24px;
-            border-radius: 20px;
+            border-radius: 24px;
             box-shadow: var(--card-shadow);
-            border-left: 5px solid var(--primary);
+            border: 1px solid rgba(0,0,0,0.02);
         }
 
-        .card-stat.danger { border-left-color: var(--danger); }
-        .card-stat.warning { border-left-color: var(--warning); }
-        .card-stat.success { border-left-color: var(--success); }
+        .stat-card .label { color: var(--text-dim); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .stat-card .value { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+        .stat-card .value.alert { color: #ef4444; }
 
-        .stat-label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        /* Table Sections */
-        .section-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 32px;
-        }
-
+        /* CRM Section */
         .card-table {
             background: var(--white);
             padding: 32px;
             border-radius: 24px;
             box-shadow: var(--card-shadow);
-            overflow-x: hidden;
-        }
-
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            margin-bottom: 24px;
         }
 
         .section-title {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             font-weight: 800;
             color: var(--primary);
             margin-bottom: 24px;
@@ -174,73 +135,54 @@
             gap: 12px;
         }
 
-        .crm-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 600px; /* Garante que não esmague no mobile */
-        }
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .crm-table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        .crm-table th { text-align: left; padding: 16px; border-bottom: 2px solid #f1f5f9; color: var(--text-dim); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; }
+        .crm-table td { padding: 16px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; }
 
-        .crm-table th {
-            text-align: left;
-            padding: 12px 16px;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .crm-table td {
-            padding: 16px;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 0.9rem;
-        }
-
-        .badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .badge.danger { background: #fee2e2; color: #991b1b; }
-        .badge.warning { background: #fef3c7; color: #92400e; }
-        .badge.success { background: #d1fae5; color: #065f46; }
+        .status-badge { padding: 6px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-warning { background: #fef9c3; color: #854d0e; }
+        .status-alert { background: #fee2e2; color: #991b1b; }
 
         .btn-action {
             padding: 8px 12px;
             border-radius: 8px;
             border: 1px solid #e2e8f0;
             background: white;
+            color: var(--primary);
             cursor: pointer;
-            color: var(--text-dim);
+            transition: 0.2s;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
-
-        /* Birthday List */
-        .bday-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .bday-icon {
-            width: 40px;
-            height: 40px;
-            background: #fdf2f8;
-            color: #db2777;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-        }
+        .btn-action:hover { background: #f8faf9; border-color: var(--primary); }
 
         /* Mobile */
         @media (max-width: 1024px) {
-            .grid-crm { grid-template-columns: repeat(2, 1fr); }
-            .section-grid { grid-template-columns: 1fr; }
+            .sidebar { width: 80px; padding: 40px 15px; }
+            .logo { font-size: 0; justify-content: center; }
+            .logo span { font-size: 1.8rem; }
+            .nav-item span { display: none; }
+            .nav-item { justify-content: center; }
+            .main-content { padding: 32px; }
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar {
+                width: 100%; height: 72px; padding: 0; position: fixed; bottom: 0; left: 0;
+                flex-direction: row; background: var(--nav-bg); backdrop-filter: blur(20px);
+                border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000;
+            }
+            .logo { display: none; }
+            .nav-links { flex-direction: row; width: 100%; height: 100%; gap: 0; }
+            .nav-item { flex: 1; flex-direction: column; gap: 5px; border-radius: 0; font-size: 0.65rem; color: #94a3b8; }
+            .nav-item i { font-size: 1.3rem; }
+            .nav-item.active { background: transparent; color: var(--primary); }
+            .main-content { padding: 24px; padding-bottom: 100px; }
+            .header { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -249,85 +191,78 @@
     <aside class="sidebar">
         <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
         <nav id="nav-links" class="nav-links">
-            <!-- Nav Dinâmico -->
+            <!-- Dynamic Links -->
         </nav>
     </aside>
 
     <main class="main-content">
         <header class="header">
             <div>
-                <h1 class="page-title">Gestão 360º</h1>
-                <p style="color: var(--text-dim);">Acompanhamento inteligente de clientes e vendas.</p>
-            </div>
-            <div style="display: flex; gap: 12px;">
-                <button class="btn-action" onclick="window.location.href='vendas.html'"><i class="fas fa-plus"></i> Nova Venda</button>
+                <h1 class="page-title">Gestão 360</h1>
+                <p style="color: var(--text-dim);">Visão completa da retenção e financeiro do seu negócio.</p>
             </div>
         </header>
 
-        <!-- Stats Row -->
-        <div class="grid-crm">
-            <div class="card-stat danger">
-                <span class="stat-label">Inativos (> 30 dias)</span>
-                <div class="stat-value" id="inactive-30">--</div>
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="label">Contas a Receber</span>
+                <div class="value" id="stat-receivables">R$ 0,00</div>
             </div>
-            <div class="card-stat warning">
-                <span class="stat-label">Contas a Receber</span>
-                <div class="stat-value" id="total-pending">R$ 0,00</div>
+            <div class="stat-card">
+                <span class="label">Clientes Inativos</span>
+                <div class="value alert" id="stat-inactive">0</div>
             </div>
-            <div class="card-stat success">
-                <span class="stat-label">Avaliações p/ Semana</span>
-                <div class="stat-value" id="assessments-week">--</div>
-            </div>
-            <div class="card-stat">
-                <span class="stat-label">Aniversários (Mês)</span>
-                <div class="stat-value" id="birthdays-month">--</div>
+            <div class="stat-card">
+                <span class="label">Aniversariantes (Mês)</span>
+                <div class="value" id="stat-birthdays" style="color: var(--accent);">0</div>
             </div>
         </div>
 
-        <div class="section-grid">
-            <!-- Table Section -->
-            <div class="card-table">
-                <h2 class="section-title"><i class="fas fa-users-cog"></i> Acompanhamento de Clientes</h2>
-                <div class="table-responsive">
-                    <table class="crm-table">
-                        <thead>
-                            <tr>
-                                <th>Cliente</th>
-                                <th>Última Compra</th>
-                                <th>Avaliação</th>
-                                <th>Status Negócio</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="client-list">
-                            <!-- Linhas dinâmicas -->
-                            <tr><td colspan="5" style="text-align:center; padding: 40px;">Carregando inteligência...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+        <!-- Inactives Table -->
+        <div class="card-table">
+            <h2 class="section-title"><i class="fas fa-user-clock"></i> Alerta de Retenção</h2>
+            <div class="table-responsive">
+                <table class="crm-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Última Compra</th>
+                            <th>Dias Inativo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="retention-list">
+                        <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-dim);">Analisando base de dados...</td></tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <!-- Side Cards -->
-            <div style="display: flex; flex-direction: column; gap: 24px;">
-                <div class="card-table">
-                    <h2 class="section-title"><i class="fas fa-birthday-cake"></i> Aniversariantes</h2>
-                    <div id="birthday-list">
-                        <!-- Lista de aniversários -->
-                        <p style="color: var(--text-dim); font-size: 0.9rem;">Buscando datas...</p>
-                    </div>
-                </div>
-
-                <div class="card-table">
-                    <h2 class="section-title"><i class="fas fa-trophy"></i> Top Produtos</h2>
-                    <div id="products-chart" style="min-height: 250px;"></div>
-                </div>
+        <!-- Receivables Table -->
+        <div class="card-table">
+            <h2 class="section-title" style="color: var(--accent);"><i class="fas fa-hand-holding-usd"></i> Pendências Financeiras</h2>
+            <div class="table-responsive">
+                <table class="crm-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Valor Devido</th>
+                            <th>Vencimento</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="receivables-list">
+                        <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-dim);">Tudo em dia!</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </main>
 
     <script>
         const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
-
+        
         async function init() {
             const { data: { session } } = await sb.auth.getSession();
             if (!session) { window.location.href = 'index.html'; return; }
@@ -335,8 +270,7 @@
             const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
             if (profile) setupNav(profile);
 
-            loadCRMData();
-            renderTopProducts();
+            loadCRMData(session.user.id);
         }
 
         function setupNav(profile) {
@@ -355,98 +289,77 @@
                     <a href="leads_admin.html" class="nav-item"><i class="fas fa-filter"></i><span>Leads</span></a>
                     <a href="configuracoes.html" class="nav-item"><i class="fas fa-cog"></i><span>Ajustes</span></a>
                 `;
+            } else {
+                navHtml += `<a href="relatorio.html" class="nav-item"><i class="fas fa-chart-line"></i><span>Evolução</span></a>`;
             }
+            navHtml += `<a href="#" class="nav-item" onclick="handleLogout()" style="margin-top:auto; color:#ef4444;"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>`;
             nav.innerHTML = navHtml;
         }
 
-        async function loadCRMData() {
-            const { data: clients } = await sb.from('profiles').select('*').eq('role', 'client');
-            const { data: sales } = await sb.from('sales').select('*').order('created_at', { ascending: false });
+        async function loadCRMData(mentorId) {
+            // 1. Carregar Alunos
+            const { data: clients } = await sb.from('profiles').select('*').eq('mentor_id', mentorId).eq('role', 'client');
+            
+            // 2. Carregar Vendas para cálculo de inatividade e recebíveis
+            const { data: sales } = await sb.from('sales').select('*, profiles!client_id(full_name)').eq('mentor_id', mentorId);
 
+            if (!clients || !sales) return;
+
+            // Lógica de Recebíveis
+            const pendingSales = sales.filter(s => s.payment_status === 'Parcial' || s.payment_status === 'Pendente');
+            const totalDue = pendingSales.reduce((acc, s) => acc + (s.total_price - (s.amount_paid || 0)), 0);
+            document.getElementById('stat-receivables').textContent = `R$ ${totalDue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+
+            const recList = document.getElementById('receivables-list');
+            if (pendingSales.length > 0) {
+                recList.innerHTML = pendingSales.map(s => {
+                    const due = s.total_price - (s.amount_paid || 0);
+                    return `
+                        <tr>
+                            <td style="font-weight:700;">${s.profiles?.full_name || 'Desconhecido'}</td>
+                            <td style="color:#ef4444; font-weight:800;">R$ ${due.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                            <td>${s.due_date ? new Date(s.due_date).toLocaleDateString('pt-BR') : '--'}</td>
+                            <td><button class="btn-action" onclick="alert('Funcionalidade de baixa em breve')">Dar Baixa</button></td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            // Lógica de Inatividade
             const now = new Date();
-            const currentMonth = now.getMonth();
-            let inactive30 = 0;
-            let totalReceivable = 0;
-            let bdayCount = 0;
+            const retentionList = document.getElementById('retention-list');
+            const inactiveClients = clients.map(c => {
+                const clientSales = sales.filter(s => s.client_id === c.id);
+                if (clientSales.length === 0) return { ...c, days: 999, lastDate: 'Nunca' };
+                
+                const lastSale = clientSales.reduce((a, b) => new Date(a.created_at) > new Date(b.created_at) ? a : b);
+                const diffDays = Math.floor((now - new Date(lastSale.created_at)) / (1000 * 60 * 60 * 24));
+                return { ...c, days: diffDays, lastDate: new Date(lastSale.created_at).toLocaleDateString('pt-BR') };
+            }).filter(c => c.days > 30);
 
-            const clientList = document.getElementById('client-list');
-            const bdayList = document.getElementById('birthday-list');
-            clientList.innerHTML = '';
-            bdayList.innerHTML = '';
-
-            // 1. Processar Contas a Receber das Vendas
-            sales?.forEach(sale => {
-                if (sale.payment_status !== 'Pago') {
-                    const pending = sale.total_price - (sale.amount_paid || 0);
-                    totalReceivable += pending;
-                }
-            });
-
-            // 2. Processar Clientes e Alertas
-            clients?.forEach(c => {
-                const clientSales = sales?.filter(s => s.client_id === c.id) || [];
-                const lastSaleDate = clientSales.length > 0 ? new Date(clientSales[0].created_at) : null;
-                const daysInactive = lastSaleDate ? Math.floor((now - lastSaleDate) / (1000 * 60 * 60 * 24)) : 999;
-
-                if (daysInactive >= 30) inactive30++;
-
-                // Aniversariantes
-                if (c.birthday) {
-                    const bday = new Date(c.birthday);
-                    if (bday.getMonth() === currentMonth) {
-                        bdayCount++;
-                        bdayList.innerHTML += `
-                            <div class="bday-item">
-                                <div class="bday-icon"><i class="fas fa-cake-candles"></i></div>
-                                <div>
-                                    <div style="font-weight:700; font-size:0.9rem;">${c.full_name}</div>
-                                    <div style="font-size:0.75rem; color:var(--text-dim);">Dia ${bday.getDate() + 1}</div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                }
-
-                const statusClass = daysInactive > 90 ? 'danger' : (daysInactive > 60 ? 'warning' : (daysInactive > 30 ? 'warning' : 'success'));
-                const statusText = daysInactive === 999 ? 'Nunca comprou' : `${daysInactive} dias`;
-
-                clientList.innerHTML += `
+            document.getElementById('stat-inactive').textContent = inactiveClients.length;
+            if (inactiveClients.length > 0) {
+                retentionList.innerHTML = inactiveClients.sort((a,b) => b.days - a.days).map(c => `
                     <tr>
-                        <td style="font-weight: 600;">${c.full_name}</td>
-                        <td><span class="badge ${statusClass}">${statusText}</span></td>
-                        <td><span class="badge ${c.next_assessment_date ? 'success' : 'warning'}">${c.next_assessment_date || 'Pendente'}</span></td>
-                        <td>
-                            <i class="fas fa-briefcase" style="color: ${c.business_presented ? 'var(--success)' : '#cbd5e1'}"></i>
-                            <span style="font-size:0.8rem; color:${c.business_presented ? 'var(--success)' : 'var(--text-dim)'}; font-weight:600;">
-                                ${c.business_presented ? 'Sim' : 'Não'}
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn-action" title="Lançar Venda" onclick="window.location.href='vendas.html?id=${c.id}'"><i class="fas fa-cart-plus"></i></button>
-                        </td>
+                        <td style="font-weight:700;">${c.full_name}</td>
+                        <td>${c.lastDate}</td>
+                        <td><span class="status-badge ${c.days > 90 ? 'status-alert' : 'status-warning'}">${c.days} dias</span></td>
+                        <td><a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn-action"><i class="fab fa-whatsapp"></i> Chamar</a></td>
                     </tr>
-                `;
-            });
+                `).join('');
+            } else {
+                retentionList.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-dim);">Nenhum cliente em risco. Bom trabalho!</td></tr>';
+            }
 
-            if (bdayCount === 0) bdayList.innerHTML = '<p style="color: var(--text-dim); font-size: 0.9rem; padding: 10px;">Nenhum aniversário este mês.</p>';
-
-            document.getElementById('inactive-30').textContent = inactive30;
-            document.getElementById('total-pending').textContent = `R$ ${totalReceivable.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-            document.getElementById('birthdays-month').textContent = bdayCount;
-            document.getElementById('assessments-week').textContent = clients.filter(c => c.next_assessment_date).length; // Simplificado
+            // Lógica Aniversários
+            const currentMonth = now.getMonth() + 1;
+            const birthdays = clients.filter(c => c.birthday && parseInt(c.birthday.split('-')[1]) === currentMonth);
+            document.getElementById('stat-birthdays').textContent = birthdays.length;
         }
 
-
-        function renderTopProducts() {
-            const options = {
-                series: [44, 55, 13, 33],
-                chart: { type: 'donut', height: 250 },
-                labels: ['Shake Pistache', 'Protein Powder', 'NRG', 'Outros'],
-                colors: ['#2F5948', '#D96C2B', '#10b981', '#64748b'],
-                legend: { position: 'bottom' },
-                dataLabels: { enabled: false }
-            };
-            new ApexCharts(document.querySelector("#products-chart"), options).render();
+        async function handleLogout() {
+            await sb.auth.signOut();
+            window.location.href = 'index.html';
         }
 
         init();

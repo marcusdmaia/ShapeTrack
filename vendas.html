@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM de Vendas | ShapeTrack</title>
+    <title>Vendas | ShapeTrack</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,287 +20,80 @@
             --nav-bg: rgba(255, 255, 255, 0.8);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; min-height: 100vh; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Desktop */
-        .sidebar {
-            width: 280px;
-            background: var(--primary);
-            padding: 40px 24px;
-            display: flex;
-            flex-direction: column;
-            color: white;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            transition: all 0.3s ease;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            margin-bottom: 48px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
+        /* Sidebar */
+        .sidebar { width: 280px; background: var(--primary); padding: 40px 24px; display: flex; flex-direction: column; color: white; position: sticky; top: 0; height: 100vh; }
+        .logo { font-size: 1.8rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 48px; cursor: pointer; }
         .logo span { color: var(--accent); }
+        .nav-links { display: flex; flex-direction: column; gap: 8px; }
+        .nav-item { padding: 14px 18px; border-radius: 12px; color: rgba(255, 255, 255, 0.6); text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 500; transition: 0.2s; }
+        .nav-item.active { background: rgba(255, 255, 255, 0.1); color: white; }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
 
-        .nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+        /* Content */
+        .main-content { flex: 1; padding: 48px; max-width: 1400px; margin: 0 auto; }
+        .header { margin-bottom: 40px; }
+        .page-title { font-size: 2.2rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
 
-        .nav-item {
-            padding: 14px 18px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 500;
-        }
+        .grid-vendas { display: grid; grid-template-columns: 1.5fr 1fr; gap: 32px; }
 
-        .nav-item i {
-            font-size: 1.2rem;
-            width: 24px;
-            text-align: center;
-        }
+        .card { background: var(--white); padding: 32px; border-radius: 24px; box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.02); height: fit-content; }
+        .section-title { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
 
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-        }
+        /* Form Controls */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; }
+        .form-group input, .form-group select { width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px; font-size: 1rem; transition: 0.2s; }
+        .form-group input:focus { outline: none; border-color: var(--primary); }
 
-        .nav-item.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
+        /* Product Search */
+        .search-container { position: relative; }
+        #search-results { position: absolute; top: 100%; left: 0; right: 0; background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 100; max-height: 300px; overflow-y: auto; display: none; margin-top: 5px; }
+        .search-item { padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-bottom: 1px solid #f1f5f9; }
+        .search-item:hover { background: #f8faf9; }
+        .search-item .name { font-weight: 700; font-size: 0.95rem; }
+        .search-item .meta { font-size: 0.8rem; color: var(--text-dim); }
 
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 48px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .header {
-            margin-bottom: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .page-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        .grid-vendas {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 32px;
-        }
-
-        .card {
-            background: var(--white);
-            padding: 32px;
-            border-radius: 24px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        select, input {
-            width: 100%;
-            padding: 14px 18px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.2s;
-        }
-
-        select:focus, input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-            box-shadow: 0 0 0 4px rgba(47, 89, 72, 0.05);
-        }
-
-        /* Product Search & List */
-        .product-search-container {
-            position: relative;
-        }
-
-        .search-results {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            z-index: 100;
-            max-height: 300px;
-            overflow-y: auto;
-            margin-top: 8px;
-            display: none;
-        }
-
-        .search-item {
-            padding: 12px 18px;
-            cursor: pointer;
-            transition: background 0.2s;
-            border-bottom: 1px solid #f1f5f9;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .search-item:hover {
-            background: #f8fafc;
-        }
-
-        .search-item .name { font-weight: 600; font-size: 0.9rem; }
-        .search-item .sku { color: var(--text-dim); font-size: 0.8rem; }
-
-        /* Cart */
-        .cart-list {
-            margin-top: 24px;
-        }
-
-        .cart-item {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 40px;
-            align-items: center;
-            gap: 12px;
-            padding: 16px 0;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .cart-item .name { font-weight: 600; font-size: 0.9rem; }
-        .cart-item .price { font-weight: 700; color: var(--primary); }
-        .cart-item .qty-input { padding: 8px; text-align: center; }
-
-        .btn-remove {
-            color: #ef4444;
-            cursor: pointer;
-            text-align: center;
-        }
+        /* Cart List */
+        .cart-list { margin-top: 24px; }
+        .cart-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: #f8faf9; border-radius: 16px; margin-bottom: 12px; }
+        .cart-item .name { flex: 1; font-weight: 700; font-size: 0.9rem; }
+        .cart-item .qty-input { width: 60px; padding: 8px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center; }
+        .cart-item .price { font-weight: 800; color: var(--primary); }
+        .btn-remove { color: #ef4444; cursor: pointer; padding: 8px; }
 
         /* Summary */
-        .summary {
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 2px dashed #f1f5f9;
-        }
+        .summary { margin-top: 30px; padding-top: 20px; border-top: 2px dashed #f1f5f9; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600; color: var(--text-dim); }
+        .summary-total { display: flex; justify-content: space-between; margin-top: 15px; font-size: 1.5rem; font-weight: 800; color: var(--primary); }
 
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
+        .btn-finish { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 16px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; margin-top: 24px; box-shadow: 0 10px 20px rgba(47, 89, 72, 0.2); }
+        .btn-finish:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(47, 89, 72, 0.3); }
 
-        .summary-total {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-top: 12px;
-        }
-
-        .btn-finish {
-            width: 100%;
-            padding: 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 16px;
-            font-size: 1.1rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 32px;
-            box-shadow: 0 4px 15px rgba(47, 89, 72, 0.2);
-        }
-
-        .btn-finish:hover {
-            background: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(47, 89, 72, 0.3);
-        }
-
-        /* Mobile Adjustments */
+        /* Mobile */
         @media (max-width: 1024px) {
-            .grid-vendas { grid-template-columns: 1fr; }
             .sidebar { width: 80px; padding: 40px 15px; }
-            .logo { font-size: 0; margin-bottom: 40px; justify-content: center; }
+            .logo { font-size: 0; justify-content: center; }
             .logo span { font-size: 1.8rem; }
             .nav-item span { display: none; }
-            .nav-item { justify-content: center; padding: 15px; }
-            .main-content { padding: 24px; }
+            .nav-item { justify-content: center; }
+            .main-content { padding: 32px; }
+            .grid-vendas { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            .sidebar {
-                width: 100%; height: 72px; padding: 0; position: fixed; bottom: 0; left: 0;
-                flex-direction: row; background: var(--nav-bg); backdrop-filter: blur(20px);
-                border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000;
-            }
+            .sidebar { width: 100%; height: 72px; padding: 0; position: fixed; bottom: 0; left: 0; flex-direction: row; background: var(--nav-bg); backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000; }
             .logo { display: none; }
             .nav-links { flex-direction: row; width: 100%; height: 100%; gap: 0; }
-            .nav-item { flex: 1; flex-direction: column; gap: 5px; padding: 10px 0; border-radius: 0; color: #94a3b8; font-size: 0.65rem; font-weight: 600; }
-            .nav-item i { font-size: 1.3rem; }
+            .nav-item { flex: 1; flex-direction: column; gap: 5px; border-radius: 0; font-size: 0.65rem; color: #94a3b8; }
             .nav-item.active { background: transparent; color: var(--primary); }
             .main-content { padding: 24px; padding-bottom: 100px; }
+            .header { margin-bottom: 24px; }
+            .page-title { font-size: 1.8rem; }
+            .card { padding: 24px; }
         }
     </style>
 </head>
@@ -309,21 +102,20 @@
     <aside class="sidebar">
         <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
         <nav id="nav-links" class="nav-links">
-            <!-- Dinâmico -->
+            <!-- Nav Dinâmico -->
         </nav>
     </aside>
 
     <main class="main-content">
         <header class="header">
-            <div>
-                <h1 class="page-title">Nova Venda</h1>
-                <p style="color: var(--text-dim);">Registre o consumo e venda de produtos Herbalife.</p>
-            </div>
+            <h1 class="page-title">Nova Venda</h1>
+            <p style="color: var(--text-dim);">Registre o consumo e venda de produtos Herbalife.</p>
         </header>
 
         <div class="grid-vendas">
+            <!-- Left: Products -->
             <div class="card">
-                <h2 class="section-title"><i class="fas fa-shopping-basket"></i> Produtos e Descontos</h2>
+                <h2 class="section-title"><i class="fas fa-shopping-basket"></i> Itens no Carrinho</h2>
                 
                 <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div class="form-group">
@@ -336,46 +128,40 @@
                     <div class="form-group">
                         <label>Nível de Desconto</label>
                         <select id="select-discount">
-                            <optgroup label="Cliente Premium">
-                                <option value="bronze">Bronze (14%)</option>
-                                <option value="silver">Prata (23%)</option>
-                                <option value="gold">Ouro (32%)</option>
-                            </optgroup>
-                            <optgroup label="Consultor">
-                                <option value="c25">Consultor (25%)</option>
-                                <option value="c35">Sênior (35%)</option>
-                                <option value="c42">Sucesso (42%)</option>
-                                <option value="c50">Supervisor (50%)</option>
-                            </optgroup>
-                            <option value="consumer" selected>Preço Cheio (Venda Direta)</option>
+                            <option value="consumer">Preço Cheio (Venda Direta)</option>
+                            <option value="c25">Cliente Premium / Consultor (25%)</option>
+                            <option value="c35">Consultor Senior (35%)</option>
+                            <option value="c42">Produtor Qualificado (42%)</option>
+                            <option value="c50">Supervisor (50%)</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="form-group product-search-container">
+                <div class="form-group search-container">
                     <label>Buscar Produto (Nome ou SKU)</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="product-input" placeholder="Ex: Shake Baunilha, Protein Crunch..." style="flex: 1;">
-                        <button class="btn-action" onclick="toggleCustomProduct()" title="Adicionar Item Manual"><i class="fas fa-plus"></i></button>
-                    </div>
-                    <div id="search-results" class="search-results"></div>
+                    <input type="text" id="product-input" placeholder="Ex: Shake Baunilha, Protein Crunch...">
+                    <div id="search-results"></div>
                 </div>
 
-                <!-- Painel de Produto Customizado (Escondido por padrão) -->
-                <div id="custom-product-form" style="display: none; background: #f1f5f9; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px dashed var(--primary);">
-                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px;">
-                        <input type="text" id="custom-name" placeholder="Nome do Item">
-                        <input type="number" id="custom-price" placeholder="R$ Preço">
-                        <input type="number" id="custom-pv" placeholder="PV">
-                    </div>
-                    <button class="btn-action" style="width: 100%; margin-top: 10px; background: var(--primary); color: white;" onclick="addCustomItem()">Adicionar Item Especial</button>
-                </div>
-
-                <div class="cart-list" id="cart-list">
+                <div id="cart-list" class="cart-list">
                     <p style="text-align: center; color: var(--text-dim); padding: 40px;">Seu carrinho está vazio.</p>
+                </div>
+
+                <button onclick="toggleCustomProduct()" style="width: 100%; border: 2px dashed #e2e8f0; padding: 15px; border-radius: 12px; background: transparent; color: var(--text-dim); font-weight: 700; cursor: pointer; margin-top: 10px;">
+                    <i class="fas fa-plus-circle"></i> Adicionar Produto Personalizado
+                </button>
+
+                <div id="custom-product-form" style="display: none; margin-top: 20px; background: #f8faf9; padding: 20px; border-radius: 16px;">
+                    <div class="form-group"><label>Nome do Item</label><input type="text" id="custom-name"></div>
+                    <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group"><label>Preço Venda (R$)</label><input type="number" id="custom-price" step="0.01"></div>
+                        <div class="form-group"><label>Pontos (PV)</label><input type="number" id="custom-pv" step="0.1"></div>
+                    </div>
+                    <button class="btn-finish" onclick="addCustomItem()" style="padding: 12px; margin-top: 0; background: var(--accent);">Adicionar ao Carrinho</button>
                 </div>
             </div>
 
+            <!-- Right: Summary & Payment -->
             <div class="card">
                 <h2 class="section-title"><i class="fas fa-receipt"></i> Resumo e Pagamento</h2>
                 
@@ -384,35 +170,32 @@
                     <select id="payment-type" onchange="togglePartialPayment()">
                         <option value="total">Pago Integralmente</option>
                         <option value="partial">Pagamento Parcial (Entrada)</option>
-                        <option value="later">Pagar Depois (Fiado)</option>
+                        <option value="later">Pagar Depois (Total Pendente)</option>
                     </select>
                 </div>
 
-                <div id="partial-fields" style="display: none; background: #fff7ed; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Valor Pago Agora</label>
-                            <input type="number" id="amount-paid" placeholder="0.00">
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Data p/ Saldo</label>
-                            <input type="date" id="due-date">
-                        </div>
+                <div id="partial-fields" style="display: none; animation: fadeIn 0.3s;">
+                    <div class="form-group">
+                        <label>Valor Recebido Agora (R$)</label>
+                        <input type="number" id="amount-paid" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Data para Saldo Devedor</label>
+                        <input type="date" id="due-date">
                     </div>
                 </div>
 
-                <div style="margin: 20px 0; display: flex; align-items: center; gap: 10px; background: #f0fdf4; padding: 12px; border-radius: 10px;">
+                <div class="form-group" style="background: #f0fdf4; padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
                     <input type="checkbox" id="business-presented" style="width: 20px; height: 20px;">
-                    <label style="margin-bottom: 0;">Apresentei a oportunidade de negócio hoje?</label>
+                    <label style="margin-bottom: 0; text-transform: none;">Apresentei a oportunidade de negócio hoje?</label>
                 </div>
 
                 <div class="summary">
-                    <div class="summary-row">
-                        <span>Volume de Pontos (PV):</span>
-                        <span id="total-pv">0.00</span>
-                    </div>
+                    <div class="summary-row"><span>Itens:</span> <span id="total-items">0</span></div>
+                    <div class="summary-row"><span>Volume (PV):</span> <span id="total-pv">0.00</span></div>
+                    <div class="summary-row"><span>Lucro Est. (Supervisor):</span> <span id="est-profit" style="color: #27ae60;">R$ 0,00</span></div>
                     <div class="summary-total">
-                        <span>Total a Cobrar:</span>
+                        <span>Total:</span>
                         <span id="total-price">R$ 0,00</span>
                     </div>
                 </div>
@@ -424,139 +207,19 @@
 
     <script>
         const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
-
-        // ... (Mesma lista de produtos anterior)
-
-        function toggleCustomProduct() {
-            const form = document.getElementById('custom-product-form');
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function addCustomItem() {
-            const name = document.getElementById('custom-name').value;
-            const price = parseFloat(document.getElementById('custom-price').value);
-            const pv = parseFloat(document.getElementById('custom-pv').value);
-
-            if (!name || isNaN(price)) return alert('Preencha os dados do produto.');
-
-            cart.push({
-                sku: 'CUSTOM-' + Date.now(),
-                name: name,
-                pv: pv || 0,
-                consumer: price,
-                custom: true,
-                qty: 1
-            });
-
-            renderCart();
-            toggleCustomProduct();
-            document.getElementById('custom-name').value = '';
-            document.getElementById('custom-price').value = '';
-            document.getElementById('custom-pv').value = '';
-        }
-
-        function togglePartialPayment() {
-            const type = document.getElementById('payment-type').value;
-            document.getElementById('partial-fields').style.display = (type === 'partial' || type === 'later') ? 'block' : 'none';
-        }
-
-        // ... (Mesma lógica de renderCart anterior, ajustada para preços customizados)
-        function renderCart() {
-            const container = document.getElementById('cart-list');
-            const discountLevel = document.getElementById('select-discount').value;
-
-            if (cart.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-dim); padding: 40px;">Seu carrinho está vazio.</p>';
-                updateSummary(0, 0, 0, 0);
-                return;
-            }
-
-            let totalPV = 0;
-            let totalPrice = 0;
-            let totalCost = 0;
-
-            container.innerHTML = cart.map(item => {
-                const price = item.custom ? item.consumer : (item[discountLevel] || item.consumer);
-                totalPV += item.pv * item.qty;
-                totalPrice += price * item.qty;
-                totalCost += (item.custom ? price * 0.5 : item.c50) * item.qty;
-
-                return `
-                    <div class="cart-item">
-                        <div class="name">${item.name} ${item.custom ? '⭐' : ''}</div>
-                        <input type="number" class="qty-input" value="${item.qty}" min="1" onchange="updateQty('${item.sku}', this.value)">
-                        <div class="price">R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
-                        <div class="btn-remove" onclick="removeFromCart('${item.sku}')"><i class="fas fa-trash-alt"></i></div>
-                    </div>
-                `;
-            }).join('');
-
-            updateSummary(cart.length, totalPV, totalPrice, totalCost);
-        }
-
-        function updateSummary(items, pv, price, cost) {
-            document.getElementById('total-items').textContent = items;
-            document.getElementById('total-pv').textContent = pv.toFixed(2);
-            document.getElementById('total-price').textContent = `R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-            
-            // Lucro estimado: Preço cobrado - Custo Supervisor (estimativa conservadora)
-            const profit = price - cost;
-            document.getElementById('est-profit').textContent = `R$ ${Math.max(0, profit).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-        }
-
-        document.getElementById('select-discount').addEventListener('change', renderCart);
-
-        document.getElementById('btn-finish').addEventListener('click', async () => {
-            const btn = document.getElementById('btn-finish');
-            if (cart.length === 0) return alert('Adicione produtos ao carrinho.');
-            
-            const clientId = document.getElementById('select-client').value;
-            if (!clientId) return alert('Selecione um cliente.');
-
-            const paymentType = document.getElementById('payment-type').value;
-            const amountPaid = parseFloat(document.getElementById('amount-paid').value) || 0;
-            const dueDate = document.getElementById('due-date').value;
-            const businessPresented = document.getElementById('business-presented').checked;
-
-            btn.disabled = true;
-            btn.textContent = 'Processando...';
-
-            try {
-                const { data: { session } } = await sb.auth.getSession();
-                
-                // 1. Salvar a Venda
-                const { error: saleError } = await sb.from('sales').insert([{
-                    client_id: clientId,
-                    mentor_id: session.user.id,
-                    total_price: parseFloat(document.getElementById('total-price').textContent.replace('R$ ', '').replace('.', '').replace(',', '.')),
-                    total_pv: parseFloat(document.getElementById('total-pv').textContent),
-                    payment_status: paymentType === 'total' ? 'Pago' : (paymentType === 'partial' ? 'Parcial' : 'Pendente'),
-                    amount_paid: amountPaid,
-                    due_date: dueDate || null,
-                    discount_level: document.getElementById('select-discount').value,
-                    items: cart
-                }]);
-
-                if (saleError) throw saleError;
-
-                // 2. Atualizar Status de Negócio do Cliente
-                if (businessPresented) {
-                    await sb.from('profiles').update({ business_presented: true }).eq('id', clientId);
-                }
-
-                alert('Venda registrada com sucesso! O Dashboard CRM já foi atualizado.');
-                cart = [];
-                renderCart();
-                window.location.href = 'crm_dashboard.html';
-
-            } catch (err) {
-                console.error(err);
-                alert('Erro ao salvar venda: ' + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Finalizar e Registrar Venda';
-            }
-        });
+        
+        let cart = [];
+        let allClients = [];
+        const products = [
+            { sku: '0141', name: 'Shake Baunilha 550g', consumer: 247, c25: 191, c35: 168, c42: 153, c50: 135, pv: 23.95 },
+            { sku: '0142', name: 'Shake Chocolate 550g', consumer: 247, c25: 191, c35: 168, c42: 153, c50: 135, pv: 23.95 },
+            { sku: '0143', name: 'Shake Morango 550g', consumer: 247, c25: 191, c35: 168, c42: 153, c50: 135, pv: 23.95 },
+            { sku: '0146', name: 'Shake Cookies 550g', consumer: 247, c25: 191, c35: 168, c42: 153, c50: 135, pv: 23.95 },
+            { sku: '0006', name: 'Nrg 60g', consumer: 110, c25: 85, c35: 75, c42: 68, c50: 60, pv: 14.75 },
+            { sku: '0077', name: 'Herbal Concentrate 50g', consumer: 180, c25: 139, c35: 122, c42: 111, c50: 98, pv: 19.95 },
+            { sku: '0242', name: 'Protein Crunch', consumer: 150, c25: 116, c35: 102, c42: 93, c50: 82, pv: 15.50 },
+            { sku: '092K', name: 'NutreV 672g', consumer: 75, c25: 58, c35: 51, c42: 46, c50: 41, pv: 10.50 }
+        ];
 
         async function init() {
             const { data: { session } } = await sb.auth.getSession();
@@ -585,11 +248,12 @@
                     <a href="leads_admin.html" class="nav-item"><i class="fas fa-filter"></i><span>Leads</span></a>
                     <a href="configuracoes.html" class="nav-item"><i class="fas fa-cog"></i><span>Ajustes</span></a>
                 `;
+            } else {
+                navHtml += `<a href="relatorio.html" class="nav-item"><i class="fas fa-chart-line"></i><span>Evolução</span></a>`;
             }
+            navHtml += `<a href="#" class="nav-item" onclick="handleLogout()" style="margin-top:auto; color:#ef4444;"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>`;
             nav.innerHTML = navHtml;
         }
-
-        let allClients = [];
 
         async function loadClients() {
             const { data: clients } = await sb.from('profiles').select('id, full_name').eq('role', 'client');
@@ -617,56 +281,123 @@
         function setupSearch() {
             const input = document.getElementById('product-input');
             const results = document.getElementById('search-results');
-
             input.addEventListener('input', (e) => {
                 const val = e.target.value.toLowerCase();
                 if (val.length < 2) { results.style.display = 'none'; return; }
-
                 const filtered = products.filter(p => p.name.toLowerCase().includes(val) || p.sku.toLowerCase().includes(val));
                 results.innerHTML = filtered.map(p => `
                     <div class="search-item" onclick="addToCart('${p.sku}')">
-                        <div>
-                            <div class="name">${p.name}</div>
-                            <div class="sku">${p.sku} | ${p.pv} PV</div>
-                        </div>
+                        <div><div class="name">${p.name}</div><div class="meta">${p.sku} | ${p.pv} PV</div></div>
                         <i class="fas fa-plus-circle" style="color: var(--primary);"></i>
                     </div>
                 `).join('');
                 results.style.display = filtered.length ? 'block' : 'none';
             });
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.product-search-container')) results.style.display = 'none';
-            });
+            document.addEventListener('click', (e) => { if (!e.target.closest('.search-container')) results.style.display = 'none'; });
         }
 
         function addToCart(sku) {
             const product = products.find(p => p.sku === sku);
-            const existing = cart.find(item => item.sku === sku);
-
-            if (existing) {
-                existing.qty++;
-            } else {
-                cart.push({ ...product, qty: 1 });
-            }
-
+            const existing = cart.find(i => i.sku === sku);
+            if (existing) existing.qty++; else cart.push({ ...product, qty: 1 });
             renderCart();
             document.getElementById('product-input').value = '';
             document.getElementById('search-results').style.display = 'none';
         }
 
         function removeFromCart(sku) {
-            cart = cart.filter(item => item.sku !== sku);
+            cart = cart.filter(i => i.sku !== sku);
             renderCart();
         }
 
         function updateQty(sku, qty) {
             const item = cart.find(i => i.sku === sku);
-            if (item) {
-                item.qty = parseInt(qty) || 1;
-                renderCart();
-            }
+            if (item) { item.qty = parseInt(qty) || 1; renderCart(); }
         }
+
+        function renderCart() {
+            const container = document.getElementById('cart-list');
+            const discount = document.getElementById('select-discount').value;
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-dim); padding: 40px;">Seu carrinho está vazio.</p>';
+                updateSummary(0,0,0,0); return;
+            }
+            let totalPV = 0, totalPrice = 0, totalCost = 0;
+            container.innerHTML = cart.map(item => {
+                const price = item.custom ? item.consumer : (item[discount] || item.consumer);
+                totalPV += item.pv * item.qty;
+                totalPrice += price * item.qty;
+                totalCost += (item.custom ? price * 0.5 : item.c50) * item.qty;
+                return `
+                    <div class="cart-item">
+                        <div class="name">${item.name} ${item.custom ? '⭐' : ''}</div>
+                        <input type="number" class="qty-input" value="${item.qty}" min="1" onchange="updateQty('${item.sku}', this.value)">
+                        <div class="price">R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                        <div class="btn-remove" onclick="removeFromCart('${item.sku}')"><i class="fas fa-trash"></i></div>
+                    </div>
+                `;
+            }).join('');
+            updateSummary(cart.length, totalPV, totalPrice, totalCost);
+        }
+
+        function updateSummary(items, pv, price, cost) {
+            document.getElementById('total-items').textContent = items;
+            document.getElementById('total-pv').textContent = pv.toFixed(2);
+            document.getElementById('total-price').textContent = `R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+            const profit = price - cost;
+            document.getElementById('est-profit').textContent = `R$ ${Math.max(0, profit).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+        }
+
+        function toggleCustomProduct() {
+            const f = document.getElementById('custom-product-form');
+            f.style.display = f.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addCustomItem() {
+            const name = document.getElementById('custom-name').value;
+            const price = parseFloat(document.getElementById('custom-price').value);
+            const pv = parseFloat(document.getElementById('custom-pv').value);
+            if (!name || isNaN(price)) return alert('Dados inválidos');
+            cart.push({ sku: 'CUSTOM-'+Date.now(), name, pv: pv||0, consumer: price, custom: true, qty: 1 });
+            renderCart(); toggleCustomProduct();
+        }
+
+        function togglePartialPayment() {
+            const type = document.getElementById('payment-type').value;
+            document.getElementById('partial-fields').style.display = (type !== 'total') ? 'block' : 'none';
+        }
+
+        document.getElementById('btn-finish').onclick = async () => {
+            const btn = document.getElementById('btn-finish');
+            if (cart.length === 0) return alert('Carrinho vazio');
+            const clientId = document.getElementById('select-client').value;
+            if (!clientId) return alert('Selecione um cliente');
+
+            btn.disabled = true; btn.textContent = 'Processando...';
+
+            try {
+                const { data: { session } } = await sb.auth.getSession();
+                const total = parseFloat(document.getElementById('total-price').textContent.replace('R$ ', '').replace('.', '').replace(',', '.'));
+                const type = document.getElementById('payment-type').value;
+
+                const { error } = await sb.from('sales').insert([{
+                    client_id: clientId, mentor_id: session.user.id,
+                    total_price: total, total_pv: parseFloat(document.getElementById('total-pv').textContent),
+                    payment_status: type === 'total' ? 'Pago' : (type === 'partial' ? 'Parcial' : 'Pendente'),
+                    amount_paid: parseFloat(document.getElementById('amount-paid').value || 0),
+                    due_date: document.getElementById('due-date').value || null,
+                    discount_level: document.getElementById('select-discount').value,
+                    items: cart, business_presented_at_sale: document.getElementById('business-presented').checked
+                }]);
+
+                if (error) throw error;
+                alert('Venda registrada com sucesso!');
+                window.location.href = 'crm_dashboard.html';
+            } catch (err) { alert(err.message); } finally { btn.disabled = false; btn.textContent = 'Finalizar e Registrar Venda'; }
+        };
+
+        document.getElementById('select-discount').onchange = renderCart;
+        async function handleLogout() { await sb.auth.signOut(); window.location.href = 'index.html'; }
 
         init();
     </script>
