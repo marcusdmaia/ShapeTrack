@@ -306,3 +306,71 @@ input:focus, select:focus {
 /* Global Transitions */
 html { scroll-behavior: smooth; }
 ::selection { background: var(--accent); color: #FFF; }
+
+/* Mobile & Responsiveness Audit */
+@media (max-width: 768px) {
+    .navbar { display: none !important; } /* Hide top bar for Bottom Nav */
+
+    .bento-grid {
+        grid-template-columns: 1fr !important;
+        padding: 80px 16px 140px !important; /* Safety margin for bottom nav */
+        gap: 16px;
+    }
+
+    .card-shell { grid-column: span 1 !important; border-radius: 1.5rem; }
+    .card-core { padding: 20px; border-radius: 1rem; }
+    
+    h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.5rem; }
+
+    /* Bottom Navigation Bar - The Mobile Island */
+    .bottom-nav {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 32px);
+        height: 72px;
+        background: rgba(10, 12, 11, 0.9);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid var(--glass-border);
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        z-index: 10000;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .bottom-nav::-webkit-scrollbar { display: none; }
+
+    .bottom-nav-link {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        min-width: 80px;
+        height: 100%;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.65rem;
+        font-weight: 700;
+        transition: all 0.3s var(--bezier);
+        opacity: 0.5;
+    }
+
+    .bottom-nav-link i { font-size: 1.5rem; }
+
+    .bottom-nav-link.active {
+        color: #FFF;
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .bottom-nav-link.active i { color: var(--accent); }
+}

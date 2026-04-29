@@ -57,24 +57,25 @@ function setupNav(profile, activePage) {
     if (!navbar) return;
 
     let links = [
-        { name: 'INÍCIO', url: 'dashboard.html' },
-        { name: 'GESTÃO 360', url: 'crm_dashboard.html' },
-        { name: 'VENDAS', url: 'vendas.html' }
+        { name: 'INÍCIO', url: 'dashboard.html', icon: 'ph-house' },
+        { name: 'GESTÃO 360', url: 'crm_dashboard.html', icon: 'ph-chart-pie' },
+        { name: 'VENDAS', url: 'vendas.html', icon: 'ph-shopping-cart' }
     ];
 
     if (profile.role === 'admin' || profile.role === 'superadmin') {
         links = links.concat([
-            { name: 'VÍDEOS', url: 'videos.html' },
-            { name: 'PARCERIAS', url: 'parcerias.html' },
-            { name: 'ALUNOS', url: 'alunos.html' },
-            { name: 'LEADS', url: 'leads_admin.html' }
+            { name: 'VÍDEOS', url: 'videos.html', icon: 'ph-play-circle' },
+            { name: 'PARCERIAS', url: 'parcerias.html', icon: 'ph-handshake' },
+            { name: 'ALUNOS', url: 'alunos.html', icon: 'ph-users' },
+            { name: 'LEADS', url: 'leads_admin.html', icon: 'ph-radar' }
         ]);
     } else {
-        links.push({ name: 'EVOLUÇÃO', url: 'relatorio.html' });
+        links.push({ name: 'EVOLUÇÃO', url: 'relatorio.html', icon: 'ph-file-text' });
     }
     
-    links.push({ name: 'AJUSTES', url: 'configuracoes.html' });
+    links.push({ name: 'AJUSTES', url: 'configuracoes.html', icon: 'ph-gear' });
 
+    // Desktop Navbar
     let navLinks = document.getElementById('nav-links');
     if (!navLinks) {
         navLinks = document.createElement('div');
@@ -82,12 +83,28 @@ function setupNav(profile, activePage) {
         navLinks.className = 'nav-links desktop-only';
         navbar.appendChild(navLinks);
     }
-
     navLinks.innerHTML = links.map(link => `
-        <a href="${link.url}" class="nav-link ${activePage === link.url ? 'active' : ''}">
-            ${link.name}
+        <a href="${link.url}" class="nav-link ${activePage === link.url ? 'active' : ''}">${link.name}</a>
+    `).join('') + `
+        <a href="#" onclick="sessionStorage.removeItem('st_profile'); sb.auth.signOut().then(() => window.location.href='index.html')" class="nav-link" style="color: #ff4d4d;">SAIR</a>
+    `;
+
+    // Mobile Bottom Nav
+    let bottomNav = document.querySelector('.bottom-nav');
+    if (!bottomNav) {
+        bottomNav = document.createElement('div');
+        bottomNav.className = 'bottom-nav';
+        document.body.appendChild(bottomNav);
+    }
+    bottomNav.innerHTML = links.map(link => `
+        <a href="${link.url}" class="bottom-nav-link ${activePage === link.url ? 'active' : ''}">
+            <i class="ph-light ${link.icon}"></i>
+            <span>${link.name.split(' ')[0]}</span>
         </a>
     `).join('') + `
-        <a href="#" onclick="sessionStorage.removeItem('st_profile'); sb.auth.signOut().then(() => window.location.href='index.html')" class="nav-link" style="color: #ff00ff;">SAIR</a>
+        <a href="#" onclick="sessionStorage.removeItem('st_profile'); sb.auth.signOut().then(() => window.location.href='index.html')" class="bottom-nav-link" style="color: #ff4d4d;">
+            <i class="ph-light ph-sign-out"></i>
+            <span>SAIR</span>
+        </a>
     `;
 }
