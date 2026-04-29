@@ -34,6 +34,10 @@
                     <input type="text" id="full_name" placeholder="IDENTIFICAÇÃO NO SISTEMA">
                 </div>
                 <div class="form-group">
+                    <label>WHATSAPP (DDD + NÚMERO)</label>
+                    <input type="tel" id="whatsapp" placeholder="EX: 11999999999">
+                </div>
+                <div class="form-group">
                     <label>E-MAIL DE ACESSO (PROTEGIDO)</label>
                     <input type="text" id="email_display" disabled style="opacity: 0.5; cursor: not-allowed;">
                 </div>
@@ -77,6 +81,7 @@
             if (!context) return;
             
             document.getElementById('full_name').value = context.profile.full_name || '';
+            document.getElementById('whatsapp').value = context.profile.whatsapp || '';
             document.getElementById('email_display').value = context.session.user.email;
             checkGoogleConnection(context.profile);
 
@@ -86,7 +91,12 @@
 
         async function updateProfile() {
             const name = document.getElementById('full_name').value;
-            const { error } = await sb.from('profiles').update({ full_name: name }).eq('id', App.profile.id);
+            const wa = document.getElementById('whatsapp').value;
+            const { error } = await sb.from('profiles').update({ 
+                full_name: name,
+                whatsapp: wa 
+            }).eq('id', App.profile.id);
+
             if (error) showToast(error.message, 'error');
             else {
                 sessionStorage.removeItem('st_profile'); // Clear cache

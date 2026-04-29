@@ -30,16 +30,16 @@
             <div class="card-core">
                 <h3 style="margin-bottom: 24px;"><i class="ph-light ph-shopping-cart" style="color: var(--accent);"></i> CARRINHO ATIVO</h3>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
-                    <div class="form-group">
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+                    <div class="form-group" style="flex: 1; min-width: 240px;">
                         <label>CLIENTE / PROTOCOLO</label>
                         <select id="select-client" style="background: rgba(255,255,255,0.02);">
                             <option value="">SELECIONAR CLIENTE...</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="flex: 1; min-width: 240px;">
                         <label>NÍVEL DE DESCONTO</label>
-                        <select id="select-discount" style="background: rgba(255,255,255,0.02);">
+                        <select id="select-discount" onchange="renderCart(); setupSearch();" style="background: rgba(255,255,255,0.02);">
                             <option value="consumer">PREÇO CHEIO (VENDA DIRETA)</option>
                             <option value="c25">CLIENTE PREMIUM / CONSULTOR (25%)</option>
                             <option value="c35">CONSULTOR SENIOR (35%)</option>
@@ -146,18 +146,32 @@
         function setupSearch() {
             const input = document.getElementById('product-input');
             const results = document.getElementById('search-results');
-            input.addEventListener('input', () => {
-                const q = input.value.toLowerCase();
-                if (!q) { results.style.display = 'none'; return; }
-                const filtered = products.filter(p => p.name.toLowerCase().includes(q));
-                results.innerHTML = filtered.map(p => `
-                    <div style="padding: 16px; cursor: pointer; border-bottom: 1px solid var(--glass-border);" onclick="addToCart('${p.sku}')">
-                        <div style="font-weight: 700; color: #FFF; font-size: 0.85rem;">${p.name}</div>
-                        <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 4px;">R$ ${p.consumer.toFixed(2)} | ${p.pv} PV</div>
-                    </div>
-                `).join('');
+            const discount = document.getElementById('select-discount').value;
+
+            input.oninput = () => {
+                const query = input.value.toLowerCase();
+                if (!query) { results.style.display = 'none'; return; }
+                const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.sku.includes(query));
+                
+                results.innerHTML = filtered.map(p => {
+                    const price = p[discount] || p.consumer;
+                    const isDiscounted = price < p.consumer;
+                    return `
+                        <div style="padding: 12px 16px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.2s;" 
+                             onmouseover="this.style.background='rgba(255,255,255,0.02)'" 
+                             onmouseout="this.style.background='transparent'"
+                             onclick="addToCart('${p.sku}')">
+                            <div style="font-size: 0.8rem; font-weight: 700; color: #FFF;">${p.name}</div>
+                            <div style="font-size: 0.7rem; color: var(--accent); font-weight: 800; margin-top: 4px;">
+                                R$ ${price.toFixed(2)} 
+                                ${isDiscounted ? `<span style="text-decoration: line-through; opacity: 0.5; margin-left: 8px; color: #FFF;">R$ ${p.consumer.toFixed(2)}</span>` : ''}
+                                <span style="color: var(--text-secondary); margin-left: 12px;">| ${p.pv} PV</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
                 results.style.display = filtered.length ? 'block' : 'none';
-            });
+            };
         }
 
         function addToCart(sku) {

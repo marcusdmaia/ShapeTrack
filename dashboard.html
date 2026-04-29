@@ -38,32 +38,23 @@
         </div>
 
         <!-- Stats Grid -->
-        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.1s;">
-            <div class="card-core">
-                <i class="ph-light ph-users" style="font-size: 2rem; color: var(--accent);"></i>
-                <div style="margin-top: 24px;">
-                    <span class="label" style="font-size: 0.75rem; color: var(--text-secondary);">CLIENTES ATIVOS</span>
-                    <h2 id="total-clients" style="font-size: 2.5rem; margin-top: 8px;">0</h2>
+        <div class="grid-stack" style="grid-column: span 12;">
+            <div class="card-shell reveal" style="animation-delay: 0.1s;">
+                <div class="card-core">
+                    <span class="eyebrow">CLIENTES ATIVOS</span>
+                    <div id="total-clients" class="stat-value" style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-top: 12px;">0</div>
                 </div>
             </div>
-        </div>
-
-        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.2s;">
-            <div class="card-core">
-                <i class="ph-light ph-trend-up" style="font-size: 2rem; color: var(--accent);"></i>
-                <div style="margin-top: 24px;">
-                    <span class="label" style="font-size: 0.75rem; color: var(--text-secondary);">EVOLUÇÃO MÉDIA</span>
-                    <h2 style="font-size: 2.5rem; margin-top: 8px;">+12%</h2>
+            <div class="card-shell reveal" style="animation-delay: 0.2s;">
+                <div class="card-core">
+                    <span class="eyebrow">EVOLUÇÃO MÉDIA</span>
+                    <div class="stat-value" style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-top: 12px;">+12%</div>
                 </div>
             </div>
-        </div>
-
-        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.3s;">
-            <div class="card-core">
-                <i class="ph-light ph-currency-dollar" style="font-size: 2rem; color: var(--accent);"></i>
-                <div style="margin-top: 24px;">
-                    <span class="label" style="font-size: 0.75rem; color: var(--text-secondary);">RECEITA BRUTA</span>
-                    <h2 id="total-revenue" style="font-size: 2.5rem; margin-top: 8px;">R$ 0,00</h2>
+            <div class="card-shell reveal" style="animation-delay: 0.3s;">
+                <div class="card-core">
+                    <span class="eyebrow">RECEITA BRUTA</span>
+                    <div id="total-revenue" class="stat-value" style="font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-top: 12px;">R$ 0,00</div>
                 </div>
             </div>
         </div>
@@ -72,7 +63,7 @@
         <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.4s;">
             <div class="card-core">
                 <h3 style="margin-bottom: 24px;">ATALHOS DO SISTEMA</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                <div class="grid-stack" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
                     <a href="vendas.html" class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;">
                         <i class="ph-light ph-bolt"></i>
                         GESTÃO DE VENDAS

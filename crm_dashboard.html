@@ -33,25 +33,31 @@
             </div>
         </div>
 
-        <!-- Finance Stats -->
-        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.1s;">
-            <div class="card-core">
-                <span class="label" style="font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 0.1em;">CONTAS A RECEBER</span>
-                <h2 id="stat-receivables" style="font-size: 2rem; margin-top: 12px; color: var(--accent);">R$ 0,00</h2>
+        <!-- Summary Stats -->
+        <div class="grid-stack" style="grid-column: span 12;">
+            <div class="card-shell reveal" style="animation-delay: 0.1s;">
+                <div class="card-core">
+                    <span class="eyebrow">CONTAS A RECEBER</span>
+                    <div id="pending-revenue" class="stat-value" style="color: var(--accent);">R$ 0,00</div>
+                </div>
             </div>
-        </div>
-
-        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.2s;">
-            <div class="card-core">
-                <span class="label" style="font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 0.1em;">RISCO DE EVASÃO</span>
-                <h2 id="stat-inactive" style="font-size: 2rem; margin-top: 12px; color: #ef4444;">0</h2>
+            <div class="card-shell reveal" style="animation-delay: 0.2s;">
+                <div class="card-core">
+                    <span class="eyebrow">RISCO DE EVASÃO</span>
+                    <div id="churn-risk" class="stat-value" style="color: #FF4B4B;">0</div>
+                </div>
             </div>
-        </div>
-
-        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.3s;">
-            <div class="card-core">
-                <span class="label" style="font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 0.1em;">ANIVERSARIANTES</span>
-                <h2 id="stat-birthdays" style="font-size: 2rem; margin-top: 12px; color: #FFF;">0</h2>
+            <div class="card-shell reveal" style="animation-delay: 0.3s;">
+                <div class="card-core">
+                    <span class="eyebrow">ANIVERSARIANTES</span>
+                    <div id="birthdays" class="stat-value">0</div>
+                </div>
+            </div>
+            <div class="card-shell reveal" style="animation-delay: 0.4s;">
+                <div class="card-core">
+                    <span class="eyebrow">CONVERSÃO LEAD</span>
+                    <div id="conversion-rate" class="stat-value">0%</div>
+                </div>
             </div>
         </div>
 
