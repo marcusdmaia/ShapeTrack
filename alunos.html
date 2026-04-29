@@ -3,176 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protocolos Ativos // ShapeTrack Premium</title>
+    <title>Alunos // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.0">
-    <style>
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(24px); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 24px; }
-        .modal-card { width: 100%; max-width: 480px; }
-    </style>
+    <link rel="stylesheet" href="style.css?v=3.5">
 </head>
 <body>
 
-    <nav class="navbar reveal">
-        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
-        <div id="nav-links" class="nav-links desktop-only"></div>
-    </nav>
+    <nav class="navbar reveal"></nav>
 
-    <div class="bento-grid">
-        <!-- Header -->
-        <div class="card-shell reveal" style="grid-column: span 12;">
-            <div class="card-core" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-                <div>
-                    <span class="eyebrow">Monitoramento de Ativos</span>
-                    <h1>HUMAN DATA</h1>
-                    <p style="color: var(--text-secondary); margin-top: 8px;">Gestão de performance e retenção individualizada.</p>
-                </div>
-                <button class="btn btn-primary" onclick="showInviteModal()">
-                    GERAR CONVITE
-                    <div class="btn-icon"><i class="ph-light ph-user-plus"></i></div>
-                </button>
-            </div>
-        </div>
-
-        <!-- Search -->
-        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.1s;">
-            <div class="card-core" style="padding: 16px 24px;">
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <i class="ph-light ph-magnifying-glass" style="color: var(--accent); font-size: 1.2rem;"></i>
-                    <input type="text" id="search-alunos" placeholder="BUSCAR POR NOME OU ID..." oninput="filterAlunos()" style="background: transparent; border: none; padding: 12px 0;">
+    <main class="container">
+        <div class="bento-grid">
+            <!-- Header -->
+            <div class="card-shell reveal" style="grid-column: span 12;">
+                <div class="card-core" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-md);">
+                    <div>
+                        <span class="eyebrow">Base de Dados</span>
+                        <h1 style="margin: 4px 0;">GESTÃO DE ALUNOS</h1>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem;">Perfis, métricas e telemetria biométrica.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="window.location.href='cadastro_aluno.html'">
+                        NOVO ALUNO
+                        <div class="btn-icon" style="width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="ph-bold ph-plus"></i></div>
+                    </button>
                 </div>
             </div>
-        </div>
 
-        <!-- Alunos Grid -->
-        <div id="alunos-list" style="grid-column: span 12; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
-            <!-- Alunos -->
-        </div>
-    </div>
-
-    <!-- Invite Modal -->
-    <div id="inviteModal" class="modal" onclick="if(event.target === this) closeModal()">
-        <div class="card-shell modal-card reveal">
-            <div class="card-core">
-                <h2 style="margin-bottom: 12px;">NOVO ATIVO</h2>
-                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 24px;">Distribua o link de conexão para vincular novos alunos ao seu protocolo.</p>
-                <div class="form-group">
-                    <label>LINK DE CONVITE</label>
-                    <div style="display: flex; gap: 12px;">
-                        <input type="text" id="invite-link" readonly style="background: rgba(255,255,255,0.02);">
-                        <button class="btn" style="background: var(--accent); color: #FFF; padding: 0 20px;" onclick="copyLink()"><i class="ph-light ph-copy"></i></button>
+            <!-- List Section -->
+            <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.1s;">
+                <div class="card-core">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); flex-wrap: wrap; gap: var(--space-md);">
+                        <h3>ALUNOS ATIVOS</h3>
+                        <input type="text" id="search-alunos" placeholder="BUSCAR POR NOME..." style="max-width: 300px; padding: 12px 20px;">
+                    </div>
+                    
+                    <div id="alunos-grid" class="grid-stack">
+                        <!-- Injected by JS -->
+                        <div style="grid-column: 1/-1; text-align: center; padding: 60px; color: var(--text-secondary);">CARREGANDO BASE DE DADOS...</div>
                     </div>
                 </div>
-                <button class="btn" onclick="closeModal()" style="width: 100%; background: rgba(255,255,255,0.05); color: #FFF; margin-top: 12px;">FECHAR</button>
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- CRM Modal -->
-    <div id="crmModal" class="modal" onclick="if(event.target === this) closeModal()">
-        <div class="card-shell modal-card reveal">
-            <div class="card-core">
-                <h2 style="margin-bottom: 12px;">AJUSTE DE PERFIL</h2>
-                <input type="hidden" id="crm-aluno-id">
-                <div class="form-group">
-                    <label>DATA DE ANIVERSÁRIO</label>
-                    <input type="date" id="crm-birthday">
-                </div>
-                <div class="form-group" style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border);">
-                    <input type="checkbox" id="crm-business" style="width: 20px; height: 20px;">
-                    <label style="margin-bottom: 0;">NEGÓCIO APRESENTADO?</label>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
-                    <button class="btn" onclick="closeModal()" style="background: rgba(255,255,255,0.05); color: #FFF;">CANCELAR</button>
-                    <button class="btn btn-primary" onclick="saveCRM()">SALVAR</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <footer class="container" style="padding: var(--space-xl) var(--space-md); text-align: center; color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 0.1em;">
+        &copy; 2026 SHAPETRACK // HIGH-END PERFORMANCE ECOSYSTEM
+    </footer>
 
-    <script src="js/config.js?v=3.0"></script>
+    <script src="js/config.js?v=3.5"></script>
     <script>
-        let allAlunos = [];
-
         async function init() {
             const context = await App.init('alunos.html');
             if (!context) return;
             loadAlunos(context.session.user.id);
         }
 
-        async function loadAlunos(mentorId) {
-            const { data, error } = await sb.from('profiles').select('*').eq('mentor_id', mentorId).eq('role', 'client').order('full_name');
-            if (error) return;
-            allAlunos = data;
-            renderAlunos(allAlunos);
-        }
-
-        function renderAlunos(alunos) {
-            const container = document.getElementById('alunos-list');
-            container.innerHTML = alunos.length ? '' : '<div class="card-shell" style="grid-column: 1/-1;"><div class="card-core" style="text-align: center; padding: 64px; color: var(--text-secondary);">NENHUM PROTOCOLO IDENTIFICADO NA REDE.</div></div>';
-
-            alunos.forEach(aluno => {
-                const initials = aluno.full_name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-                const card = document.createElement('div');
-                card.className = 'card-shell reveal';
-                card.innerHTML = `
-                    <div class="card-core">
-                        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
-                            <div style="width: 48px; height: 48px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; border: 2px solid var(--accent);">${initials || '?'}</div>
-                            <div>
-                                <h3 style="font-size: 1rem; font-weight: 800; color: #FFF;">${aluno.full_name.toUpperCase()}</h3>
-                                <p style="font-size: 0.7rem; color: var(--text-secondary);"><i class="ph-light ph-calendar"></i> DESDE ${new Date(aluno.created_at).toLocaleDateString('pt-BR')}</p>
+        async function loadAlunos(userId) {
+            const { data, error } = await sb.from('profiles').select('*').eq('mentor_id', userId).eq('role', 'client');
+            const grid = document.getElementById('alunos-grid');
+            
+            if (data && data.length > 0) {
+                grid.innerHTML = data.map(aluno => `
+                    <div class="card-shell">
+                        <div class="card-core" style="padding: var(--space-lg);">
+                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                                <div style="width: 48px; height: 48px; background: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem;">${aluno.full_name.charAt(0)}</div>
+                                <div>
+                                    <div style="font-weight: 700; font-size: 0.9rem;">${aluno.full_name.toUpperCase()}</div>
+                                    <div style="font-size: 0.7rem; color: var(--text-secondary);">${aluno.email}</div>
+                                </div>
                             </div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                            <a href="lancar_avaliacao.html?aluno=${aluno.id}" class="btn" style="background: var(--accent); color: #FFF; font-size: 0.7rem; padding: 10px;"><i class="ph-light ph-clipboard-text"></i> AVALIAR</a>
-                            <button class="btn" style="background: rgba(255,255,255,0.05); color: #FFF; font-size: 0.7rem; padding: 10px;" onclick="openCRM('${aluno.id}')"><i class="ph-light ph-user-circle-gear"></i> PERFIL</button>
-                            <a href="relatorio.html?aluno=${aluno.id}" class="btn" style="background: rgba(255,255,255,0.05); color: #FFF; font-size: 0.7rem; padding: 10px;"><i class="ph-light ph-chart-line-up"></i> EVOLUÇÃO</a>
-                            <a href="https://wa.me/55${aluno.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="background: #25D366; color: #000; font-size: 0.7rem; padding: 10px;"><i class="ph-fill ph-whatsapp-logo"></i> CONTATO</a>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; font-size: 0.75rem;">
+                                <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
+                                    <span style="display: block; color: var(--text-secondary); font-size: 0.6rem;">PESO</span>
+                                    <span style="font-weight: 700;">${aluno.last_weight || '--'} kg</span>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
+                                    <span style="display: block; color: var(--text-secondary); font-size: 0.6rem;">STATUS</span>
+                                    <span style="font-weight: 700; color: var(--accent);">${(aluno.status || 'Ativo').toUpperCase()}</span>
+                                </div>
+                            </div>
+                            <a href="perfil_aluno.html?id=${aluno.id}" class="btn" style="width: 100%; padding: 10px; font-size: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">ACESSAR PERFIL</a>
                         </div>
                     </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function filterAlunos() {
-            const query = document.getElementById('search-alunos').value.toLowerCase();
-            renderAlunos(allAlunos.filter(a => a.full_name.toLowerCase().includes(query)));
-        }
-
-        function showInviteModal() {
-            const baseUrl = window.location.origin + window.location.pathname.replace('alunos.html', 'cadastro_aluno.html');
-            document.getElementById('invite-link').value = `${baseUrl}?mentor=${App.profile.id}`;
-            document.getElementById('inviteModal').style.display = 'flex';
-        }
-
-        function openCRM(alunoId) {
-            const aluno = allAlunos.find(a => a.id === alunoId);
-            document.getElementById('crm-aluno-id').value = alunoId;
-            document.getElementById('crm-birthday').value = aluno.birthday || '';
-            document.getElementById('crm-business').checked = aluno.business_presented || false;
-            document.getElementById('crmModal').style.display = 'flex';
-        }
-
-        async function saveCRM() {
-            const id = document.getElementById('crm-aluno-id').value;
-            const bday = document.getElementById('crm-birthday').value;
-            const business = document.getElementById('crm-business').checked;
-            const { error } = await sb.from('profiles').update({ birthday: bday, business_presented: business }).eq('id', id);
-            if (error) return showToast(error.message, 'error');
-            showToast('Dados salvos!');
-            closeModal();
-            loadAlunos(App.profile.id);
-        }
-
-        function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
-        function copyLink() {
-            const input = document.getElementById('invite-link');
-            input.select();
-            document.execCommand('copy');
-            showToast('Link copiado!');
+                `).join('');
+            } else {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: var(--text-secondary);">NENHUM ALUNO ENCONTRADO</div>`;
+            }
         }
 
         init();

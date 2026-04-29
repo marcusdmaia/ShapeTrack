@@ -3,99 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnóstico de Integridade // ShapeTrack Premium</title>
+    <title>Diagnóstico // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.0">
-    <style>
-        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
-        .diagnostico-card { width: 100%; max-width: 640px; }
-        .status-pill { padding: 12px 16px; border-radius: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 0.8rem; }
-        .status-pill.ok { background: rgba(46, 204, 113, 0.1); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.2); }
-        .status-pill.error { background: rgba(231, 76, 60, 0.1); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.2); }
-        pre { background: #000; color: #2ecc71; padding: 20px; border-radius: 16px; font-family: 'Courier New', monospace; font-size: 0.75rem; overflow-x: auto; margin-top: 16px; border: 1px solid var(--glass-border); }
-    </style>
+    <link rel="stylesheet" href="style.css?v=3.5">
 </head>
 <body>
 
-    <div class="card-shell diagnostico-card reveal">
-        <div class="card-core">
-            <div class="nav-logo" style="margin-bottom: 24px; font-size: 1.5rem;">SHAPE<span>TRACK</span></div>
-            <h1>SYSTEM CHECK-UP</h1>
-            <p style="color: var(--text-secondary); margin-bottom: 32px;">Verificação de integridade estrutural e conexão de dados.</p>
-            
-            <div id="results">
-                <p style="color: var(--text-secondary); text-align: center; padding: 24px;">INICIALIZANDO VARREDURA...</p>
+    <nav class="navbar reveal"></nav>
+
+    <main class="container">
+        <div class="bento-grid">
+            <!-- Header -->
+            <div class="card-shell reveal" style="grid-column: span 12;">
+                <div class="card-core">
+                    <span class="eyebrow">Análise Cognitiva</span>
+                    <h1 style="margin: 4px 0;">AUTO-DIAGNÓSTICO</h1>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem;">Identifique bloqueios e padrões de comportamento que impactam sua performance.</p>
+                </div>
             </div>
 
-            <div id="sql-fix" style="display: none; margin-top: 32px; border-top: 1px solid var(--glass-border); padding-top: 32px;">
-                <h3 style="font-size: 1rem; color: var(--accent); margin-bottom: 12px;">SCRIPT DE CORREÇÃO</h3>
-                <p style="color: var(--text-secondary); font-size: 0.8rem;">Execute os comandos abaixo no SQL Editor do seu console Supabase:</p>
-                <pre id="sql-code"></pre>
-                <button class="btn btn-primary" onclick="window.location.href='dashboard.html'" style="width: 100%; margin-top: 24px;">FORÇAR ACESSO AO DASHBOARD</button>
+            <!-- Quiz Section -->
+            <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.1s;">
+                <div class="card-core">
+                    <div id="quiz-container">
+                        <div class="quiz-step" data-step="1">
+                            <h3 style="margin-bottom: var(--space-lg);">01. QUAL SEU PRINCIPAL DESAFIO HOJE?</h3>
+                            <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+                                <button class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;" onclick="nextStep(2)">CONSTÂNCIA NA DIETA</button>
+                                <button class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;" onclick="nextStep(2)">FALTA DE ENERGIA/DISPOSIÇÃO</button>
+                                <button class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;" onclick="nextStep(2)">ESTAGNAÇÃO DE RESULTADOS</button>
+                            </div>
+                        </div>
+
+                        <div class="quiz-step" data-step="2" style="display: none;">
+                            <h3 style="margin-bottom: var(--space-lg);">02. COMO ESTÁ SUA ROTINA DE SONO?</h3>
+                            <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+                                <button class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;" onclick="finishQuiz()">DORMO MENOS DE 6H POR NOITE</button>
+                                <button class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;" onclick="finishQuiz()">DORMO BEM, MAS ACORDO CANSADO</button>
+                                <button class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;" onclick="finishQuiz()">SONO REPARADOR E REGULAR</button>
+                            </div>
+                        </div>
+
+                        <div id="quiz-result" style="display: none; text-align: center; padding: var(--space-xl) 0;">
+                            <i class="ph-bold ph-shield-star" style="font-size: 4rem; color: var(--accent); margin-bottom: 24px;"></i>
+                            <h3 style="margin-bottom: var(--space-md);">DIAGNÓSTICO CONCLUÍDO</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: var(--space-xl);">Seu perfil indica uma necessidade de ajuste no ciclo circadiano e aporte de micronutrientes.</p>
+                            <button class="btn btn-primary" onclick="location.reload()">REFAZER ANÁLISE</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context Info -->
+            <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.2s;">
+                <div class="card-core">
+                    <h3 style="margin-bottom: var(--space-lg);">POR QUE FAZER?</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.8;">
+                        O sucesso no protocolo ShapeTrack depende 20% da técnica e 80% da psicologia aplicada. Entender seu estado atual permite que seu mentor ajuste a estratégia de forma cirúrgica.
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 
+    <footer class="container" style="padding: var(--space-xl) var(--space-md); text-align: center; color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 0.1em;">
+        &copy; 2026 SHAPETRACK // HIGH-END PERFORMANCE ECOSYSTEM
+    </footer>
+
+    <script src="js/config.js?v=3.5"></script>
     <script>
-        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
-        const results = document.getElementById('results');
-        const sqlFix = document.getElementById('sql-fix');
-        const sqlCode = document.getElementById('sql-code');
-
-        async function runTests() {
-            results.innerHTML = '';
-            let hasErrors = false;
-            let missingCols = [];
-
-            // 1. Connection Test
-            try {
-                const { error } = await sb.from('profiles').select('count', { count: 'exact', head: true });
-                if(error) throw error;
-                addResult('DATA CONNECTION', 'STABLE', 'ok');
-            } catch(e) {
-                addResult('DATA CONNECTION', 'FALHOU: ' + e.message, 'error');
-                hasErrors = true;
-            }
-
-            // 2. CRM Columns Test
-            try {
-                const { error } = await sb.from('profiles').select('birthday, business_presented, next_assessment_date').limit(1);
-                if(error) {
-                    addResult('CRM SCHEMA', 'MISSING COLUMNS', 'error');
-                    missingCols.push('ALTER TABLE profiles \nADD COLUMN IF NOT EXISTS birthday DATE, \nADD COLUMN IF NOT EXISTS business_presented BOOLEAN DEFAULT FALSE, \nADD COLUMN IF NOT EXISTS next_assessment_date DATE;');
-                    hasErrors = true;
-                } else {
-                    addResult('CRM SCHEMA', 'VERIFIED', 'ok');
-                }
-            } catch(e) {}
-
-            // 3. Sales Table Test
-            try {
-                const { error } = await sb.from('sales').select('*').limit(1);
-                if(error) {
-                    addResult('SALES ARCHITECTURE', 'NOT IDENTIFIED', 'error');
-                    missingCols.push('-- CREATE SALES TABLE\nCREATE TABLE IF NOT EXISTS sales (\n  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),\n  created_at TIMESTAMPTZ DEFAULT NOW(),\n  client_id UUID REFERENCES profiles(id),\n  mentor_id UUID REFERENCES profiles(id),\n  total_price NUMERIC,\n  total_pv NUMERIC,\n  payment_status TEXT,\n  amount_paid NUMERIC,\n  due_date DATE,\n  items JSONB\n);');
-                    hasErrors = true;
-                } else {
-                    addResult('SALES ARCHITECTURE', 'ACTIVE', 'ok');
-                }
-            } catch(e) {}
-
-            if(hasErrors) {
-                sqlFix.style.display = 'block';
-                sqlCode.textContent = missingCols.join('\n\n');
-            } else {
-                results.innerHTML += '<div style="text-align:center; padding: 32px;"><i class="ph-fill ph-check-circle" style="font-size: 3rem; color: #2ecc71; margin-bottom: 16px; display: block;"></i><h3 style="color: #FFF;">SISTEMA OPERACIONAL</h3><p style="color: var(--text-secondary); margin-top: 8px;">Toda a infraestrutura está sincronizada com o Design System v3.0.</p></div>';
-                results.innerHTML += '<button class="btn btn-primary" onclick="window.location.href=\'dashboard.html\'" style="width:100%; margin-top:24px;">ACESSAR CONSOLE</button>';
-            }
+        async function init() {
+            const context = await App.init('diagnostico.html');
         }
 
-        function addResult(test, msg, style) {
-            results.innerHTML += `<div class="status-pill ${style}"><i class="ph-fill ${style==='ok'?'ph-check-circle':'ph-warning-octagon'}"></i> <span><b>${test}:</b> ${msg}</span></div>`;
+        function nextStep(step) {
+            document.querySelectorAll('.quiz-step').forEach(s => s.style.display = 'none');
+            document.querySelector(`.quiz-step[data-step="${step}"]`).style.display = 'block';
         }
 
-        runTests();
+        function finishQuiz() {
+            document.querySelectorAll('.quiz-step').forEach(s => s.style.display = 'none');
+            document.getElementById('quiz-result').style.display = 'block';
+            showToast('Diagnóstico processado.');
+        }
+
+        init();
     </script>
 </body>
 </html>

@@ -3,116 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShapeTrack // Premium Mentorship Access</title>
+    <title>Login // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.0">
-    <style>
-        .login-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 100dvh;
-        }
-        
-        .login-visual {
-            background: linear-gradient(135deg, #050807 0%, #2F5948 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 80px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .login-visual::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-            opacity: 0.1;
-        }
-
-        .login-form-side {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            background: var(--bg-dark);
-        }
-
-        @media (max-width: 900px) {
-            .login-container { grid-template-columns: 1fr; }
-            .login-visual { display: none; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css?v=3.5">
 </head>
 <body>
 
-    <div class="login-container">
-        <!-- Visual Side -->
-        <div class="login-visual reveal">
-            <span class="eyebrow" style="color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1);">Protocolo Ativo</span>
-            <h1 style="font-size: 5rem; color: #FFF; margin-bottom: 24px;">SHAPE<br><span style="color: var(--accent);">TRACK</span></h1>
-            <p style="color: rgba(255,255,255,0.6); font-size: 1.1rem; max-width: 400px; line-height: 1.6;">
-                A plataforma definitiva para mentoria de alta performance. 
-                Spatial rhythm, fluid motion, and human-centric data.
-            </p>
-        </div>
+    <main style="display: flex; align-items: center; justify-content: center; padding: var(--space-xl) var(--space-md);">
+        <div class="card-shell reveal" style="width: 100%; max-width: 450px;">
+            <div class="card-core" style="text-align: center;">
+                <div class="nav-logo" style="font-size: 2rem; margin-bottom: var(--space-xl);">SHAPE<span>TRACK</span></div>
+                
+                <h2 style="margin-bottom: var(--space-md);">BEM-VINDO</h2>
+                <p style="color: var(--text-secondary); margin-bottom: var(--space-xl); font-size: var(--font-size-sm);">INSIRA SUAS CREDENCIAIS PARA ACESSAR O ECOSSISTEMA.</p>
 
-        <!-- Form Side -->
-        <div class="login-form-side">
-            <div class="card-shell reveal" style="width: 100%; max-width: 440px; animation-delay: 0.2s;">
-                <div class="card-core">
-                    <h2 style="margin-bottom: 8px;">BEM-VINDO</h2>
-                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 32px;">Insira suas credenciais de acesso premium.</p>
-                    
-                    <form id="login-form">
-                        <div class="form-group">
-                            <label>E-MAIL CORPORATIVO</label>
-                            <input type="email" id="email" placeholder="nome@exemplo.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label>CHAVE DE ACESSO</label>
-                            <input type="password" id="password" placeholder="••••••••" required>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">
-                            AUTENTICAR SISTEMA
-                            <div class="btn-icon"><i class="ph-light ph-fingerprint"></i></div>
-                        </button>
-                    </form>
-                    
-                    <div style="margin-top: 32px; text-align: center;">
-                        <a href="recuperar_senha.html" style="color: var(--text-secondary); font-size: 0.75rem; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">ESQUECEU SUA CHAVE?</a>
+                <form id="login-form">
+                    <div class="form-group" style="text-align: left;">
+                        <label>E-MAIL CORPORATIVO</label>
+                        <input type="email" id="email" placeholder="nome@exemplo.com" required>
                     </div>
+                    <div class="form-group" style="text-align: left;">
+                        <label>SENHA DE ACESSO</label>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-md);">
+                        ENTRAR NO SISTEMA
+                        <div class="btn-icon" style="width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="ph-bold ph-arrow-right"></i></div>
+                    </button>
+                </form>
+
+                <div style="margin-top: var(--space-xl); display: flex; flex-direction: column; gap: var(--space-sm);">
+                    <a href="recuperar_senha.html" style="font-size: var(--font-size-sm); color: var(--text-secondary); text-decoration: underline;">Esqueceu sua senha?</a>
+                    <a href="cadastro_aluno.html" style="font-size: var(--font-size-sm); color: var(--accent); font-weight: 700;">Criar nova conta de aluno</a>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <script src="js/config.js?v=3.0"></script>
+    <script src="js/config.js?v=3.5"></script>
     <script>
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        document.getElementById('login-form').onsubmit = async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const btn = e.target.querySelector('button');
+            
+            btn.disabled = true;
+            btn.innerText = 'AUTENTICANDO...';
 
             const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
             if (error) {
                 showToast(error.message, 'error');
+                btn.disabled = false;
+                btn.innerText = 'ENTRAR NO SISTEMA';
             } else {
-                showToast('Acesso Autorizado');
-                setTimeout(() => window.location.href = 'dashboard.html', 1500);
+                showToast('Acesso concedido. Bem-vindo de volta!');
+                setTimeout(() => window.location.href = 'dashboard.html', 1000);
             }
-        });
+        };
 
         // Check if already logged in
-        async function checkSession() {
-            const { data: { session } } = await sb.auth.getSession();
+        sb.auth.getSession().then(({data: {session}}) => {
             if (session) window.location.href = 'dashboard.html';
-        }
-        checkSession();
+        });
     </script>
 </body>
 </html>

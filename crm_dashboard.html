@@ -6,11 +6,11 @@
     <title>Gestão 360 // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.0">
+    <link rel="stylesheet" href="style.css?v=3.5">
     <style>
-        table { width: 100%; border-collapse: collapse; margin-top: 24px; }
-        th { text-align: left; padding: 16px; font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--glass-border); }
-        td { padding: 16px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        table { width: 100%; border-collapse: collapse; margin-top: var(--space-lg); }
+        th { text-align: left; padding: var(--space-md); font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--glass-border); }
+        td { padding: var(--space-md); font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.02); }
         .badge { padding: 4px 10px; border-radius: 100px; font-size: 0.7rem; font-weight: 700; }
         .badge-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
         .badge-warning { background: rgba(217, 108, 43, 0.1); color: var(--accent); }
@@ -18,126 +18,102 @@
 </head>
 <body>
 
-    <nav class="navbar reveal">
-        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
-        <div id="nav-links" class="nav-links desktop-only"></div>
-    </nav>
+    <nav class="navbar reveal"></nav>
 
-    <div class="bento-grid">
-        <!-- Header -->
-        <div class="card-shell reveal" style="grid-column: span 12;">
-            <div class="card-core">
-                <span class="eyebrow">Monitoramento Ativo</span>
-                <h1 style="margin: 4px 0;">GESTÃO 360º</h1>
-                <p style="color: var(--text-secondary); font-size: 0.85rem;">Visão completa da retenção e saúde do ecossistema.</p>
+    <main class="container">
+        <div class="bento-grid">
+            <!-- Header -->
+            <div class="card-shell reveal" style="grid-column: span 12;">
+                <div class="card-core">
+                    <span class="eyebrow">Monitoramento Ativo</span>
+                    <h1 style="margin: 4px 0;">GESTÃO 360º</h1>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem;">Visão completa da retenção e saúde do ecossistema.</p>
+                </div>
             </div>
-        </div>
 
-        <!-- Summary Stats -->
-        <div class="grid-stack" style="grid-column: span 12;">
-            <div class="card-shell reveal" style="animation-delay: 0.1s;">
-                <div class="card-core">
-                    <span class="eyebrow">CONTAS A RECEBER</span>
-                    <div id="pending-revenue" class="stat-value" style="color: var(--accent);">R$ 0,00</div>
+            <!-- Summary Stats -->
+            <div class="grid-stack" style="grid-column: span 12;">
+                <div class="card-shell reveal" style="animation-delay: 0.1s;">
+                    <div class="card-core">
+                        <span class="eyebrow">CONTAS A RECEBER</span>
+                        <div id="pending-revenue" style="font-size: 2rem; font-weight: 800; color: var(--accent); margin-top: 12px;">R$ 0,00</div>
+                    </div>
+                </div>
+                <div class="card-shell reveal" style="animation-delay: 0.2s;">
+                    <div class="card-core">
+                        <span class="eyebrow">RISCO DE EVASÃO</span>
+                        <div id="churn-risk" style="font-size: 2rem; font-weight: 800; color: #FF4B4B; margin-top: 12px;">0</div>
+                    </div>
+                </div>
+                <div class="card-shell reveal" style="animation-delay: 0.3s;">
+                    <div class="card-core">
+                        <span class="eyebrow">ANIVERSARIANTES</span>
+                        <div id="birthdays" style="font-size: 2rem; font-weight: 800; color: #FFF; margin-top: 12px;">0</div>
+                    </div>
+                </div>
+                <div class="card-shell reveal" style="animation-delay: 0.4s;">
+                    <div class="card-core">
+                        <span class="eyebrow">CONVERSÃO LEAD</span>
+                        <div id="conversion-rate" style="font-size: 2rem; font-weight: 800; color: #FFF; margin-top: 12px;">0%</div>
+                    </div>
                 </div>
             </div>
-            <div class="card-shell reveal" style="animation-delay: 0.2s;">
-                <div class="card-core">
-                    <span class="eyebrow">RISCO DE EVASÃO</span>
-                    <div id="churn-risk" class="stat-value" style="color: #FF4B4B;">0</div>
-                </div>
-            </div>
-            <div class="card-shell reveal" style="animation-delay: 0.3s;">
-                <div class="card-core">
-                    <span class="eyebrow">ANIVERSARIANTES</span>
-                    <div id="birthdays" class="stat-value">0</div>
-                </div>
-            </div>
-            <div class="card-shell reveal" style="animation-delay: 0.4s;">
-                <div class="card-core">
-                    <span class="eyebrow">CONVERSÃO LEAD</span>
-                    <div id="conversion-rate" class="stat-value">0%</div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Lists -->
-        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.4s;">
-            <div class="card-core">
-                <h3><i class="ph-light ph-warning-octagon" style="color: #ef4444; margin-right: 8px;"></i> ALERTA DE RETENÇÃO</h3>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr><th>Cliente</th><th>Última Atividade</th><th>Status</th><th>Ação</th></tr>
-                        </thead>
-                        <tbody id="retention-list">
-                            <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-secondary);">PROCESSANDO DADOS...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.5s;">
-            <div class="card-core">
-                <h3><i class="ph-light ph-hand-coins" style="color: var(--accent); margin-right: 8px;"></i> PENDÊNCIAS FINANCEIRAS</h3>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr><th>Cliente</th><th>Valor em Aberto</th><th>Vencimento</th><th>Ação</th></tr>
-                        </thead>
-                        <tbody id="receivables-list">
-                            <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-secondary);">TUDO EM DIA.</td></tr>
-                        </tbody>
-                    </table>
+            <!-- Main Table -->
+            <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.5s;">
+                <div class="card-core">
+                    <h3 style="margin-bottom: var(--space-lg);">FLUXO DE RETENÇÃO</h3>
+                    <div style="overflow-x: auto;">
+                        <table id="retention-table">
+                            <thead>
+                                <tr>
+                                    <th>CLIENTE</th>
+                                    <th>ÚLTIMA AVALIAÇÃO</th>
+                                    <th>STATUS</th>
+                                    <th>AÇÃO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <script src="js/config.js?v=3.0"></script>
+    <footer class="container" style="padding: var(--space-xl) var(--space-md); text-align: center; color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 0.1em;">
+        &copy; 2026 SHAPETRACK // HIGH-END PERFORMANCE ECOSYSTEM
+    </footer>
+
+    <script src="js/config.js?v=3.5"></script>
     <script>
         async function init() {
             const context = await App.init('crm_dashboard.html');
             if (!context) return;
-            loadCRMData(context.session.user.id);
+            loadCRM(context.session.user.id);
         }
 
-        async function loadCRMData(mentorId) {
-            const { data: clients } = await sb.from('profiles').select('*').eq('mentor_id', mentorId).eq('role', 'client');
-            const { data: sales } = await sb.from('sales').select('*, profiles!client_id(full_name)').eq('mentor_id', mentorId);
-            if (!clients || !sales) return;
-
-            const pendingSales = sales.filter(s => s.payment_status === 'Parcial' || s.payment_status === 'Pendente');
-            const totalDue = pendingSales.reduce((acc, s) => acc + (s.total_price - (s.amount_paid || 0)), 0);
-            document.getElementById('stat-receivables').textContent = totalDue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-            document.getElementById('receivables-list').innerHTML = pendingSales.length ? pendingSales.map(s => `
-                <tr>
-                    <td style="font-weight:700; color:#FFF;">${s.profiles?.full_name || 'Desconhecido'}</td>
-                    <td style="color:#ef4444; font-weight:800;">R$ ${(s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                    <td>${s.due_date ? new Date(s.due_date).toLocaleDateString('pt-BR') : '--'}</td>
-                    <td><button class="btn" style="padding: 8px 16px; font-size: 0.7rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color:#FFF;" onclick="alert('Funcionalidade em manutenção')">COBRAR</button></td>
-                </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Sem pendências.</td></tr>';
-
-            const now = new Date();
-            const inactiveClients = clients.map(c => {
-                const clientSales = sales.filter(s => s.client_id === c.id);
-                if (clientSales.length === 0) return { ...c, days: 999, lastDate: 'Nunca' };
-                const lastSale = clientSales.reduce((a, b) => new Date(a.created_at) > new Date(b.created_at) ? a : b);
-                return { ...c, days: Math.floor((now - new Date(lastSale.created_at)) / (1000 * 60 * 60 * 24)), lastDate: new Date(lastSale.created_at).toLocaleDateString('pt-BR') };
-            }).filter(c => c.days > 30);
-
-            document.getElementById('stat-inactive').textContent = inactiveClients.length;
-            document.getElementById('retention-list').innerHTML = inactiveClients.length ? inactiveClients.sort((a,b) => b.days - a.days).map(c => `
-                <tr>
-                    <td style="font-weight:700; color:#FFF;">${c.full_name}</td>
-                    <td style="color:var(--text-secondary);">${c.lastDate}</td>
-                    <td><span class="badge ${c.days > 90 ? 'badge-danger' : 'badge-warning'}">${c.days} DIAS INATIVO</span></td>
-                    <td><a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="padding: 8px 16px; font-size: 0.7rem; background: #25D366; color:#000;"><i class="ph-fill ph-whatsapp-logo"></i> RESGATAR</a></td>
-                </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Base 100% ativa.</td></tr>';
-
-            document.getElementById('stat-birthdays').textContent = clients.filter(c => c.birthday && parseInt(c.birthday.split('-')[1]) === (now.getMonth() + 1)).length;
+        async function loadCRM(userId) {
+            const { data: profiles } = await sb.from('profiles').select('*').eq('mentor_id', userId).eq('role', 'client');
+            const { data: sales } = await sb.from('sales').select('*').eq('mentor_id', userId);
+            
+            if (profiles) {
+                const tbody = document.querySelector('#retention-table tbody');
+                tbody.innerHTML = profiles.map(p => {
+                    const status = p.status || 'Ativo';
+                    const badgeClass = status === 'Inativo' ? 'badge-danger' : (status === 'Risco' ? 'badge-warning' : '');
+                    return `
+                        <tr>
+                            <td style="font-weight: 600;">${p.full_name.toUpperCase()}</td>
+                            <td style="color: var(--text-secondary);">${p.last_assessment || 'N/A'}</td>
+                            <td><span class="badge ${badgeClass}">${status.toUpperCase()}</span></td>
+                            <td><a href="perfil_aluno.html?id=${p.id}" class="btn" style="padding: 8px 16px; font-size: 0.7rem; background: rgba(255,255,255,0.05);">VER PERFIL</a></td>
+                        </tr>
+                    `;
+                }).join('');
+            }
         }
 
         init();

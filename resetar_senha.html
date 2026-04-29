@@ -3,65 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuração de Nova Credencial // ShapeTrack Premium</title>
+    <title>Redefinir Senha // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.0">
-    <style>
-        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
-        .reset-card { width: 100%; max-width: 400px; }
-    </style>
+    <link rel="stylesheet" href="style.css?v=3.5">
 </head>
 <body>
 
-    <div class="card-shell reset-card reveal">
-        <div class="card-core" style="text-align: center;">
-            <div class="nav-logo" style="margin-bottom: 24px; font-size: 1.5rem; justify-content: center;">SHAPE<span>TRACK</span></div>
-            <h1>DEFINIR NOVA SENHA</h1>
-            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin-bottom: 32px;">Estabeleça sua nova chave de segurança para retomar o acesso ao ecossistema.</p>
+    <main style="display: flex; align-items: center; justify-content: center; padding: var(--space-xl) var(--space-md);">
+        <div class="card-shell reveal" style="width: 100%; max-width: 450px;">
+            <div class="card-core">
+                <div class="nav-logo" style="font-size: 1.5rem; text-align: center; margin-bottom: var(--space-xl);">SHAPE<span>TRACK</span></div>
+                
+                <h2 style="text-align: center; margin-bottom: var(--space-md);">NOVA SENHA</h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: var(--space-xl); font-size: var(--font-size-sm);">ESCOLHA UMA NOVA CREDENCIAL DE ACESSO SEGURA PARA SUA CONTA.</p>
 
-            <div class="form-group">
-                <label>NOVA SENHA</label>
-                <input type="password" id="new_password" placeholder="MÍNIMO 6 CARACTERES">
+                <form id="reset-form">
+                    <div class="form-group">
+                        <label>NOVA SENHA</label>
+                        <input type="password" id="new-password" placeholder="••••••••" required>
+                    </div>
+                    <div class="form-group">
+                        <label>CONFIRMAR NOVA SENHA</label>
+                        <input type="password" id="confirm-password" placeholder="••••••••" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-md);">
+                        ATUALIZAR CREDENCIAIS
+                        <div class="btn-icon" style="width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="ph-bold ph-key"></i></div>
+                    </button>
+                </form>
+
+                <div style="margin-top: var(--space-xl); text-align: center;">
+                    <a href="index.html" style="font-size: var(--font-size-sm); color: var(--text-secondary);">Cancelar redefinição</a>
+                </div>
             </div>
-
-            <button class="btn btn-primary" id="resetBtn" style="width: 100%; margin-top: 12px;">
-                ATUALIZAR CREDENCIAIS
-                <div class="btn-icon"><i class="ph-light ph-lock-key-open"></i></div>
-            </button>
-
-            <div id="message" style="margin-top: 24px; font-size: 0.8rem; font-weight: 700;"></div>
         </div>
-    </div>
+    </main>
 
+    <script src="js/config.js?v=3.5"></script>
     <script>
-        const _supabase = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
+        document.getElementById('reset-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
 
-        document.getElementById('resetBtn').onclick = async () => {
-            const password = document.getElementById('new_password').value;
-            const msg = document.getElementById('message');
-            const btn = document.getElementById('resetBtn');
+            if (password !== confirmPassword) return showToast('As senhas não coincidem', 'error');
 
-            if(password.length < 6) {
-                msg.style.color = '#ef4444';
-                msg.textContent = 'MÍNIMO DE 6 CARACTERES NECESSÁRIO.';
-                return;
-            }
-
+            const btn = e.target.querySelector('button');
             btn.disabled = true;
-            btn.innerHTML = 'ATUALIZANDO... <div class="btn-icon"><i class="ph-light ph-spinner ph-spin"></i></div>';
+            btn.innerText = 'ATUALIZANDO...';
 
-            const { error } = await _supabase.auth.updateUser({ password: password });
+            const { error } = await sb.auth.updateUser({ password });
 
             if (error) {
-                msg.style.color = '#ef4444';
-                msg.textContent = 'ERRO: ' + error.message.toUpperCase();
+                showToast(error.message, 'error');
                 btn.disabled = false;
-                btn.innerHTML = 'ATUALIZAR CREDENCIAIS <div class="btn-icon"><i class="ph-light ph-lock-key-open"></i></div>';
+                btn.innerText = 'ATUALIZAR CREDENCIAIS';
             } else {
-                msg.style.color = '#2ecc71';
-                msg.textContent = 'SENHA ATUALIZADA! REDIRECIONANDO...';
-                setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+                showToast('Senha atualizada com sucesso!');
+                setTimeout(() => window.location.href = 'dashboard.html', 2000);
             }
         };
     </script>

@@ -3,123 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radar de Prospecção // ShapeTrack Premium</title>
+    <title>Leads // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.0">
+    <link rel="stylesheet" href="style.css?v=3.5">
 </head>
 <body>
 
-    <nav class="navbar reveal">
-        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
-        <div id="nav-links" class="nav-links desktop-only"></div>
-    </nav>
+    <nav class="navbar reveal"></nav>
 
-    <div class="bento-grid">
-        <!-- Header -->
-        <div class="card-shell reveal" style="grid-column: span 12;">
-            <div class="card-core" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-                <div>
-                    <span class="eyebrow">Inteligência de Captura</span>
-                    <h1>LEAD RADAR</h1>
-                    <p style="color: var(--text-secondary); margin-top: 8px;">Monitoramento de prospecção e conversão em tempo real.</p>
+    <main class="container">
+        <div class="bento-grid">
+            <!-- Header -->
+            <div class="card-shell reveal" style="grid-column: span 12;">
+                <div class="card-core">
+                    <span class="eyebrow">Pipeline de Aquisição</span>
+                    <h1 style="margin: 4px 0;">CENTRAL DE LEADS</h1>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem;">Gestão de potenciais alunos e solicitações de ingresso.</p>
                 </div>
-                <button class="btn btn-primary" onclick="copyFunnelLink()">
-                    LINK DO FUNIL
-                    <div class="btn-icon"><i class="ph-light ph-link"></i></div>
-                </button>
             </div>
-        </div>
 
-        <!-- Search Bar -->
-        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.1s;">
-            <div class="card-core" style="padding: 16px 24px;">
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <i class="ph-light ph-magnifying-glass" style="color: var(--accent); font-size: 1.2rem;"></i>
-                    <input type="text" id="search-leads" placeholder="FILTRAR POR NOME OU WHATSAPP..." oninput="filterLeads()" style="background: transparent; border: none; padding: 12px 0; font-size: 0.85rem;">
+            <!-- List -->
+            <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.1s;">
+                <div class="card-core">
+                    <h3 style="margin-bottom: var(--space-lg);">SOLICITAÇÕES PENDENTES</h3>
+                    <div id="leads-list" style="display: flex; flex-direction: column; gap: var(--space-md);">
+                        <div style="text-align: center; padding: 48px; color: var(--text-secondary);">CARREGANDO LEADS...</div>
+                    </div>
                 </div>
             </div>
         </div>
+    </main>
 
-        <!-- Leads Grid -->
-        <div id="leads-list" style="grid-column: span 12; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
-            <!-- Leads -->
-        </div>
-    </div>
+    <footer class="container" style="padding: var(--space-xl) var(--space-md); text-align: center; color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 0.1em;">
+        &copy; 2026 SHAPETRACK // HIGH-END PERFORMANCE ECOSYSTEM
+    </footer>
 
-    <script src="js/config.js?v=3.0"></script>
+    <script src="js/config.js?v=3.5"></script>
     <script>
-        let allLeads = [];
-
         async function init() {
             const context = await App.init('leads_admin.html');
             if (!context) return;
             loadLeads(context.session.user.id);
         }
 
-        async function loadLeads(mentorId) {
-            const { data: leads } = await sb.from('leads').select('*').eq('mentor_id', mentorId).order('created_at', { ascending: false });
-            allLeads = leads || [];
-            renderLeads(allLeads);
-        }
-
-        function renderLeads(list) {
+        async function loadLeads(userId) {
+            const { data } = await sb.from('leads').select('*').eq('mentor_id', userId).order('created_at', { ascending: false });
             const container = document.getElementById('leads-list');
-            container.innerHTML = list.length ? '' : '<div class="card-shell" style="grid-column: 1/-1;"><div class="card-core" style="text-align: center; padding: 64px; color: var(--text-secondary);">NENHUM LEAD IDENTIFICADO NO RADAR.</div></div>';
             
-            list.forEach(lead => {
-                const date = new Date(lead.created_at).toLocaleDateString('pt-BR');
-                const macros = lead.calculated_data;
-                const goalText = lead.goal === 'loss' ? 'EMAGRECER' : (lead.goal === 'gain' ? 'GANHAR PESO' : 'MANTER');
-                
-                const card = document.createElement('div');
-                card.className = 'card-shell reveal';
-                card.innerHTML = `
-                    <div class="card-core">
-                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.65rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 16px;">
-                            <span><i class="ph-light ph-calendar"></i> ${date}</span>
-                            <span style="background: var(--accent); color: #FFF; padding: 4px 8px; border-radius: 6px;">${goalText}</span>
+            if (data && data.length > 0) {
+                container.innerHTML = data.map(lead => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-md); background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 16px; flex-wrap: wrap; gap: var(--space-md);">
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.9rem; color: #FFF;">${lead.name.toUpperCase()}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-secondary);">${lead.email} | ${lead.phone || 'SEM TELEFONE'}</div>
                         </div>
-                        <h3 style="font-size: 1.1rem; font-weight: 800; color: #FFF; margin-bottom: 20px;">${lead.full_name.toUpperCase()}</h3>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); margin-bottom: 24px;">
-                            <div style="display: flex; flex-direction: column;"><span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 700;">CALORIAS</span><span style="font-size: 1rem; font-weight: 800; color: #FFF;">${macros.calories}</span></div>
-                            <div style="display: flex; flex-direction: column;"><span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 700;">PROTEÍNA</span><span style="font-size: 1rem; font-weight: 800; color: #FFF;">${macros.protein}g</span></div>
-                            <div style="display: flex; flex-direction: column;"><span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 700;">CARBOS</span><span style="font-size: 1rem; font-weight: 800; color: #FFF;">${macros.carbs}g</span></div>
-                            <div style="display: flex; flex-direction: column;"><span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 700;">ÁGUA</span><span style="font-size: 1rem; font-weight: 800; color: #FFF;">${macros.water}L</span></div>
-                        </div>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                            <button class="btn btn-primary" onclick="convertLead('${lead.id}')" style="font-size: 0.7rem; padding: 10px;">CONVERTER</button>
-                            <a href="https://wa.me/55${lead.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="background: #25D366; color: #000; font-size: 0.7rem; padding: 10px;"><i class="ph-fill ph-whatsapp-logo"></i> WHATSAPP</a>
+                        <div style="display: flex; gap: var(--space-sm);">
+                            <a href="https://wa.me/${lead.phone}" target="_blank" class="btn" style="padding: 8px 16px; font-size: 0.7rem; background: #25D366; color: #FFF;">WHATSAPP</a>
+                            <button onclick="deleteLead('${lead.id}')" class="btn" style="padding: 8px 16px; font-size: 0.7rem; background: rgba(239, 68, 68, 0.1); color: #ef4444;">EXCLUIR</button>
                         </div>
                     </div>
-                `;
-                container.appendChild(card);
-            });
+                `).join('');
+            } else {
+                container.innerHTML = `<div style="text-align: center; padding: 48px; color: var(--text-secondary);">NENHUM LEAD PENDENTE NO MOMENTO.</div>`;
+            }
         }
 
-        function filterLeads() {
-            const query = document.getElementById('search-leads').value.toLowerCase();
-            renderLeads(allLeads.filter(l => l.full_name.toLowerCase().includes(query) || l.whatsapp.includes(query)));
-        }
-
-        async function convertLead(leadId) {
-            if (!confirm('TRANSFORMAR ESTE LEAD EM UM ALUNO OFICIAL?')) return;
-            const lead = allLeads.find(l => l.id === leadId);
-            const { error: pError } = await sb.from('profiles').insert([{
-                id: lead.id, full_name: lead.full_name, role: 'client', mentor_id: App.profile.id, whatsapp: lead.whatsapp
-            }]);
-            if (pError) return showToast(pError.message, 'error');
-            await sb.from('leads').delete().eq('id', leadId);
-            showToast('Lead convertido com sucesso!');
-            loadLeads(App.profile.id);
-        }
-
-        async function copyFunnelLink() {
-            const link = window.location.origin + window.location.pathname.replace('leads_admin.html', 'calculadora.html') + `?mentor=${App.profile.id}`;
-            navigator.clipboard.writeText(link);
-            showToast('Link do Funil copiado!');
+        async function deleteLead(id) {
+            if (confirm('Deseja excluir este lead?')) {
+                await sb.from('leads').delete().eq('id', id);
+                showToast('Lead removido');
+                init();
+            }
         }
 
         init();

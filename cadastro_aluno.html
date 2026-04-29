@@ -3,109 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciação de Protocolo // ShapeTrack Premium</title>
+    <title>Cadastro // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.0">
-    <style>
-        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
-        .onboarding-card { width: 100%; max-width: 440px; }
-    </style>
+    <link rel="stylesheet" href="style.css?v=3.5">
 </head>
 <body>
 
-    <div class="card-shell onboarding-card reveal">
-        <div class="card-core" style="text-align: center;">
-            <div class="nav-logo" style="margin-bottom: 24px; font-size: 2rem;">SHAPE<span>TRACK</span></div>
-            
-            <div id="mentor-info" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.02); padding: 8px 16px; border-radius: 50px; font-size: 0.75rem; border: 1px solid var(--glass-border); margin-bottom: 32px; color: var(--text-secondary); font-weight: 700;">
-                <i class="ph-light ph-spinner ph-spin"></i> VALIDANDO ACESSO...
+    <main style="display: flex; align-items: center; justify-content: center; padding: var(--space-xl) var(--space-md);">
+        <div class="card-shell reveal" style="width: 100%; max-width: 550px;">
+            <div class="card-core">
+                <div class="nav-logo" style="font-size: 1.5rem; text-align: center; margin-bottom: var(--space-xl);">SHAPE<span>TRACK</span></div>
+                
+                <h2 style="text-align: center; margin-bottom: var(--space-md);">NOVO REGISTRO</h2>
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: var(--space-xl); font-size: var(--font-size-sm);">CRIE SUA CONTA PARA INICIAR O PROTOCOLO DE ALTA PERFORMANCE.</p>
+
+                <form id="register-form">
+                    <div class="form-group">
+                        <label>NOME COMPLETO</label>
+                        <input type="text" id="full_name" placeholder="DIGITE SEU NOME..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>E-MAIL CORPORATIVO</label>
+                        <input type="email" id="email" placeholder="nome@exemplo.com" required>
+                    </div>
+                    <div class="grid-stack" style="grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+                        <div class="form-group">
+                            <label>SENHA</label>
+                            <input type="password" id="password" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label>CONFIRMAR SENHA</label>
+                            <input type="password" id="confirm-password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-md);">
+                        FINALIZAR CADASTRO
+                        <div class="btn-icon" style="width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="ph-bold ph-user-plus"></i></div>
+                    </button>
+                </form>
+
+                <div style="margin-top: var(--space-xl); text-align: center;">
+                    <a href="index.html" style="font-size: var(--font-size-sm); color: var(--text-secondary);">Já possui conta? <span style="color: var(--accent); font-weight: 700;">Fazer login</span></a>
+                </div>
             </div>
-
-            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin-bottom: 32px;">Seja bem-vindo ao ecossistema ShapeTrack. Complete sua identificação para iniciar o protocolo.</p>
-
-            <div class="form-group">
-                <label>NOME COMPLETO</label>
-                <input type="text" id="name" placeholder="EX: JOÃO SILVA">
-            </div>
-
-            <div class="form-group">
-                <label>E-MAIL DE ACESSO</label>
-                <input type="email" id="email" placeholder="seu@email.com">
-            </div>
-
-            <div class="form-group">
-                <label>CHAVE DE ACESSO (SENHA)</label>
-                <input type="password" id="password" placeholder="MÍNIMO 6 CARACTERES">
-            </div>
-
-            <button class="btn btn-primary" id="signupBtn" style="width: 100%; margin-top: 12px;">
-                CRIAR MINHA CONTA
-                <div class="btn-icon"><i class="ph-light ph-user-plus"></i></div>
-            </button>
-
-            <div id="message" style="margin-top: 24px; font-size: 0.8rem; font-weight: 700;"></div>
         </div>
-    </div>
+    </main>
 
+    <script src="js/config.js?v=3.5"></script>
     <script>
-        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
-        const urlParams = new URLSearchParams(window.location.search);
-        const mentorId = urlParams.get('mentor'); // Updated to match alunos.html link generation
-
-        async function checkMentor() {
-            if (!mentorId) {
-                document.body.innerHTML = '<div class="card-shell reveal" style="max-width: 400px;"><div class="card-core" style="text-align:center;"><h1>CONVITE INVÁLIDO</h1><p style="color:var(--text-secondary); margin-top:16px;">SOLICITE UM NOVO LINK AO SEU MENTOR.</p></div></div>';
-                return;
-            }
-            const { data: mentor } = await sb.from('profiles').select('full_name').eq('id', mentorId).single();
-            if (mentor) {
-                document.getElementById('mentor-info').innerHTML = `<i class="ph-fill ph-user-check" style="color: var(--accent);"></i> MENTOR: ${mentor.full_name.toUpperCase()}`;
-            }
-        }
-
-        document.getElementById('signupBtn').addEventListener('click', async () => {
-            const name = document.getElementById('name').value;
+        document.getElementById('register-form').onsubmit = async (e) => {
+            e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const msg = document.getElementById('message');
-            const btn = document.getElementById('signupBtn');
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const fullName = document.getElementById('full_name').value;
 
-            if (!name || !email || !password) {
-                msg.style.color = '#ef4444';
-                msg.textContent = 'PREENCHA TODOS OS CAMPOS.';
-                return;
-            }
+            if (password !== confirmPassword) return showToast('As senhas não coincidem', 'error');
 
+            const btn = e.target.querySelector('button');
             btn.disabled = true;
-            btn.innerHTML = 'PROCESSANDO... <div class="btn-icon"><i class="ph-light ph-spinner ph-spin"></i></div>';
+            btn.innerText = 'PROCESSANDO...';
 
             const { data, error } = await sb.auth.signUp({ email, password });
-            if (error) {
-                msg.style.color = '#ef4444';
-                msg.textContent = `ERRO: ${error.message.toUpperCase()}`;
-                btn.disabled = false;
-                btn.innerHTML = 'CRIAR MINHA CONTA <div class="btn-icon"><i class="ph-light ph-user-plus"></i></div>';
-                return;
-            }
 
-            if (data.user) {
-                const { error: profileError } = await sb.from('profiles').insert([{ 
-                    id: data.user.id, full_name: name, role: 'client', mentor_id: mentorId 
+            if (error) {
+                showToast(error.message, 'error');
+                btn.disabled = false;
+                btn.innerText = 'FINALIZAR CADASTRO';
+            } else {
+                // Create profile
+                const { error: profileError } = await sb.from('profiles').insert([{
+                    id: data.user.id,
+                    full_name: fullName,
+                    email: email,
+                    role: 'client'
                 }]);
 
                 if (profileError) {
-                    msg.style.color = '#ef4444';
-                    msg.textContent = 'ERRO AO VINCULAR PERFIL.';
+                    showToast('Conta criada, mas erro no perfil. Contate o suporte.', 'warning');
                 } else {
-                    msg.style.color = '#2ecc71';
-                    msg.textContent = 'CONTA CRIADA! REDIRECIONANDO...';
-                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+                    showToast('Conta criada com sucesso! Verifique seu e-mail.');
+                    setTimeout(() => window.location.href = 'index.html', 2000);
                 }
             }
-        });
-
-        checkMentor();
+        };
     </script>
 </body>
 </html>

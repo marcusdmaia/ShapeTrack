@@ -3,142 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protocolos de Segurança // ShapeTrack Premium</title>
+    <title>Configurações // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.0">
+    <link rel="stylesheet" href="style.css?v=3.5">
 </head>
 <body>
 
-    <nav class="navbar reveal">
-        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
-        <div id="nav-links" class="nav-links desktop-only"></div>
-    </nav>
+    <nav class="navbar reveal"></nav>
 
-    <div class="bento-grid" style="max-width: 900px;">
-        <!-- Header -->
-        <div class="card-shell reveal" style="grid-column: span 12;">
-            <div class="card-core">
-                <span class="eyebrow">Ajustes de Sistema</span>
-                <h1>CONFIGURAÇÕES</h1>
-                <p style="color: var(--text-secondary); margin-top: 8px;">Gerencie suas chaves de acesso e conexões neurais.</p>
-            </div>
-        </div>
-
-        <!-- Profile Settings -->
-        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.1s;">
-            <div class="card-core">
-                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-user-circle" style="color: var(--accent);"></i> IDENTIDADE PROFISSIONAL</h3>
-                <div class="form-group">
-                    <label>NOME COMPLETO</label>
-                    <input type="text" id="full_name" placeholder="IDENTIFICAÇÃO NO SISTEMA">
+    <main class="container">
+        <div class="bento-grid">
+            <!-- Header -->
+            <div class="card-shell reveal" style="grid-column: span 12;">
+                <div class="card-core">
+                    <span class="eyebrow">Preferências do Sistema</span>
+                    <h1 style="margin: 4px 0;">CONFIGURAÇÕES</h1>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem;">Personalização do perfil e credenciais de segurança.</p>
                 </div>
-                <div class="form-group">
-                    <label>WHATSAPP (DDD + NÚMERO)</label>
-                    <input type="tel" id="whatsapp" placeholder="EX: 11999999999">
+            </div>
+
+            <!-- Profile Settings -->
+            <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.1s;">
+                <div class="card-core">
+                    <h3 style="margin-bottom: var(--space-lg);">PERFIL PROFISSIONAL</h3>
+                    <form id="profile-form">
+                        <div class="grid-stack" style="grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+                            <div class="form-group">
+                                <label>NOME COMPLETO</label>
+                                <input type="text" id="full-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>WHATSAPP (COM DDD)</label>
+                                <input type="tel" id="whatsapp" placeholder="Ex: 11999999999">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>E-MAIL DE ACESSO</label>
+                            <input type="email" id="profile-email" disabled style="opacity: 0.5;">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="margin-top: var(--space-md);">
+                            SALVAR ALTERAÇÕES
+                            <div class="btn-icon" style="width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="ph-bold ph-floppy-disk"></i></div>
+                        </button>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label>E-MAIL DE ACESSO (PROTEGIDO)</label>
-                    <input type="text" id="email_display" disabled style="opacity: 0.5; cursor: not-allowed;">
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.2s;">
+                <div class="card-core">
+                    <h3 style="margin-bottom: var(--space-lg); color: #ef4444;">SEGURANÇA</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: var(--space-lg);">Gerencie sua sessão e acesso ao ecossistema.</p>
+                    
+                    <button class="btn" onclick="App.logout()" style="width: 100%; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2);">
+                        ENCERRAR SESSÃO
+                        <div class="btn-icon" style="background: rgba(239, 68, 68, 0.1);"><i class="ph-bold ph-sign-out"></i></div>
+                    </button>
                 </div>
-                <button class="btn btn-primary" onclick="updateProfile()" style="width: 100%;">
-                    SALVAR ALTERAÇÕES
-                    <div class="btn-icon"><i class="ph-light ph-floppy-disk"></i></div>
-                </button>
             </div>
         </div>
+    </main>
 
-        <!-- Google Integration -->
-        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.2s;">
-            <div class="card-core">
-                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-google-logo" style="color: #4285F4;"></i> SINCRONISMO GOOGLE</h3>
-                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 24px;">Conecte sua agenda para orquestração automática de avaliações e lembretes.</p>
-                <div id="google-status" style="margin-bottom: 16px; font-size: 0.8rem; font-weight: 700;">VERIFICANDO CONEXÃO...</div>
-                <button class="btn" id="btn-google" onclick="startGoogleAuth()" style="width: 100%; background: #4285F4; color: #FFF;">
-                    CONECTAR GOOGLE CALENDAR
-                    <div class="btn-icon" style="background: rgba(255,255,255,0.2);"><i class="ph-light ph-link"></i></div>
-                </button>
-            </div>
-        </div>
+    <footer class="container" style="padding: var(--space-xl) var(--space-md); text-align: center; color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 0.1em;">
+        &copy; 2026 SHAPETRACK // HIGH-END PERFORMANCE ECOSYSTEM
+    </footer>
 
-        <!-- Logout -->
-        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.3s;">
-            <div class="card-core" style="border: 1px solid rgba(239, 68, 68, 0.2);">
-                <h3 style="color: #ef4444; margin-bottom: 8px;"><i class="ph-light ph-power"></i> FINALIZAR SESSÃO</h3>
-                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 24px;">Encerrar seu acesso ao console ShapeTrack com segurança total.</p>
-                <button class="btn" onclick="handleLogout()" style="width: 100%; border: 1px solid #ef4444; color: #ef4444; background: transparent;">SAIR DO SISTEMA</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="js/config.js?v=3.0"></script>
+    <script src="js/config.js?v=3.5"></script>
     <script>
-        const GOOGLE_CLIENT_ID = '859217445398-8jutv09ole7ci2fmj3djv8skk0gekkjh.apps.googleusercontent.com';
-        const REDIRECT_URI = window.location.origin + window.location.pathname;
-
         async function init() {
             const context = await App.init('configuracoes.html');
             if (!context) return;
             
-            document.getElementById('full_name').value = context.profile.full_name || '';
+            document.getElementById('full-name').value = context.profile.full_name || '';
             document.getElementById('whatsapp').value = context.profile.whatsapp || '';
-            document.getElementById('email_display').value = context.session.user.email;
-            checkGoogleConnection(context.profile);
-
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('code')) handleGoogleCallback(urlParams.get('code'), context.session.user.id);
+            document.getElementById('profile-email').value = context.session.user.email;
         }
 
-        async function updateProfile() {
-            const name = document.getElementById('full_name').value;
-            const wa = document.getElementById('whatsapp').value;
+        document.getElementById('profile-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('full-name').value;
+            const whatsapp = document.getElementById('whatsapp').value;
+            
             const { error } = await sb.from('profiles').update({ 
-                full_name: name,
-                whatsapp: wa 
+                full_name: fullName,
+                whatsapp: whatsapp
             }).eq('id', App.profile.id);
 
-            if (error) showToast(error.message, 'error');
-            else {
-                sessionStorage.removeItem('st_profile'); // Clear cache
-                showToast('Identidade atualizada');
-            }
-        }
-
-        function checkGoogleConnection(profile) {
-            const status = document.getElementById('google-status');
-            const btn = document.getElementById('btn-google');
-            if (profile.google_refresh_token) {
-                status.innerHTML = '<span style="color:#2ecc71;"><i class="ph-fill ph-check-circle"></i> CONEXÃO ATIVA</span>';
-                btn.innerHTML = 'RECONECTAR AGENDA <div class="btn-icon" style="background: rgba(255,255,255,0.2);"><i class="ph-light ph-arrows-clockwise"></i></div>';
+            if (error) {
+                showToast(error.message, 'error');
             } else {
-                status.innerHTML = '<span style="color:var(--text-secondary);"><i class="ph-light ph-x-circle"></i> STATUS: DESCONECTADO</span>';
+                showToast('Configurações atualizadas com sucesso!');
+                // Refresh local cache
+                const { data } = await sb.from('profiles').select('*').eq('id', App.profile.id).single();
+                sessionStorage.setItem('st_profile', JSON.stringify(data));
             }
-        }
-
-        function startGoogleAuth() {
-            const scope = 'https://www.googleapis.com/auth/calendar.events';
-            window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
-        }
-
-        async function handleGoogleCallback(code, userId) {
-            showToast('Sincronizando com Google...');
-            try {
-                const { data, error } = await sb.functions.invoke('google-auth-exchange', {
-                    body: { code, redirect_uri: REDIRECT_URI }
-                });
-                if (error) throw error;
-                if (data.refresh_token) {
-                    await sb.from('profiles').update({ google_refresh_token: data.refresh_token }).eq('id', userId);
-                    window.location.href = 'configuracoes.html';
-                }
-            } catch (err) { showToast('Erro na sincronização', 'error'); }
-        }
-
-        async function handleLogout() {
-            sessionStorage.removeItem('st_profile');
-            await sb.auth.signOut();
-            window.location.href = 'index.html';
-        }
+        };
 
         init();
     </script>
