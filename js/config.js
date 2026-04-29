@@ -73,6 +73,35 @@ function setupNav(profile, activePage) {
 
     navHtml += `<a href="#" class="nav-item" onclick="handleLogout()" style="margin-top:auto; color:#ef4444;"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>`;
     nav.innerHTML = navHtml;
+
+    // Adiciona o botão de toggle no header (apenas se não existir)
+    const header = document.querySelector('.header');
+    if (header && !document.querySelector('.menu-toggle')) {
+        const toggle = document.createElement('button');
+        toggle.className = 'menu-toggle';
+        toggle.innerHTML = '<i class="fas fa-bars"></i>';
+        toggle.onclick = () => toggleSidebar(true);
+        header.prepend(toggle);
+    }
+
+    // Adiciona o overlay no body (apenas se não existir)
+    if (!document.querySelector('.sidebar-overlay')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        overlay.onclick = () => toggleSidebar(false);
+        document.body.appendChild(overlay);
+    }
+}
+
+/**
+ * Abre ou fecha a sidebar no mobile.
+ * @param {boolean} open - Se deve abrir ou fechar.
+ */
+function toggleSidebar(open) {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    if (sidebar) sidebar.classList.toggle('active', open);
+    if (overlay) overlay.classList.toggle('active', open);
 }
 
 /**

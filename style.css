@@ -147,6 +147,19 @@ body {
     margin-bottom: 32px;
 }
 
+.grid-vendas {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 32px;
+}
+
+@media (max-width: 1024px) {
+    .grid-vendas {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
 /* Buttons */
 .btn {
     padding: 14px 24px;
@@ -215,69 +228,103 @@ td { padding: 16px; border-bottom: 1px solid var(--border-color); font-size: 0.9
 .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
 .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
 
-/* Mobile Menu (Bottom Nav) */
+/* Mobile Styles - Drawer Navigation */
 @media (max-width: 768px) {
     body { flex-direction: column; }
     
     .sidebar {
-        width: 100%;
-        height: 72px;
-        padding: 0;
         position: fixed;
-        bottom: 0;
         left: 0;
-        top: auto;
-        flex-direction: row;
-        background: var(--nav-bg);
-        backdrop-filter: blur(20px);
-        border-top: 1px solid rgba(0,0,0,0.05);
-        z-index: 1000;
-        box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+        top: 0;
+        width: 280px;
+        height: 100vh;
+        z-index: 2000;
+        transform: translateX(-100%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 20px 0 50px rgba(0,0,0,0.1);
     }
     
-    .logo { display: none; }
+    .sidebar.active {
+        transform: translateX(0);
+    }
     
-    .nav-links {
-        flex-direction: row;
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
-        gap: 0;
-        overflow-x: auto;
-        scrollbar-width: none;
+        background: rgba(0,0,0,0.4);
+        backdrop-filter: blur(4px);
+        z-index: 1999;
+        display: none;
+        animation: fadeIn 0.3s ease;
     }
     
-    .nav-links::-webkit-scrollbar { display: none; }
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    .nav-links {
+        padding-top: 20px;
+    }
     
     .nav-item {
-        flex: 0 0 80px;
-        flex-direction: column;
-        gap: 5px;
-        padding: 10px 0;
-        border-radius: 0;
-        color: #94a3b8;
-        font-size: 0.65rem;
-        font-weight: 600;
+        flex-direction: row;
+        padding: 16px 20px;
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.7);
     }
-    
-    .nav-item i { font-size: 1.3rem; }
-    
-    .nav-item.active {
-        background: transparent;
+
+    .menu-toggle {
+        display: flex !important;
+        width: 45px;
+        height: 45px;
+        background: white;
+        border-radius: 12px;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
         color: var(--primary);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        cursor: pointer;
+        border: none;
     }
-    
+
     .main-content {
-        padding: 24px;
-        padding-bottom: 120px;
+        padding: 20px;
+        padding-top: 80px;
     }
     
     .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: var(--bg-color);
+        padding: 15px 20px;
+        z-index: 1000;
+        margin-bottom: 0;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
     
-    .page-title { font-size: 1.8rem; }
+    .page-title { font-size: 1.5rem; }
+
+    /* Fix table drag issues */
+    .table-container {
+        margin: 0 -20px;
+        padding: 0 20px;
+        width: calc(100% + 40px);
+    }
     
-    .card { padding: 24px; }
+    table { font-size: 0.85rem; }
+    th, td { padding: 12px 8px; }
 }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.menu-toggle { display: none; }
