@@ -3,73 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parcerias // ShapeTrack Premium</title>
+    <title>Marketplace de Colaboração // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.5">
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body>
 
-    <nav class="navbar reveal"></nav>
+    <nav class="navbar reveal">
+        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <div id="nav-links" class="nav-links desktop-only"></div>
+    </nav>
 
-    <main class="container">
-        <div class="bento-grid">
-            <!-- Header -->
-            <div class="card-shell reveal" style="grid-column: span 12;">
-                <div class="card-core">
-                    <span class="eyebrow">Rede de Suporte</span>
-                    <h1 style="margin: 4px 0;">CENTRAL DE PARCERIAS</h1>
-                    <p style="color: var(--text-secondary); font-size: 0.85rem;">Conexões estratégicas que potencializam resultados.</p>
-                </div>
-            </div>
-
-            <!-- Partnerships -->
-            <div class="grid-stack" style="grid-column: span 12; animation-delay: 0.1s;">
-                <div class="card-shell reveal">
-                    <div class="card-core" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-md);">
-                        <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <i class="ph-bold ph-first-aid" style="font-size: 2.5rem; color: var(--accent);"></i>
-                        </div>
-                        <h3 style="font-size: 1rem;">CLÍNICA VITA</h3>
-                        <p style="font-size: 0.75rem; color: var(--text-secondary);">Especialistas em endocrinologia e suporte metabólico.</p>
-                        <button class="btn" style="width: 100%; font-size: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">SOLICITAR INDICAÇÃO</button>
-                    </div>
-                </div>
-
-                <div class="card-shell reveal" style="animation-delay: 0.2s;">
-                    <div class="card-core" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-md);">
-                        <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <i class="ph-bold ph-barbell" style="font-size: 2.5rem; color: var(--accent);"></i>
-                        </div>
-                        <h3 style="font-size: 1rem;">ELITE GYM</h3>
-                        <p style="font-size: 0.75rem; color: var(--text-secondary);">Treinamento personalizado com foco em hipertrofia.</p>
-                        <button class="btn" style="width: 100%; font-size: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">VER CONVÊNIO</button>
-                    </div>
-                </div>
-
-                <div class="card-shell reveal" style="animation-delay: 0.3s;">
-                    <div class="card-core" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-md);">
-                        <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <i class="ph-bold ph-bowl-food" style="font-size: 2.5rem; color: var(--accent);"></i>
-                        </div>
-                        <h3 style="font-size: 1rem;">GREEN KITCHEN</h3>
-                        <p style="font-size: 0.75rem; color: var(--text-secondary);">Marmitas saudáveis ultra-congeladas com desconto exclusivo.</p>
-                        <button class="btn" style="width: 100%; font-size: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">PEGAR CUPOM</button>
-                    </div>
-                </div>
+    <div class="bento-grid">
+        <!-- Header -->
+        <div class="card-shell reveal" style="grid-column: span 12;">
+            <div class="card-core">
+                <span class="eyebrow">Ecossistema de Inteligência</span>
+                <h1>COLLAB MARKET</h1>
+                <p style="color: var(--text-secondary); margin-top: 8px;">Conecte-se a ativos de outros mentores para escala exponencial.</p>
             </div>
         </div>
-    </main>
 
-    <footer class="container" style="padding: var(--space-xl) var(--space-md); text-align: center; color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 0.1em;">
-        &copy; 2026 SHAPETRACK // HIGH-END PERFORMANCE ECOSYSTEM
-    </footer>
+        <!-- Marketplace Grid -->
+        <div class="card-shell reveal" style="grid-column: span 12; background: transparent; border: none; padding: 0;">
+            <h3 style="margin-bottom: 24px; padding-left: 12px;"><i class="ph-light ph-planet" style="color: var(--accent);"></i> ATIVOS DISPONÍVEIS NA REDE</h3>
+            <div id="marketplace-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+                <!-- Vídeos Colab -->
+            </div>
+        </div>
+    </div>
 
-    <script src="js/config.js?v=3.5"></script>
+    <script src="js/config.js?v=3.0"></script>
     <script>
         async function init() {
             const context = await App.init('parcerias.html');
+            if (!context) return;
+            loadMarketplace(context.session.user.id);
         }
+
+        async function loadMarketplace(mentorId) {
+            const { data: videos } = await sb.from('videos').select('*, profiles!mentor_id(full_name)').neq('mentor_id', mentorId).eq('is_colab', true);
+            const { data: shared } = await sb.from('shared_videos').select('video_id').eq('mentor_id', mentorId);
+            const sharedIds = shared?.map(s => s.video_id) || [];
+
+            const grid = document.getElementById('marketplace-grid');
+            grid.innerHTML = videos?.length ? '' : '<div class="card-shell" style="grid-column: 1/-1;"><div class="card-core" style="text-align: center; padding: 64px; color: var(--text-secondary);">NENHUM ATIVO DISPONÍVEL PARA PARCERIA NO MOMENTO.</div></div>';
+
+            videos?.forEach(v => {
+                const isRequested = sharedIds.includes(v.id);
+                const ytId = v.youtube_url.includes('v=') ? v.youtube_url.split('v=')[1].split('&')[0] : v.youtube_url.split('/').pop();
+                const card = document.createElement('div');
+                card.className = 'card-shell reveal';
+                card.innerHTML = `
+                    <div class="card-core" style="padding: 12px;">
+                        <div style="width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-inner); background: url('https://img.youtube.com/vi/${ytId}/mqdefault.jpg') center/cover; border: 1px solid var(--glass-border);"></div>
+                        <div style="padding: 16px 8px;">
+                            <h4 style="font-size: 0.9rem; font-weight: 800; color: #FFF; margin-bottom: 8px;">${v.title.toUpperCase()}</h4>
+                            <div style="font-size: 0.65rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 16px; display: flex; align-items: center; gap: 6px;">
+                                <i class="ph-light ph-user-focus"></i> MENTOR: ${v.profiles?.full_name?.toUpperCase() || 'AUTOR EXTERNO'}
+                            </div>
+                            <button class="btn ${isRequested ? '' : 'btn-primary'}" style="width: 100%; font-size: 0.7rem; padding: 12px; ${isRequested ? 'background: rgba(255,255,255,0.05); color: #FFF; opacity: 0.5;' : ''}" onclick="${isRequested ? '' : `requestColab('${v.id}')`}" ${isRequested ? 'disabled' : ''}>
+                                <i class="ph-light ${isRequested ? 'ph-check-circle' : 'ph-plus'}"></i> 
+                                ${isRequested ? 'NA SUA BIBLIOTECA' : 'SOLICITAR PARCERIA'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function requestColab(videoId) {
+            const { error } = await sb.from('shared_videos').insert([{ video_id: videoId, mentor_id: App.profile.id }]);
+            if (error) return showToast(error.message, 'error');
+            showToast('Ativo vinculado com sucesso!');
+            loadMarketplace(App.profile.id);
+        }
+
         init();
     </script>
 </body>

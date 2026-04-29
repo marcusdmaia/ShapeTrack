@@ -6,115 +6,112 @@
     <title>Vendas // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.5">
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body>
 
-    <nav class="navbar reveal"></nav>
+    <nav class="navbar reveal">
+        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <div id="nav-links" class="nav-links desktop-only"></div>
+    </nav>
 
-    <main class="container">
-        <div class="bento-grid">
-            <!-- Header -->
-            <div class="card-shell reveal" style="grid-column: span 12;">
-                <div class="card-core">
-                    <span class="eyebrow">Registro de Transação</span>
-                    <h1 style="margin: 4px 0;">NOVA VENDA</h1>
-                    <p style="color: var(--text-secondary); font-size: 0.85rem;">Controle de consumo e fluxo de caixa premium.</p>
-                </div>
+    <div class="bento-grid">
+        <!-- Header -->
+        <div class="card-shell reveal" style="grid-column: span 12;">
+            <div class="card-core">
+                <span class="eyebrow">Registro de Transação</span>
+                <h1>NOVA VENDA</h1>
+                <p style="color: var(--text-secondary); margin-top: 8px;">Controle de consumo e fluxo de caixa premium.</p>
             </div>
+        </div>
 
-            <!-- Selection & Cart -->
-            <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.1s;">
-                <div class="card-core">
-                    <h3 style="margin-bottom: var(--space-lg);"><i class="ph-bold ph-shopping-cart" style="color: var(--accent);"></i> CARRINHO ATIVO</h3>
-                    
-                    <div style="display: flex; flex-wrap: wrap; gap: var(--space-md); margin-bottom: var(--space-lg);">
-                        <div class="form-group" style="flex: 1; min-width: 240px;">
-                            <label>CLIENTE / PROTOCOLO</label>
-                            <select id="select-client">
-                                <option value="">SELECIONAR CLIENTE...</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="flex: 1; min-width: 240px;">
-                            <label>NÍVEL DE DESCONTO</label>
-                            <select id="select-discount" onchange="renderCart(); setupSearch();">
-                                <option value="consumer">PREÇO CHEIO (VENDA DIRETA)</option>
-                                <option value="c25">CLIENTE PREMIUM / CONSULTOR (25%)</option>
-                                <option value="c35">CONSULTOR SENIOR (35%)</option>
-                                <option value="c42">PRODUTOR QUALIFICADO (42%)</option>
-                                <option value="c50">SUPERVISOR (50%)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="position: relative;">
-                        <label>BUSCAR ITEM (SKU/NOME)</label>
-                        <input type="text" id="product-input" placeholder="DIGITE PARA BUSCAR...">
-                        <div id="search-results" style="position: absolute; top: 100%; left: 0; right: 0; background: #0A0C0B; border: 1px solid var(--glass-border); border-radius: 12px; z-index: 100; max-height: 200px; overflow-y: auto; display: none; margin-top: 8px;"></div>
-                    </div>
-
-                    <div id="cart-list" style="margin-top: var(--space-xl);">
-                        <div style="text-align: center; padding: 48px; border: 1px dashed var(--glass-border); border-radius: 20px; color: var(--text-secondary);">
-                            CARRINHO DISPONÍVEL PARA INPUT
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Summary & Action -->
-            <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.2s;">
-                <div class="card-core">
-                    <h3 style="margin-bottom: var(--space-lg);"><i class="ph-bold ph-receipt" style="color: var(--accent);"></i> RESUMO</h3>
-                    
-                    <div style="background: rgba(255,255,255,0.02); padding: var(--space-lg); border-radius: 20px; border: 1px solid var(--glass-border); margin-bottom: var(--space-lg);">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-secondary); font-size: 0.8rem;">
-                            <span>VOLUME TOTAL (PV)</span>
-                            <span id="total-pv" style="color: #FFF; font-weight: 700;">0.00</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-secondary); font-size: 0.8rem;">
-                            <span>LUCRO ESTIMADO</span>
-                            <span id="est-profit" style="color: #2ecc71; font-weight: 700;">R$ 0,00</span>
-                        </div>
-                        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-weight: 800; font-size: 1.2rem;">TOTAL</span>
-                            <span id="total-price" style="font-size: 1.5rem; font-weight: 800; color: var(--accent);">R$ 0,00</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>PAGAMENTO</label>
-                        <select id="payment-type" onchange="togglePartialPayment()">
-                            <option value="total">PAGO INTEGRALMENTE</option>
-                            <option value="partial">PAGAMENTO PARCIAL</option>
-                            <option value="later">PAGAMENTO PENDENTE</option>
+        <!-- Selection & Cart -->
+        <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.1s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-shopping-cart" style="color: var(--accent);"></i> CARRINHO ATIVO</h3>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+                    <div class="form-group" style="flex: 1; min-width: 240px;">
+                        <label>CLIENTE / PROTOCOLO</label>
+                        <select id="select-client" style="background: rgba(255,255,255,0.02);">
+                            <option value="">SELECIONAR CLIENTE...</option>
                         </select>
                     </div>
-
-                    <div id="partial-fields" style="display: none;">
-                        <div class="form-group">
-                            <label>VALOR RECEBIDO (R$)</label>
-                            <input type="number" id="amount-paid" step="0.01">
-                        </div>
-                        <div class="form-group">
-                            <label>VENCIMENTO DO SALDO</label>
-                            <input type="date" id="due-date">
-                        </div>
+                    <div class="form-group" style="flex: 1; min-width: 240px;">
+                        <label>NÍVEL DE DESCONTO</label>
+                        <select id="select-discount" onchange="renderCart(); setupSearch();" style="background: rgba(255,255,255,0.02);">
+                            <option value="consumer">PREÇO CHEIO (VENDA DIRETA)</option>
+                            <option value="c25">CLIENTE PREMIUM / CONSULTOR (25%)</option>
+                            <option value="c35">CONSULTOR SENIOR (35%)</option>
+                            <option value="c42">PRODUTOR QUALIFICADO (42%)</option>
+                            <option value="c50">SUPERVISOR (50%)</option>
+                        </select>
                     </div>
+                </div>
 
-                    <button id="btn-finish" class="btn btn-primary" style="width: 100%; margin-top: var(--space-md);">
-                        FINALIZAR VENDA
-                        <div class="btn-icon" style="width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="ph-bold ph-check"></i></div>
-                    </button>
+                <div class="form-group" style="position: relative;">
+                    <label>BUSCAR ITEM (SKU/NOME)</label>
+                    <input type="text" id="product-input" placeholder="DIGITE PARA BUSCAR...">
+                    <div id="search-results" style="position: absolute; top: 100%; left: 0; right: 0; background: #0A0C0B; border: 1px solid var(--glass-border); border-radius: 12px; z-index: 100; max-height: 200px; overflow-y: auto; display: none; margin-top: 8px;"></div>
+                </div>
+
+                <div id="cart-list" style="margin-top: 32px;">
+                    <div style="text-align: center; padding: 48px; border: 1px dashed var(--glass-border); border-radius: 20px; color: var(--text-secondary);">
+                        CARRINHO DISPONÍVEL PARA INPUT
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
 
-    <footer class="container" style="padding: var(--space-xl) var(--space-md); text-align: center; color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 0.1em;">
-        &copy; 2026 SHAPETRACK // HIGH-END PERFORMANCE ECOSYSTEM
-    </footer>
+        <!-- Summary & Action -->
+        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.2s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-receipt" style="color: var(--accent);"></i> RESUMO</h3>
+                
+                <div style="background: rgba(255,255,255,0.02); padding: 24px; border-radius: 20px; border: 1px solid var(--glass-border); margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-secondary); font-size: 0.8rem;">
+                        <span>VOLUME TOTAL (PV)</span>
+                        <span id="total-pv" style="color: #FFF; font-weight: 700;">0.00</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-secondary); font-size: 0.8rem;">
+                        <span>LUCRO ESTIMADO</span>
+                        <span id="est-profit" style="color: #2ecc71; font-weight: 700;">R$ 0,00</span>
+                    </div>
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 800; font-size: 1.2rem;">TOTAL</span>
+                        <span id="total-price" style="font-size: 1.5rem; font-weight: 800; color: var(--accent);">R$ 0,00</span>
+                    </div>
+                </div>
 
-    <script src="js/config.js?v=3.5"></script>
+                <div class="form-group">
+                    <label>CONDIÇÃO DE PAGAMENTO</label>
+                    <select id="payment-type" onchange="togglePartialPayment()" style="background: rgba(255,255,255,0.02);">
+                        <option value="total">PAGO INTEGRALMENTE</option>
+                        <option value="partial">PAGAMENTO PARCIAL</option>
+                        <option value="later">PAGAMENTO PENDENTE</option>
+                    </select>
+                </div>
+
+                <div id="partial-fields" style="display: none; animation: fadeInUp 0.5s var(--bezier);">
+                    <div class="form-group">
+                        <label>VALOR RECEBIDO (R$)</label>
+                        <input type="number" id="amount-paid" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>DATA DE VENCIMENTO</label>
+                        <input type="date" id="due-date">
+                    </div>
+                </div>
+
+                <button id="btn-finish" class="btn btn-primary" style="width: 100%; margin-top: 24px;">
+                    FINALIZAR VENDA
+                    <div class="btn-icon"><i class="ph-light ph-check"></i></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js?v=3.0"></script>
     <script>
         const products = [
             { sku: '1', name: 'SHAKE HERBALIFE', consumer: 195.00, c25: 146.25, c35: 126.75, c42: 113.10, c50: 97.50, pv: 23.95 },
@@ -125,6 +122,7 @@
         ];
 
         let cart = [];
+        let allClients = [];
 
         async function init() {
             const context = await App.init('vendas.html');
@@ -133,17 +131,16 @@
             setupSearch();
         }
 
-        async function loadClients(userId) {
-            const { data } = await sb.from('profiles').select('id, full_name').eq('mentor_id', userId).eq('role', 'client');
-            if (data) {
-                const select = document.getElementById('select-client');
-                data.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.textContent = c.full_name.toUpperCase();
-                    select.appendChild(opt);
-                });
-            }
+        async function loadClients(mentorId) {
+            const { data: clients } = await sb.from('profiles').select('id, full_name').eq('mentor_id', mentorId).eq('role', 'client');
+            allClients = clients || [];
+            const select = document.getElementById('select-client');
+            allClients.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = c.full_name.toUpperCase();
+                select.appendChild(opt);
+            });
         }
 
         function setupSearch() {
@@ -158,10 +155,18 @@
                 
                 results.innerHTML = filtered.map(p => {
                     const price = p[discount] || p.consumer;
+                    const isDiscounted = price < p.consumer;
                     return `
-                        <div style="padding: 12px 16px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05);" onclick="addToCart('${p.sku}')">
+                        <div style="padding: 12px 16px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.2s;" 
+                             onmouseover="this.style.background='rgba(255,255,255,0.02)'" 
+                             onmouseout="this.style.background='transparent'"
+                             onclick="addToCart('${p.sku}')">
                             <div style="font-size: 0.8rem; font-weight: 700; color: #FFF;">${p.name}</div>
-                            <div style="font-size: 0.7rem; color: var(--accent); font-weight: 800; margin-top: 4px;">R$ ${price.toFixed(2)} | ${p.pv} PV</div>
+                            <div style="font-size: 0.7rem; color: var(--accent); font-weight: 800; margin-top: 4px;">
+                                R$ ${price.toFixed(2)} 
+                                ${isDiscounted ? `<span style="text-decoration: line-through; opacity: 0.5; margin-left: 8px; color: #FFF;">R$ ${p.consumer.toFixed(2)}</span>` : ''}
+                                <span style="color: var(--text-secondary); margin-left: 12px;">| ${p.pv} PV</span>
+                            </div>
                         </div>
                     `;
                 }).join('');
@@ -182,7 +187,7 @@
             const container = document.getElementById('cart-list');
             const discount = document.getElementById('select-discount').value;
             if (cart.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 48px; border: 1px dashed var(--glass-border); border-radius: 20px; color: var(--text-secondary);">CARRINHO VAZIO</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 48px; border: 1px dashed var(--glass-border); border-radius: 20px; color: var(--text-secondary);">CARRINHO DISPONÍVEL PARA INPUT</div>';
                 updateSummary(0, 0, 0); return;
             }
             let totalPV = 0, totalPrice = 0, totalCost = 0;
@@ -193,9 +198,9 @@
                 totalCost += item.c50 * item.qty;
                 return `
                     <div style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 16px; margin-bottom: 12px;">
-                        <div style="flex: 1; font-weight: 700; font-size: 0.85rem; color: #FFF;">${item.name} (${item.qty}x)</div>
-                        <div style="font-weight: 800; color: var(--accent); font-size: 0.9rem;">R$ ${(price * item.qty).toFixed(2)}</div>
-                        <div style="color: #ef4444; cursor: pointer;" onclick="removeFromCart('${item.sku}')"><i class="ph-bold ph-trash"></i></div>
+                        <div style="flex: 1; font-weight: 700; font-size: 0.85rem; color: #FFF;">${item.name}</div>
+                        <div style="font-weight: 800; color: var(--accent); font-size: 0.9rem;">R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                        <div style="color: #ef4444; cursor: pointer; padding: 8px;" onclick="removeFromCart('${item.sku}')"><i class="ph-light ph-trash"></i></div>
                     </div>
                 `;
             }).join('');
@@ -209,9 +214,9 @@
 
         function updateSummary(pv, price, cost) {
             document.getElementById('total-pv').textContent = pv.toFixed(2);
-            document.getElementById('total-price').textContent = `R$ ${price.toFixed(2)}`;
+            document.getElementById('total-price').textContent = `R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
             const profit = price - cost;
-            document.getElementById('est-profit').textContent = `R$ ${Math.max(0, profit).toFixed(2)}`;
+            document.getElementById('est-profit').textContent = `R$ ${Math.max(0, profit).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
         }
 
         function togglePartialPayment() {
@@ -220,14 +225,31 @@
         }
 
         document.getElementById('btn-finish').onclick = async () => {
+            const btn = document.getElementById('btn-finish');
+            if (cart.length === 0) return showToast('Carrinho vazio', 'error');
             const clientId = document.getElementById('select-client').value;
             if (!clientId) return showToast('Selecione um cliente', 'error');
-            if (cart.length === 0) return showToast('Carrinho vazio', 'error');
 
-            showToast('Venda registrada com sucesso!');
-            setTimeout(() => window.location.href = 'crm_dashboard.html', 1500);
+            btn.disabled = true;
+            try {
+                const total = parseFloat(document.getElementById('total-price').textContent.replace('R$ ', '').replace('.', '').replace(',', '.'));
+                const type = document.getElementById('payment-type').value;
+                const { error } = await sb.from('sales').insert([{
+                    client_id: clientId, mentor_id: App.profile.id,
+                    total_price: total, total_pv: parseFloat(document.getElementById('total-pv').textContent),
+                    payment_status: type === 'total' ? 'Pago' : (type === 'partial' ? 'Parcial' : 'Pendente'),
+                    amount_paid: parseFloat(document.getElementById('amount-paid').value || 0),
+                    due_date: document.getElementById('due-date').value || null,
+                    discount_level: document.getElementById('select-discount').value,
+                    items: cart
+                }]);
+                if (error) throw error;
+                showToast('Venda registrada com sucesso!');
+                setTimeout(() => window.location.href = 'crm_dashboard.html', 1500);
+            } catch (err) { showToast(err.message, 'error'); } finally { btn.disabled = false; }
         };
 
+        document.getElementById('select-discount').onchange = renderCart;
         init();
     </script>
 </body>

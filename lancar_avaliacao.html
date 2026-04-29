@@ -3,97 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lançar Avaliação // ShapeTrack Premium</title>
+    <title>Captura Biométrica // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.5">
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body>
 
-    <nav class="navbar reveal"></nav>
+    <nav class="navbar reveal">
+        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <div id="nav-links" class="nav-links desktop-only"></div>
+    </nav>
 
-    <main class="container">
-        <div class="bento-grid">
-            <!-- Header -->
-            <div class="card-shell reveal" style="grid-column: span 12;">
-                <div class="card-core">
-                    <span class="eyebrow">Input de Telemetria</span>
-                    <h1 style="margin: 4px 0;">NOVA AVALIAÇÃO</h1>
-                    <p style="color: var(--text-secondary); font-size: 0.85rem;">Registre as métricas biométricas para análise de evolução.</p>
-                </div>
+    <div class="bento-grid">
+        <!-- Header -->
+        <div class="card-shell reveal" style="grid-column: span 12;">
+            <div class="card-core">
+                <span class="eyebrow">Input de Performance</span>
+                <h1>LANÇAR AVALIAÇÃO</h1>
+                <p style="color: var(--text-secondary); margin-top: 8px;">Registro preciso de dados antropométricos e bioimpedância.</p>
             </div>
+        </div>
 
-            <!-- Form Section -->
-            <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.1s;">
-                <div class="card-core">
-                    <h3 style="margin-bottom: var(--space-lg);">DADOS BIOMÉTRICOS</h3>
-                    <form id="assessment-form">
-                        <div class="form-group">
-                            <label>SELECIONAR ALUNO</label>
-                            <select id="client-id" required>
-                                <option value="">ESCOLHA UM ALUNO...</option>
-                            </select>
-                        </div>
-
-                        <div class="grid-stack" style="grid-template-columns: 1fr 1fr; gap: var(--space-md);">
-                            <div class="form-group">
-                                <label>PESO ATUAL (KG)</label>
-                                <input type="number" id="weight" step="0.1" placeholder="00.0" required>
-                            </div>
-                            <div class="form-group">
-                                <label>GORDURA CORPORAL (% BF)</label>
-                                <input type="number" id="body-fat" step="0.1" placeholder="00.0">
-                            </div>
-                        </div>
-
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-md);">
-                            <div class="form-group">
-                                <label>CINTURA (CM)</label>
-                                <input type="number" id="waist" step="0.1" placeholder="00.0">
-                            </div>
-                            <div class="form-group">
-                                <label>QUADRIL (CM)</label>
-                                <input type="number" id="hip" step="0.1" placeholder="00.0">
-                            </div>
-                            <div class="form-group">
-                                <label>PEITO (CM)</label>
-                                <input type="number" id="chest" step="0.1" placeholder="00.0">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>OBSERVAÇÕES DO PROTOCOLO</label>
-                            <textarea id="notes" rows="4" placeholder="NOTAS SOBRE O DESEMPENHO OU AJUSTES NA DIETA..."></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-md);">
-                            REGISTRAR AVALIAÇÃO
-                            <div class="btn-icon" style="width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="ph-bold ph-check"></i></div>
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Quick Tips -->
-            <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.2s;">
-                <div class="card-core">
-                    <h3 style="margin-bottom: var(--space-lg);">DIRETRIZES</h3>
-                    <ul style="color: var(--text-secondary); font-size: 0.85rem; padding-left: 20px; display: flex; flex-direction: column; gap: 12px;">
-                        <li>Realize as medições preferencialmente em jejum.</li>
-                        <li>Mantenha a mesma fita métrica para consistência.</li>
-                        <li>Registre fotos de progresso no perfil do aluno.</li>
-                        <li>A gordura corporal (BF) é uma estimativa; foque na tendência.</li>
-                    </ul>
+        <!-- Student Selection -->
+        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.1s;">
+            <div class="card-core">
+                <div class="form-group">
+                    <label>IDENTIFICAÇÃO DO ALUNO</label>
+                    <select id="select-aluno" style="background: rgba(255,255,255,0.02);">
+                        <option value="">SELECIONE UM ATIVO NA REDE...</option>
+                    </select>
                 </div>
             </div>
         </div>
-    </main>
 
-    <footer class="container" style="padding: var(--space-xl) var(--space-md); text-align: center; color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 0.1em;">
-        &copy; 2026 SHAPETRACK // HIGH-END PERFORMANCE ECOSYSTEM
-    </footer>
+        <!-- Bioimpedance Data -->
+        <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.2s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-activity" style="color: var(--accent);"></i> BIOIMPEDÂNCIA</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+                    <div class="form-group">
+                        <label>PESO (KG)</label>
+                        <input type="number" id="weight" step="0.1" placeholder="00.0">
+                    </div>
+                    <div class="form-group">
+                        <label>% GORDURA</label>
+                        <input type="number" id="body_fat" step="0.1" placeholder="00.0">
+                    </div>
+                    <div class="form-group">
+                        <label>% MUSCULAR</label>
+                        <input type="number" id="muscle_mass" step="0.1" placeholder="00.0">
+                    </div>
+                    <div class="form-group">
+                        <label>GORD. VISCERAL</label>
+                        <input type="number" id="visceral_fat" step="1" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>IDADE METAB.</label>
+                        <input type="number" id="metabolic_age" step="1" placeholder="00">
+                    </div>
+                    <div class="form-group">
+                        <label>% ÁGUA</label>
+                        <input type="number" id="body_water" step="0.1" placeholder="00.0">
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <script src="js/config.js?v=3.5"></script>
+        <!-- Measurements & Next Date -->
+        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.3s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-ruler" style="color: var(--accent);"></i> MEDIDAS (CM)</h3>
+                <div class="form-group">
+                    <label>CINTURA</label>
+                    <input type="number" id="waist" step="0.1" placeholder="00.0">
+                </div>
+                <div class="form-group">
+                    <label>ABDOMEN</label>
+                    <input type="number" id="abdomen" step="0.1" placeholder="00.0">
+                </div>
+                <div class="form-group" style="margin-bottom: 32px;">
+                    <label>QUADRIL</label>
+                    <input type="number" id="hip" step="0.1" placeholder="00.0">
+                </div>
+                
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-calendar-plus" style="color: var(--accent);"></i> AGENDA</h3>
+                <div class="form-group">
+                    <label>PRÓXIMO RETORNO</label>
+                    <input type="date" id="next_assessment_date">
+                </div>
+
+                <button class="btn btn-primary" id="btn-save" style="width: 100%; margin-top: 24px;">
+                    SALVAR DADOS
+                    <div class="btn-icon"><i class="ph-light ph-check"></i></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js?v=3.0"></script>
     <script>
         async function init() {
             const context = await App.init('lancar_avaliacao.html');
@@ -101,50 +109,51 @@
             loadAlunos(context.session.user.id);
         }
 
-        async function loadAlunos(userId) {
-            const { data } = await sb.from('profiles').select('id, full_name').eq('mentor_id', userId).eq('role', 'client');
-            if (data) {
-                const select = document.getElementById('client-id');
-                data.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.textContent = c.full_name.toUpperCase();
-                    select.appendChild(opt);
-                });
-            }
+        async function loadAlunos(mentorId) {
+            const { data: alunos } = await sb.from('profiles').select('id, full_name').eq('mentor_id', mentorId).eq('role', 'client');
+            const select = document.getElementById('select-aluno');
+            alunos?.forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a.id;
+                opt.textContent = a.full_name.toUpperCase();
+                select.appendChild(opt);
+            });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const alunoId = urlParams.get('aluno');
+            if (alunoId) select.value = alunoId;
         }
 
-        document.getElementById('assessment-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.disabled = true;
+        document.getElementById('btn-save').onclick = async () => {
+            const btn = document.getElementById('btn-save');
+            const alunoId = document.getElementById('select-aluno').value;
+            if (!alunoId) return showToast('Selecione um aluno', 'error');
 
+            btn.disabled = true;
             const assessment = {
-                client_id: document.getElementById('client-id').value,
-                weight: parseFloat(document.getElementById('weight').value),
-                body_fat: parseFloat(document.getElementById('body-fat').value) || null,
-                waist: parseFloat(document.getElementById('waist').value) || null,
-                hip: parseFloat(document.getElementById('hip').value) || null,
-                chest: parseFloat(document.getElementById('chest').value) || null,
-                notes: document.getElementById('notes').value,
-                mentor_id: App.profile.id
+                student_id: alunoId, mentor_id: App.profile.id,
+                weight: parseFloat(document.getElementById('weight').value || 0),
+                body_fat: parseFloat(document.getElementById('body_fat').value || 0),
+                muscle_mass: parseFloat(document.getElementById('muscle_mass').value || 0),
+                visceral_fat: parseFloat(document.getElementById('visceral_fat').value || 0),
+                metabolic_age: parseFloat(document.getElementById('metabolic_age').value || 0),
+                body_water: parseFloat(document.getElementById('body_water').value || 0),
+                waist: parseFloat(document.getElementById('waist').value || 0),
+                abdomen: parseFloat(document.getElementById('abdomen').value || 0),
+                hip: parseFloat(document.getElementById('hip').value || 0)
             };
 
-            const { error } = await sb.from('assessments').insert([assessment]);
+            const nextDate = document.getElementById('next_assessment_date').value;
 
-            if (error) {
-                showToast(error.message, 'error');
-                btn.disabled = false;
-            } else {
-                // Update profile with last assessment date
-                await sb.from('profiles').update({ 
-                    last_assessment: new Date().toLocaleDateString('pt-BR'),
-                    last_weight: assessment.weight
-                }).eq('id', assessment.client_id);
-                
-                showToast('Avaliação registrada com sucesso!');
+            try {
+                const { error } = await sb.from('assessments').insert([assessment]);
+                if (error) throw error;
+                if (nextDate) {
+                    await sb.from('profiles').update({ next_assessment_date: nextDate }).eq('id', alunoId);
+                }
+                showToast('Avaliação processada!');
                 setTimeout(() => window.location.href = 'alunos.html', 1500);
-            }
+            } catch (err) { showToast(err.message, 'error'); } finally { btn.disabled = false; }
         };
 
         init();

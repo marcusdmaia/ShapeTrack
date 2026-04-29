@@ -6,83 +6,85 @@
     <title>Painel // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.5">
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body>
 
-    <nav class="navbar reveal"></nav>
+    <nav class="navbar reveal">
+        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <div id="nav-links" class="nav-links desktop-only">
+            <!-- Injected by JS -->
+        </div>
+        <div class="menu-toggle mobile-only">
+            <i class="ph-light ph-dots-three-vertical"></i>
+        </div>
+    </nav>
 
-    <main class="container">
-        <div class="bento-grid">
-            <!-- Header Section -->
-            <div class="card-shell reveal" style="grid-column: span 12;">
-                <div class="card-core" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-md);">
-                    <div>
-                        <span class="eyebrow">Acesso Verificado</span>
-                        <h1 id="profile_name" style="margin: 4px 0;">CARREGANDO...</h1>
-                    </div>
-                    <div>
-                        <button class="btn btn-primary" onclick="window.location.href='lancar_avaliacao.html'">
-                            AVALIAÇÃO
-                            <div class="btn-icon" style="width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i class="ph-bold ph-plus"></i></div>
-                        </button>
-                    </div>
+    <div class="bento-grid">
+        <!-- Header Section -->
+        <div class="card-shell reveal" style="grid-column: span 12;">
+            <div class="card-core" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                <div>
+                    <span class="eyebrow">Acesso Verificado</span>
+                    <h1 id="profile_name" style="margin: 4px 0;">CARREGANDO...</h1>
                 </div>
-            </div>
-
-            <!-- Stats Grid -->
-            <div class="grid-stack" style="grid-column: span 12;">
-                <div class="card-shell reveal" style="animation-delay: 0.1s;">
-                    <div class="card-core">
-                        <span class="eyebrow">CLIENTES ATIVOS</span>
-                        <div id="total-clients" style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-top: 12px;">0</div>
-                    </div>
-                </div>
-                <div class="card-shell reveal" style="animation-delay: 0.2s;">
-                    <div class="card-core">
-                        <span class="eyebrow">EVOLUÇÃO MÉDIA</span>
-                        <div style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-top: 12px;">+12%</div>
-                    </div>
-                </div>
-                <div class="card-shell reveal" style="animation-delay: 0.3s;">
-                    <div class="card-core">
-                        <span class="eyebrow">RECEITA BRUTA</span>
-                        <div id="total-revenue" style="font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-top: 12px;">R$ 0,00</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.4s;">
-                <div class="card-core">
-                    <h3 style="margin-bottom: var(--space-lg);">ATALHOS DO SISTEMA</h3>
-                    <div class="grid-stack" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-md);">
-                        <a href="vendas.html" class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;">
-                            <i class="ph-bold ph-bolt"></i>
-                            GESTÃO DE VENDAS
-                        </a>
-                        <a href="alunos.html" class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;">
-                            <i class="ph-bold ph-user-focus"></i>
-                            PERFIL DOS ALUNOS
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.5s;">
-                <div class="card-core" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-                    <i class="ph-bold ph-shield-check" style="font-size: 3rem; color: var(--accent); opacity: 0.5;"></i>
-                    <p style="margin-top: var(--space-md); color: var(--text-secondary); font-size: 0.8rem; font-weight: 600;">SISTEMA PROTEGIDO POR PROTOCOLO SHAPETRACK</p>
+                <div>
+                    <button class="btn btn-primary" onclick="window.location.href='lancar_avaliacao.html'">
+                        AVALIAÇÃO
+                        <div class="btn-icon"><i class="ph-light ph-plus"></i></div>
+                    </button>
                 </div>
             </div>
         </div>
-    </main>
 
-    <footer class="container" style="padding: var(--space-xl) var(--space-md); text-align: center; color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 0.1em;">
-        &copy; 2026 SHAPETRACK // HIGH-END PERFORMANCE ECOSYSTEM
-    </footer>
+        <!-- Stats Grid -->
+        <div class="grid-stack" style="grid-column: span 12;">
+            <div class="card-shell reveal" style="animation-delay: 0.1s;">
+                <div class="card-core">
+                    <span class="eyebrow">CLIENTES ATIVOS</span>
+                    <div id="total-clients" class="stat-value" style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-top: 12px;">0</div>
+                </div>
+            </div>
+            <div class="card-shell reveal" style="animation-delay: 0.2s;">
+                <div class="card-core">
+                    <span class="eyebrow">EVOLUÇÃO MÉDIA</span>
+                    <div class="stat-value" style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-top: 12px;">+12%</div>
+                </div>
+            </div>
+            <div class="card-shell reveal" style="animation-delay: 0.3s;">
+                <div class="card-core">
+                    <span class="eyebrow">RECEITA BRUTA</span>
+                    <div id="total-revenue" class="stat-value" style="font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-top: 12px;">R$ 0,00</div>
+                </div>
+            </div>
+        </div>
 
-    <script src="js/config.js?v=3.5"></script>
+        <!-- Quick Actions -->
+        <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.4s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;">ATALHOS DO SISTEMA</h3>
+                <div class="grid-stack" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <a href="vendas.html" class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;">
+                        <i class="ph-light ph-bolt"></i>
+                        GESTÃO DE VENDAS
+                    </a>
+                    <a href="alunos.html" class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;">
+                        <i class="ph-light ph-user-focus"></i>
+                        PERFIL DOS ALUNOS
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.5s;">
+            <div class="card-core" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                <i class="ph-light ph-shield-check" style="font-size: 3rem; color: var(--accent); opacity: 0.5;"></i>
+                <p style="margin-top: 16px; color: var(--text-secondary); font-size: 0.8rem;">SISTEMA PROTEGIDO POR PROTOCOLO SHAPETRACK</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js?v=3.0"></script>
     <script>
         async function init() {
             const context = await App.init('dashboard.html');

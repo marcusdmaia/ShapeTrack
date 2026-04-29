@@ -3,109 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evolução // ShapeTrack Premium</title>
+    <title>Estatística de Performance // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.5">
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body>
 
-    <nav class="navbar reveal"></nav>
+    <nav class="navbar reveal">
+        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <div id="nav-links" class="nav-links desktop-only"></div>
+    </nav>
 
-    <main class="container">
-        <div class="bento-grid">
-            <!-- Header -->
-            <div class="card-shell reveal" style="grid-column: span 12;">
-                <div class="card-core" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-md);">
-                    <div>
-                        <span class="eyebrow">Acompanhamento Biométrico</span>
-                        <h1 style="margin: 4px 0;">RELATÓRIO DE EVOLUÇÃO</h1>
-                        <p style="color: var(--text-secondary); font-size: 0.85rem;">Histórico de progresso e métricas de composição corporal.</p>
-                    </div>
+    <div class="bento-grid">
+        <!-- Header -->
+        <div class="card-shell reveal" style="grid-column: span 12;">
+            <div class="card-core">
+                <span class="eyebrow">Análise de Dados Antropométricos</span>
+                <h1>EVOLUÇÃO BIOMÉTRICA</h1>
+                <p style="color: var(--text-secondary); margin-top: 8px;">Mapeamento histórico de performance e composição corporal.</p>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid-stack" style="grid-column: span 12;">
+            <div class="card-shell reveal" style="animation-delay: 0.1s;">
+                <div class="card-core" style="text-align: center;">
+                    <span class="eyebrow">PESO ATUAL</span>
+                    <div id="current-weight" style="font-size: 2rem; font-weight: 800; color: #FFF; margin-top: 12px;">-- kg</div>
                 </div>
             </div>
-
-            <!-- Quick Stats -->
-            <div class="grid-stack" style="grid-column: span 12;">
-                <div class="card-shell reveal" style="animation-delay: 0.1s;">
-                    <div class="card-core" style="text-align: center;">
-                        <span class="eyebrow">PESO ATUAL</span>
-                        <div id="current-weight" style="font-size: 2rem; font-weight: 800; color: #FFF; margin-top: 12px;">-- kg</div>
-                    </div>
-                </div>
-                <div class="card-shell reveal" style="animation-delay: 0.2s;">
-                    <div class="card-core" style="text-align: center;">
-                        <span class="eyebrow">PESO INICIAL</span>
-                        <div id="initial-weight" style="font-size: 2rem; font-weight: 800; color: #FFF; margin-top: 12px;">-- kg</div>
-                    </div>
-                </div>
-                <div class="card-shell reveal" style="animation-delay: 0.3s;">
-                    <div class="card-core" style="text-align: center;">
-                        <span class="eyebrow">DIFERENÇA TOTAL</span>
-                        <div id="weight-diff" style="font-size: 2rem; font-weight: 800; color: var(--accent); margin-top: 12px;">-- kg</div>
-                    </div>
-                </div>
-                <div class="card-shell reveal" style="animation-delay: 0.4s;">
-                    <div class="card-core" style="text-align: center;">
-                        <span class="eyebrow">AVALIAÇÕES</span>
-                        <div id="total-assessments" style="font-size: 2rem; font-weight: 800; color: #FFF; margin-top: 12px;">0</div>
-                    </div>
+            <div class="card-shell reveal" style="animation-delay: 0.2s;">
+                <div class="card-core" style="text-align: center;">
+                    <span class="eyebrow">PESO INICIAL</span>
+                    <div id="initial-weight" style="font-size: 2rem; font-weight: 800; color: #FFF; margin-top: 12px;">-- kg</div>
                 </div>
             </div>
-
-            <!-- History Section -->
-            <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.5s;">
-                <div class="card-core">
-                    <h3 style="margin-bottom: var(--space-lg);">HISTÓRICO DE MEDIÇÕES</h3>
-                    <div id="history-container" style="display: flex; flex-direction: column; gap: var(--space-md);">
-                        <!-- Injected by JS -->
-                        <div style="text-align: center; padding: 48px; color: var(--text-secondary);">CARREGANDO HISTÓRICO...</div>
-                    </div>
+            <div class="card-shell reveal" style="animation-delay: 0.3s;">
+                <div class="card-core" style="text-align: center;">
+                    <span class="eyebrow">DIFERENÇA TOTAL</span>
+                    <div id="weight-diff" style="font-size: 2rem; font-weight: 800; color: var(--accent); margin-top: 12px;">-- kg</div>
+                </div>
+            </div>
+            <div class="card-shell reveal" style="animation-delay: 0.4s;">
+                <div class="card-core" style="text-align: center;">
+                    <span class="eyebrow">AVALIAÇÕES</span>
+                    <div id="total-assessments" style="font-size: 2rem; font-weight: 800; color: #FFF; margin-top: 12px;">0</div>
                 </div>
             </div>
         </div>
-    </main>
 
-    <footer class="container" style="padding: var(--space-xl) var(--space-md); text-align: center; color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 0.1em;">
-        &copy; 2026 SHAPETRACK // HIGH-END PERFORMANCE ECOSYSTEM
-    </footer>
+        <!-- Chart -->
+        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.5s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-chart-line" style="color: var(--accent);"></i> PROJEÇÃO TEMPORAL</h3>
+                <div style="width: 100%; height: 320px;">
+                    <canvas id="weightChart"></canvas>
+                </div>
+            </div>
+        </div>
 
-    <script src="js/config.js?v=3.5"></script>
+        <!-- History Table -->
+        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.6s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-clock-counter-clockwise" style="color: var(--accent);"></i> LOG DE MEDIÇÕES</h3>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="text-align: left; border-bottom: 1px solid var(--glass-border);">
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">DATA</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">PESO</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">FAT %</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">MUSCLE %</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">CINTURA</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">QUADRIL</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-body">
+                            <!-- Medidas -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js?v=3.0"></script>
     <script>
         async function init() {
             const context = await App.init('relatorio.html');
             if (!context) return;
-            loadAssessments(context.session.user.id);
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const studentId = urlParams.get('aluno') || context.session.user.id;
+            loadAssessments(studentId);
         }
 
-        async function loadAssessments(userId) {
-            const { data, error } = await sb.from('assessments').select('*').eq('client_id', userId).order('created_at', { ascending: false });
+        async function loadAssessments(studentId) {
+            const { data: assessments } = await sb.from('assessments').select('*').eq('student_id', studentId).order('created_at', { ascending: true });
             
-            if (data && data.length > 0) {
-                const latest = data[0];
-                const oldest = data[data.length - 1];
-                
-                document.getElementById('current-weight').innerText = latest.weight + ' kg';
-                document.getElementById('initial-weight').innerText = oldest.weight + ' kg';
-                document.getElementById('weight-diff').innerText = (latest.weight - oldest.weight).toFixed(1) + ' kg';
-                document.getElementById('total-assessments').innerText = data.length;
-
-                const container = document.getElementById('history-container');
-                container.innerHTML = data.map(item => `
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-md); background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 16px;">
-                        <div>
-                            <div style="font-weight: 700; font-size: 0.85rem;">${new Date(item.created_at).toLocaleDateString('pt-BR')}</div>
-                            <div style="font-size: 0.7rem; color: var(--text-secondary);">AVALIAÇÃO BIOMÉTRICA</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 800; color: var(--accent);">${item.weight} kg</div>
-                            <div style="font-size: 0.6rem; color: var(--text-secondary);">${item.body_fat || '--'}% BF</div>
-                        </div>
-                    </div>
-                `).join('');
-            } else {
-                document.getElementById('history-container').innerHTML = `<div style="text-align: center; padding: 48px; color: var(--text-secondary);">NENHUMA AVALIAÇÃO REGISTRADA AINDA.</div>`;
+            if (!assessments || assessments.length === 0) {
+                document.getElementById('history-body').innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 64px; color: var(--text-secondary);">NENHUMA TELEMETRIA IDENTIFICADA.</td></tr>';
+                return;
             }
+
+            const last = assessments[assessments.length - 1];
+            const first = assessments[0];
+            const diff = last.weight - first.weight;
+
+            document.getElementById('current-weight').textContent = `${last.weight.toFixed(1)} kg`;
+            document.getElementById('initial-weight').textContent = `${first.weight.toFixed(1)} kg`;
+            document.getElementById('weight-diff').textContent = `${diff > 0 ? '+' : ''}${diff.toFixed(1)} kg`;
+            document.getElementById('total-assessments').textContent = assessments.length;
+
+            const historyBody = document.getElementById('history-body');
+            historyBody.innerHTML = assessments.map(a => `
+                <tr style="border-bottom: 1px solid var(--glass-border);">
+                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${new Date(a.created_at).toLocaleDateString('pt-BR')}</td>
+                    <td style="padding: 16px; font-size: 0.85rem; font-weight: 800; color: #FFF;">${a.weight.toFixed(1)} kg</td>
+                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.body_fat}%</td>
+                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.muscle_mass}%</td>
+                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.waist} cm</td>
+                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.hip} cm</td>
+                </tr>
+            `).reverse().join('');
+
+            const ctx = document.getElementById('weightChart').getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(217, 108, 43, 0.2)');
+            gradient.addColorStop(1, 'rgba(217, 108, 43, 0)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: assessments.map(a => new Date(a.created_at).toLocaleDateString('pt-BR')),
+                    datasets: [{
+                        label: 'Peso',
+                        data: assessments.map(a => a.weight),
+                        borderColor: '#D96C2B',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#D96C2B',
+                        pointBorderColor: 'rgba(255,255,255,0.1)',
+                        pointRadius: 4,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } }
+                        }
+                    }
+                }
+            });
         }
 
         init();

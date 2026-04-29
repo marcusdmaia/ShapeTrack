@@ -3,79 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vídeos // ShapeTrack Premium</title>
+    <title>Bio-Biblioteca // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.5">
+    <link rel="stylesheet" href="style.css?v=3.0">
+    <style>
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(24px); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 24px; }
+        .modal-card { width: 100%; max-width: 480px; }
+        .video-thumb { width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-inner); overflow: hidden; position: relative; border: 1px solid var(--glass-border); }
+        .play-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s var(--bezier); }
+        .video-thumb:hover .play-overlay { opacity: 1; }
+    </style>
 </head>
 <body>
 
-    <nav class="navbar reveal"></nav>
+    <nav class="navbar reveal">
+        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <div id="nav-links" class="nav-links desktop-only"></div>
+    </nav>
 
-    <main class="container">
-        <div class="bento-grid">
-            <!-- Header -->
-            <div class="card-shell reveal" style="grid-column: span 12;">
-                <div class="card-core">
-                    <span class="eyebrow">Conteúdo Educacional</span>
-                    <h1 style="margin: 4px 0;">BIBLIOTECA DE VÍDEOS</h1>
-                    <p style="color: var(--text-secondary); font-size: 0.85rem;">Treinamentos, protocolos e mentalidade de alta performance.</p>
+    <div class="bento-grid">
+        <!-- Header -->
+        <div class="card-shell reveal" style="grid-column: span 12;">
+            <div class="card-core" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+                <div>
+                    <span class="eyebrow">Repositório Multimídia</span>
+                    <h1>BIO-VÍDEOS</h1>
+                    <p style="color: var(--text-secondary); margin-top: 8px;">Gerenciamento de conteúdos e ativos digitais para mentoria.</p>
                 </div>
+                <button class="btn btn-primary" onclick="showAddModal()">
+                    NOVO CONTEÚDO
+                    <div class="btn-icon"><i class="ph-light ph-plus-circle"></i></div>
+                </button>
             </div>
+        </div>
 
-            <!-- Video Grid -->
-            <div class="grid-stack" style="grid-column: span 12; animation-delay: 0.1s;">
-                <div class="card-shell reveal">
-                    <div class="card-core" style="padding: 0; overflow: hidden;">
-                        <div style="aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center;">
-                            <i class="ph-bold ph-play" style="font-size: 3rem; color: var(--accent);"></i>
-                        </div>
-                        <div style="padding: var(--space-md);">
-                            <span class="eyebrow">PROTOCOLOS</span>
-                            <h3 style="font-size: 1rem; margin-top: 8px;">COMO PREPARAR SEU SHAKE IDEAL</h3>
-                            <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px;">Aprenda a textura e os complementos para máxima saciedade.</p>
-                        </div>
-                    </div>
+        <!-- Video Grid -->
+        <div id="video-grid" style="grid-column: span 12; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+            <!-- Vídeos -->
+        </div>
+    </div>
+
+    <!-- Add Modal -->
+    <div id="addModal" class="modal" onclick="if(event.target === this) closeModal()">
+        <div class="card-shell modal-card reveal">
+            <div class="card-core">
+                <h2 style="margin-bottom: 12px;">NOVO ATIVO VÍDEO</h2>
+                <div class="form-group">
+                    <label>TÍTULO DO CONTEÚDO</label>
+                    <input type="text" id="v-title" placeholder="EX: PROTOCOLO DE SUPERIORES">
                 </div>
-
-                <div class="card-shell reveal" style="animation-delay: 0.2s;">
-                    <div class="card-core" style="padding: 0; overflow: hidden;">
-                        <div style="aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center;">
-                            <i class="ph-bold ph-play" style="font-size: 3rem; color: var(--accent);"></i>
-                        </div>
-                        <div style="padding: var(--space-md);">
-                            <span class="eyebrow">MENTALIDADE</span>
-                            <h3 style="font-size: 1rem; margin-top: 8px;">CONSTÂNCIA VS MOTIVAÇÃO</h3>
-                            <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px;">O segredo dos 90 dias que transformam o metabolismo.</p>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label>URL DO YOUTUBE</label>
+                    <input type="text" id="v-url" placeholder="https://youtube.com/watch?v=...">
                 </div>
-
-                <div class="card-shell reveal" style="animation-delay: 0.3s;">
-                    <div class="card-core" style="padding: 0; overflow: hidden;">
-                        <div style="aspect-ratio: 16/9; background: #000; display: flex; align-items: center; justify-content: center;">
-                            <i class="ph-bold ph-play" style="font-size: 3rem; color: var(--accent);"></i>
-                        </div>
-                        <div style="padding: var(--space-md);">
-                            <span class="eyebrow">TREINAMENTO</span>
-                            <h3 style="font-size: 1rem; margin-top: 8px;">HIIT CASEIRO - NÍVEL 1</h3>
-                            <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 8px;">20 minutos de queima intensa sem equipamentos.</p>
-                        </div>
-                    </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border);">
+                    <input type="checkbox" id="v-colab" style="width: 20px; height: 20px;">
+                    <label style="margin-bottom: 0;">DISPONIBILIZAR PARA COLABORAÇÃO?</label>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
+                    <button class="btn" onclick="closeModal()" style="background: rgba(255,255,255,0.05); color: #FFF;">CANCELAR</button>
+                    <button class="btn btn-primary" onclick="saveVideo()">SALVAR VÍDEO</button>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
-    <footer class="container" style="padding: var(--space-xl) var(--space-md); text-align: center; color: var(--text-secondary); font-size: 0.7rem; letter-spacing: 0.1em;">
-        &copy; 2026 SHAPETRACK // HIGH-END PERFORMANCE ECOSYSTEM
-    </footer>
+    <!-- Player Modal -->
+    <div id="playerModal" class="modal" onclick="closePlayer()">
+        <div class="card-shell reveal" style="width: 100%; max-width: 960px;">
+            <div class="card-core" style="padding: 0; aspect-ratio: 16/9; overflow: hidden;">
+                <iframe id="videoIframe" width="100%" height="100%" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
 
-    <script src="js/config.js?v=3.5"></script>
+    <script src="js/config.js?v=3.0"></script>
     <script>
+        let allVideos = [];
+
         async function init() {
             const context = await App.init('videos.html');
+            if (!context) return;
+            loadVideos(context.session.user.id);
         }
+
+        async function loadVideos(mentorId) {
+            const { data: videos } = await sb.from('videos').select('*').eq('mentor_id', mentorId);
+            allVideos = videos || [];
+            renderVideos(allVideos);
+        }
+
+        function renderVideos(videos) {
+            const grid = document.getElementById('video-grid');
+            grid.innerHTML = videos.length ? '' : '<div class="card-shell" style="grid-column: 1/-1;"><div class="card-core" style="text-align: center; padding: 64px; color: var(--text-secondary);">NENHUM ATIVO MULTIMÍDIA IDENTIFICADO.</div></div>';
+
+            videos.forEach(v => {
+                const ytId = v.youtube_url.includes('v=') ? v.youtube_url.split('v=')[1].split('&')[0] : v.youtube_url.split('/').pop();
+                const card = document.createElement('div');
+                card.className = 'card-shell reveal';
+                card.innerHTML = `
+                    <div class="card-core" style="padding: 12px;">
+                        <div class="video-thumb" onclick="openPlayer('${ytId}')" style="background: url('https://img.youtube.com/vi/${ytId}/mqdefault.jpg') center/cover;">
+                            <div class="play-overlay">
+                                <i class="ph-light ph-play" style="font-size: 3rem; color: #FFF;"></i>
+                            </div>
+                        </div>
+                        <div style="padding: 16px 8px;">
+                            <h4 style="font-size: 0.9rem; font-weight: 800; color: #FFF; margin-bottom: 8px;">${v.title.toUpperCase()}</h4>
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 0.65rem; font-weight: 700; color: ${v.is_colab ? 'var(--accent)' : 'var(--text-secondary)'}; margin-bottom: 16px;">
+                                <i class="ph-light ${v.is_colab ? 'ph-share-network' : 'ph-lock'}"></i> ${v.is_colab ? 'DISPONÍVEL PARA PARCERIAS' : 'CONTEÚDO PRIVADO'}
+                            </div>
+                            <div style="display: flex; gap: 8px; border-top: 1px solid var(--glass-border); padding-top: 16px;">
+                                <button class="btn" style="flex: 1; font-size: 0.65rem; padding: 8px; background: rgba(255,255,255,0.05); color: #FFF;" onclick="toggleColab('${v.id}', ${v.is_colab})">ALTERNAR COLAB</button>
+                                <button class="btn" style="color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 8px; width: 40px;" onclick="deleteVideo('${v.id}')"><i class="ph-light ph-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function saveVideo() {
+            const title = document.getElementById('v-title').value;
+            const url = document.getElementById('v-url').value;
+            const colab = document.getElementById('v-colab').checked;
+            if (!title || !url) return showToast('Preencha os campos!', 'error');
+
+            const { error } = await sb.from('videos').insert([{ mentor_id: App.profile.id, title, youtube_url: url, is_colab: colab }]);
+            if (error) return showToast(error.message, 'error');
+            
+            showToast('Vídeo adicionado!');
+            closeModal(); 
+            loadVideos(App.profile.id);
+        }
+
+        async function toggleColab(id, current) {
+            await sb.from('videos').update({ is_colab: !current }).eq('id', id);
+            loadVideos(App.profile.id);
+        }
+
+        async function deleteVideo(id) {
+            if (confirm('EXCLUIR ESTE ATIVO DEFINITIVAMENTE?')) {
+                await sb.from('videos').delete().eq('id', id);
+                loadVideos(App.profile.id);
+            }
+        }
+
+        function openPlayer(ytId) {
+            document.getElementById('videoIframe').src = `https://www.youtube.com/embed/${ytId}?autoplay=1`;
+            document.getElementById('playerModal').style.display = 'flex';
+        }
+        function closePlayer() {
+            document.getElementById('videoIframe').src = '';
+            document.getElementById('playerModal').style.display = 'none';
+        }
+        function showAddModal() { document.getElementById('addModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('addModal').style.display = 'none'; }
+
         init();
     </script>
 </body>
