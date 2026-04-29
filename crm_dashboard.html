@@ -7,200 +7,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #f8faf9;
-            --primary: #2F5948;
-            --primary-light: #3d755e;
-            --accent: #D96C2B;
-            --text-main: #1a1c1b;
-            --text-dim: #64748b;
-            --white: #ffffff;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            --nav-bg: rgba(255, 255, 255, 0.8);
-        }
-
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Desktop */
-        .sidebar {
-            width: 280px;
-            background: var(--primary);
-            padding: 40px 24px;
-            display: flex;
-            flex-direction: column;
-            color: white;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            transition: all 0.3s ease;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            margin-bottom: 48px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-        .logo span { color: var(--accent); }
-
-        .nav-links { display: flex; flex-direction: column; gap: 8px; }
-        .nav-item {
-            padding: 14px 18px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 500;
-        }
-        .nav-item.active { background: rgba(255, 255, 255, 0.1); color: white; }
-        .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 48px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header {
-            margin-bottom: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .page-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: -1px;
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-
-        .stat-card {
-            background: var(--white);
-            padding: 24px;
-            border-radius: 24px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-
-        .stat-card .label { color: var(--text-dim); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; display: block; }
-        .stat-card .value { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
-        .stat-card .value.alert { color: #ef4444; }
-
-        /* CRM Section */
-        .card-table {
-            background: var(--white);
-            padding: 32px;
-            border-radius: 24px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 24px;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        .crm-table { width: 100%; border-collapse: collapse; min-width: 700px; }
-        .crm-table th { text-align: left; padding: 16px; border-bottom: 2px solid #f1f5f9; color: var(--text-dim); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; }
-        .crm-table td { padding: 16px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; }
-
-        .status-badge { padding: 6px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
-        .status-active { background: #dcfce7; color: #166534; }
-        .status-warning { background: #fef9c3; color: #854d0e; }
-        .status-alert { background: #fee2e2; color: #991b1b; }
-
-        .btn-action {
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            background: white;
-            color: var(--primary);
-            cursor: pointer;
-            transition: 0.2s;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .btn-action:hover { background: #f8faf9; border-color: var(--primary); }
-
-        /* Mobile */
-        @media (max-width: 1024px) {
-            .sidebar { width: 80px; padding: 40px 15px; }
-            .logo { font-size: 0; justify-content: center; }
-            .logo span { font-size: 1.8rem; }
-            .nav-item span { display: none; }
-            .nav-item { justify-content: center; }
-            .main-content { padding: 32px; }
-        }
-
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar {
-                width: 100%; height: 72px; padding: 0; position: fixed; 
-                bottom: 0; left: 0; top: auto;
-                flex-direction: row; background: var(--nav-bg); backdrop-filter: blur(20px);
-                border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000;
-            }
-            .logo { display: none; }
-            .nav-links { 
-                flex-direction: row; width: 100%; height: 100%; gap: 0; 
-                overflow-x: auto; scrollbar-width: none; 
-            }
-            .nav-links::-webkit-scrollbar { display: none; }
-            .nav-item { 
-                flex: 0 0 80px; flex-direction: column; gap: 5px; border-radius: 0; 
-                font-size: 0.65rem; color: #94a3b8; padding: 10px 0;
-            }
-            .nav-item i { font-size: 1.3rem; }
-            .nav-item.active { background: transparent; color: var(--primary); }
-            .main-content { padding: 24px; padding-bottom: 120px; }
-            .header { flex-direction: column; align-items: flex-start; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <aside class="sidebar">
         <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
-        <nav id="nav-links" class="nav-links">
-            <!-- Dynamic Links -->
-        </nav>
+        <nav id="nav-links" class="nav-links"></nav>
     </aside>
 
     <main class="main-content">
@@ -211,34 +24,27 @@
             </div>
         </header>
 
-        <!-- Stats -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <span class="label">Contas a Receber</span>
-                <div class="value" id="stat-receivables">R$ 0,00</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 40px;">
+            <div class="card" style="padding: 24px; margin-bottom: 0;">
+                <span style="color: var(--text-dim); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; display: block;">Contas a Receber</span>
+                <div id="stat-receivables" style="font-size: 1.8rem; font-weight: 800; color: var(--primary);">R$ 0,00</div>
             </div>
-            <div class="stat-card">
-                <span class="label">Clientes Inativos</span>
-                <div class="value alert" id="stat-inactive">0</div>
+            <div class="card" style="padding: 24px; margin-bottom: 0;">
+                <span style="color: var(--text-dim); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; display: block;">Clientes Inativos</span>
+                <div id="stat-inactive" style="font-size: 1.8rem; font-weight: 800; color: #ef4444;">0</div>
             </div>
-            <div class="stat-card">
-                <span class="label">Aniversariantes (Mês)</span>
-                <div class="value" id="stat-birthdays" style="color: var(--accent);">0</div>
+            <div class="card" style="padding: 24px; margin-bottom: 0;">
+                <span style="color: var(--text-dim); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; display: block;">Aniversariantes (Mês)</span>
+                <div id="stat-birthdays" style="font-size: 1.8rem; font-weight: 800; color: var(--accent);">0</div>
             </div>
         </div>
 
-        <!-- Inactives Table -->
-        <div class="card-table">
+        <div class="card">
             <h2 class="section-title"><i class="fas fa-user-clock"></i> Alerta de Retenção</h2>
-            <div class="table-responsive">
-                <table class="crm-table">
+            <div class="table-container">
+                <table>
                     <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Última Compra</th>
-                            <th>Dias Inativo</th>
-                            <th>Ações</th>
-                        </tr>
+                        <tr><th>Cliente</th><th>Última Compra</th><th>Dias Inativo</th><th>Ações</th></tr>
                     </thead>
                     <tbody id="retention-list">
                         <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-dim);">Analisando base de dados...</td></tr>
@@ -247,18 +53,12 @@
             </div>
         </div>
 
-        <!-- Receivables Table -->
-        <div class="card-table">
+        <div class="card">
             <h2 class="section-title" style="color: var(--accent);"><i class="fas fa-hand-holding-usd"></i> Pendências Financeiras</h2>
-            <div class="table-responsive">
-                <table class="crm-table">
+            <div class="table-container">
+                <table>
                     <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Valor Devido</th>
-                            <th>Vencimento</th>
-                            <th>Ações</th>
-                        </tr>
+                        <tr><th>Cliente</th><th>Valor Devido</th><th>Vencimento</th><th>Ações</th></tr>
                     </thead>
                     <tbody id="receivables-list">
                         <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-dim);">Tudo em dia!</td></tr>
@@ -268,106 +68,52 @@
         </div>
     </main>
 
+    <script src="js/config.js"></script>
     <script>
-        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
-        
         async function init() {
-            const { data: { session } } = await sb.auth.getSession();
-            if (!session) { window.location.href = 'index.html'; return; }
+            const session = await checkAuth();
+            if (!session) return;
 
             const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
-            if (profile) setupNav(profile);
-
+            if (profile) setupNav(profile, 'crm_dashboard.html');
             loadCRMData(session.user.id);
         }
 
-        function setupNav(profile) {
-            const nav = document.getElementById('nav-links');
-            let navHtml = `
-                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
-                <a href="crm_dashboard.html" class="nav-item active"><i class="fas fa-chart-pie"></i><span>Gestão 360</span></a>
-                <a href="vendas.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Vendas</span></a>
-            `;
-
-            if (profile.role === 'admin' || profile.role === 'superadmin') {
-                navHtml += `
-                    <a href="videos.html" class="nav-item"><i class="fas fa-play-circle"></i><span>Vídeos</span></a>
-                    <a href="parcerias.html" class="nav-item"><i class="fas fa-handshake"></i><span>Parcerias</span></a>
-                    <a href="alunos.html" class="nav-item"><i class="fas fa-users"></i><span>Alunos</span></a>
-                    <a href="leads_admin.html" class="nav-item"><i class="fas fa-filter"></i><span>Leads</span></a>
-                    <a href="configuracoes.html" class="nav-item"><i class="fas fa-cog"></i><span>Ajustes</span></a>
-                `;
-            } else {
-                navHtml += `<a href="relatorio.html" class="nav-item"><i class="fas fa-chart-line"></i><span>Evolução</span></a>`;
-            }
-            navHtml += `<a href="#" class="nav-item" onclick="handleLogout()" style="margin-top:auto; color:#ef4444;"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>`;
-            nav.innerHTML = navHtml;
-        }
-
         async function loadCRMData(mentorId) {
-            // 1. Carregar Alunos
             const { data: clients } = await sb.from('profiles').select('*').eq('mentor_id', mentorId).eq('role', 'client');
-            
-            // 2. Carregar Vendas para cálculo de inatividade e recebíveis
             const { data: sales } = await sb.from('sales').select('*, profiles!client_id(full_name)').eq('mentor_id', mentorId);
-
             if (!clients || !sales) return;
 
-            // Lógica de Recebíveis
             const pendingSales = sales.filter(s => s.payment_status === 'Parcial' || s.payment_status === 'Pendente');
             const totalDue = pendingSales.reduce((acc, s) => acc + (s.total_price - (s.amount_paid || 0)), 0);
             document.getElementById('stat-receivables').textContent = `R$ ${totalDue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
 
-            const recList = document.getElementById('receivables-list');
-            if (pendingSales.length > 0) {
-                recList.innerHTML = pendingSales.map(s => {
-                    const due = s.total_price - (s.amount_paid || 0);
-                    return `
-                        <tr>
-                            <td style="font-weight:700;">${s.profiles?.full_name || 'Desconhecido'}</td>
-                            <td style="color:#ef4444; font-weight:800;">R$ ${due.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                            <td>${s.due_date ? new Date(s.due_date).toLocaleDateString('pt-BR') : '--'}</td>
-                            <td><button class="btn-action" onclick="alert('Funcionalidade de baixa em breve')">Dar Baixa</button></td>
-                        </tr>
-                    `;
-                }).join('');
-            }
+            document.getElementById('receivables-list').innerHTML = pendingSales.length ? pendingSales.map(s => `
+                <tr>
+                    <td style="font-weight:700;">${s.profiles?.full_name || 'Desconhecido'}</td>
+                    <td style="color:#ef4444; font-weight:800;">R$ ${(s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                    <td>${s.due_date ? new Date(s.due_date).toLocaleDateString('pt-BR') : '--'}</td>
+                    <td><button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;" onclick="alert('Baixa em breve')">Dar Baixa</button></td>
+                </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Tudo pago!</td></tr>';
 
-            // Lógica de Inatividade
             const now = new Date();
-            const retentionList = document.getElementById('retention-list');
             const inactiveClients = clients.map(c => {
                 const clientSales = sales.filter(s => s.client_id === c.id);
                 if (clientSales.length === 0) return { ...c, days: 999, lastDate: 'Nunca' };
-                
                 const lastSale = clientSales.reduce((a, b) => new Date(a.created_at) > new Date(b.created_at) ? a : b);
-                const diffDays = Math.floor((now - new Date(lastSale.created_at)) / (1000 * 60 * 60 * 24));
-                return { ...c, days: diffDays, lastDate: new Date(lastSale.created_at).toLocaleDateString('pt-BR') };
+                return { ...c, days: Math.floor((now - new Date(lastSale.created_at)) / (1000 * 60 * 60 * 24)), lastDate: new Date(lastSale.created_at).toLocaleDateString('pt-BR') };
             }).filter(c => c.days > 30);
 
             document.getElementById('stat-inactive').textContent = inactiveClients.length;
-            if (inactiveClients.length > 0) {
-                retentionList.innerHTML = inactiveClients.sort((a,b) => b.days - a.days).map(c => `
-                    <tr>
-                        <td style="font-weight:700;">${c.full_name}</td>
-                        <td>${c.lastDate}</td>
-                        <td><span class="status-badge ${c.days > 90 ? 'status-alert' : 'status-warning'}">${c.days} dias</span></td>
-                        <td><a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn-action"><i class="fab fa-whatsapp"></i> Chamar</a></td>
-                    </tr>
-                `).join('');
-            } else {
-                retentionList.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-dim);">Nenhum cliente em risco. Bom trabalho!</td></tr>';
-            }
+            document.getElementById('retention-list').innerHTML = inactiveClients.length ? inactiveClients.sort((a,b) => b.days - a.days).map(c => `
+                <tr>
+                    <td style="font-weight:700;">${c.full_name}</td>
+                    <td>${c.lastDate}</td>
+                    <td><span class="badge ${c.days > 90 ? 'badge-danger' : 'badge-warning'}">${c.days} dias</span></td>
+                    <td><a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;"><i class="fab fa-whatsapp"></i> Chamar</a></td>
+                </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Clientes ativos!</td></tr>';
 
-            // Lógica Aniversários
-            const currentMonth = now.getMonth() + 1;
-            const birthdays = clients.filter(c => c.birthday && parseInt(c.birthday.split('-')[1]) === currentMonth);
-            document.getElementById('stat-birthdays').textContent = birthdays.length;
-        }
-
-        async function handleLogout() {
-            await sb.auth.signOut();
-            window.location.href = 'index.html';
+            document.getElementById('stat-birthdays').textContent = clients.filter(c => c.birthday && parseInt(c.birthday.split('-')[1]) === (now.getMonth() + 1)).length;
         }
 
         init();

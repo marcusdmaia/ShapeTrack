@@ -7,90 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #f8faf9;
-            --primary: #2F5948;
-            --primary-light: #3d755e;
-            --accent: #D96C2B;
-            --text-main: #1a1c1b;
-            --text-dim: #64748b;
-            --white: #ffffff;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            --nav-bg: rgba(255, 255, 255, 0.8);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-main); display: flex; min-height: 100vh; }
-
-        /* Sidebar */
-        .sidebar { width: 280px; background: var(--primary); padding: 40px 24px; display: flex; flex-direction: column; color: white; position: sticky; top: 0; height: 100vh; }
-        .logo { font-size: 1.8rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 48px; cursor: pointer; }
-        .logo span { color: var(--accent); }
-        .nav-links { display: flex; flex-direction: column; gap: 8px; }
-        .nav-item { padding: 14px 18px; border-radius: 12px; color: rgba(255, 255, 255, 0.6); text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 500; }
-        .nav-item.active { background: rgba(255, 255, 255, 0.1); color: white; }
-        .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
-
-        /* Content */
-        .main-content { flex: 1; padding: 48px; max-width: 1200px; margin: 0 auto; }
-        .header { margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .page-title { font-size: 2.2rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
-
-        .btn-copy { background: var(--primary); color: white; padding: 14px 24px; border-radius: 16px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
-        .btn-copy:hover { background: var(--primary-light); transform: translateY(-3px); }
-
-        /* Leads Grid */
-        .leads-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
-        .lead-card { background: white; padding: 24px; border-radius: 24px; box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 20px; transition: 0.3s; }
-        .lead-card:hover { transform: translateY(-5px); }
-
-        .lead-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; }
-        .goal-badge { padding: 4px 12px; border-radius: 50px; background: #f1f5f9; color: var(--primary); font-size: 0.75rem; }
-
-        .lead-name { font-size: 1.25rem; font-weight: 800; color: var(--primary); margin: 5px 0; }
-        
-        .macro-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #f8faf9; padding: 15px; border-radius: 16px; }
-        .stat-item { display: flex; flex-direction: column; }
-        .stat-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; }
-        .stat-value { font-size: 1.1rem; font-weight: 800; color: var(--primary); }
-
-        .lead-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-action { padding: 12px; border-radius: 12px; border: 1.5px solid #f1f5f9; background: white; color: var(--primary); font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: 0.2s; }
-        .btn-action.primary { background: var(--accent); color: white; border: none; }
-        .btn-action:hover { background: #f8faf9; border-color: var(--primary); }
-        .btn-action.primary:hover { transform: scale(1.02); opacity: 0.9; }
-
-        /* Search Bar */
-        .search-container { position: relative; margin-bottom: 32px; }
-        .search-container i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-dim); }
-        .search-container input { width: 100%; padding: 14px 14px 14px 48px; border: 2px solid #f1f5f9; border-radius: 16px; outline: none; transition: 0.2s; }
-        .search-container input:focus { border-color: var(--primary); }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { 
-                width: 100%; height: 72px; padding: 0; position: fixed; 
-                bottom: 0; left: 0; top: auto;
-                flex-direction: row; background: var(--nav-bg); backdrop-filter: blur(20px); 
-                border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000; 
-            }
-            .logo { display: none; }
-            .nav-links { 
-                flex-direction: row; width: 100%; height: 100%; gap: 0; 
-                overflow-x: auto; scrollbar-width: none; 
-            }
-            .nav-links::-webkit-scrollbar { display: none; }
-            .nav-item { 
-                flex: 0 0 80px; flex-direction: column; gap: 5px; border-radius: 0; 
-                font-size: 0.65rem; color: #94a3b8; padding: 10px 0;
-            }
-            .nav-item.active { background: transparent; color: var(--primary); }
-            .main-content { padding: 24px; padding-bottom: 120px; }
-            .header { flex-direction: column; align-items: flex-start; gap: 20px; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -100,71 +17,49 @@
     </aside>
 
     <main class="main-content">
-        <header class="header">
+        <header class="header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
             <div>
                 <h1 class="page-title">Gestão de Leads</h1>
                 <p style="color: var(--text-dim);">Pessoas que calcularam macros através do seu link.</p>
             </div>
-            <button class="btn-copy" onclick="copyFunnelLink()">
+            <button class="btn btn-primary" onclick="copyFunnelLink()">
                 <i class="fas fa-link"></i> Link do Funil
             </button>
         </header>
 
-        <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" id="search-leads" placeholder="Buscar por nome ou WhatsApp..." oninput="filterLeads()">
+        <div class="search-container" style="position: relative; margin-bottom: 32px;">
+            <i class="fas fa-search" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-dim);"></i>
+            <input type="text" id="search-leads" placeholder="Buscar por nome ou WhatsApp..." oninput="filterLeads()" style="width: 100%; padding: 14px 14px 14px 48px; border: 2px solid #f1f5f9; border-radius: 16px; outline: none;">
         </div>
 
-        <div id="leads-list" class="leads-grid">
+        <div id="leads-list" class="grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
             <!-- Leads -->
         </div>
     </main>
 
+    <script src="js/config.js"></script>
     <script>
-        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
         let allLeads = [];
-        let currentUser = null;
 
         async function init() {
-            const { data: { session } } = await sb.auth.getSession();
-            if (!session) { window.location.href = 'index.html'; return; }
-            currentUser = session.user;
+            const session = await checkAuth();
+            if (!session) return;
             
-            const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-            if (profile) setupNav(profile);
+            const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+            if (profile) setupNav(profile, 'leads_admin.html');
 
-            loadLeads();
+            loadLeads(session.user.id);
         }
 
-        function setupNav(profile) {
-            const nav = document.getElementById('nav-links');
-            let navHtml = `
-                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
-                <a href="crm_dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Gestão 360</span></a>
-                <a href="vendas.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Vendas</span></a>
-            `;
-            if (profile.role === 'admin' || profile.role === 'superadmin') {
-                navHtml += `
-                    <a href="videos.html" class="nav-item"><i class="fas fa-play-circle"></i><span>Vídeos</span></a>
-                    <a href="parcerias.html" class="nav-item"><i class="fas fa-handshake"></i><span>Parcerias</span></a>
-                    <a href="alunos.html" class="nav-item"><i class="fas fa-users"></i><span>Alunos</span></a>
-                    <a href="leads_admin.html" class="nav-item active"><i class="fas fa-filter"></i><span>Leads</span></a>
-                    <a href="configuracoes.html" class="nav-item"><i class="fas fa-cog"></i><span>Ajustes</span></a>
-                `;
-            }
-            navHtml += `<a href="#" class="nav-item" onclick="handleLogout()" style="margin-top:auto; color:#ef4444;"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>`;
-            nav.innerHTML = navHtml;
-        }
-
-        async function loadLeads() {
-            const { data: leads } = await sb.from('leads').select('*').eq('mentor_id', currentUser.id).order('created_at', { ascending: false });
+        async function loadLeads(mentorId) {
+            const { data: leads } = await sb.from('leads').select('*').eq('mentor_id', mentorId).order('created_at', { ascending: false });
             allLeads = leads || [];
             renderLeads(allLeads);
         }
 
         function renderLeads(list) {
             const container = document.getElementById('leads-list');
-            container.innerHTML = list.length ? '' : '<p style="text-align:center; padding: 40px; color: var(--text-dim);">Nenhum lead capturado ainda.</p>';
+            container.innerHTML = list.length ? '' : '<p style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--text-dim);">Nenhum lead capturado ainda.</p>';
             
             list.forEach(lead => {
                 const date = new Date(lead.created_at).toLocaleDateString('pt-BR');
@@ -172,22 +67,25 @@
                 const goalText = lead.goal === 'loss' ? 'Emagrecer' : (lead.goal === 'gain' ? 'Ganhar Peso' : 'Manter');
                 
                 const card = document.createElement('div');
-                card.className = 'lead-card';
+                card.className = 'card lead-card';
+                card.style.display = 'flex';
+                card.style.flexDirection = 'column';
+                card.style.gap = '20px';
                 card.innerHTML = `
-                    <div class="lead-meta">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase;">
                         <span><i class="fas fa-calendar-day"></i> ${date}</span>
-                        <span class="goal-badge">${goalText}</span>
+                        <span class="badge badge-warning">${goalText}</span>
                     </div>
-                    <div class="lead-name">${lead.full_name}</div>
-                    <div class="macro-stats">
-                        <div class="stat-item"><span class="stat-label">Calorias</span><span class="stat-value">${macros.calories}</span></div>
-                        <div class="stat-item"><span class="stat-label">Proteína</span><span class="stat-value">${macros.protein}g</span></div>
-                        <div class="stat-item"><span class="stat-label">Carbos</span><span class="stat-value">${macros.carbs}g</span></div>
-                        <div class="stat-item"><span class="stat-label">Água</span><span class="stat-value">${macros.water}L</span></div>
+                    <div style="font-size: 1.25rem; font-weight: 800; color: var(--primary); margin: 5px 0;">${lead.full_name}</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #f8faf9; padding: 15px; border-radius: 16px;">
+                        <div style="display: flex; flex-direction: column;"><span style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Calorias</span><span style="font-size: 1.1rem; font-weight: 800; color: var(--primary);">${macros.calories}</span></div>
+                        <div style="display: flex; flex-direction: column;"><span style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Proteína</span><span style="font-size: 1.1rem; font-weight: 800; color: var(--primary);">${macros.protein}g</span></div>
+                        <div style="display: flex; flex-direction: column;"><span style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Carbos</span><span style="font-size: 1.1rem; font-weight: 800; color: var(--primary);">${macros.carbs}g</span></div>
+                        <div style="display: flex; flex-direction: column;"><span style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Água</span><span style="font-size: 1.1rem; font-weight: 800; color: var(--primary);">${macros.water}L</span></div>
                     </div>
-                    <div class="lead-actions">
-                        <button class="btn-action primary" onclick="convertLead('${lead.id}')"><i class="fas fa-user-check"></i> Virar Aluno</button>
-                        <a href="https://wa.me/55${lead.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn-action"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button class="btn btn-accent" onclick="convertLead('${lead.id}')" style="font-size: 0.8rem;"><i class="fas fa-user-check"></i> Virar Aluno</button>
+                        <a href="https://wa.me/55${lead.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn btn-outline" style="font-size: 0.8rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
                     </div>
                 `;
                 container.appendChild(card);
@@ -202,28 +100,29 @@
         async function convertLead(leadId) {
             if (!confirm('Deseja transformar este lead em um Aluno oficial?')) return;
             const lead = allLeads.find(l => l.id === leadId);
+            const { data: { session } } = await sb.auth.getSession();
             
-            // 1. Criar perfil de aluno
             const { error: pError } = await sb.from('profiles').insert([{
-                id: lead.id, full_name: lead.full_name, role: 'client', mentor_id: currentUser.id, whatsapp: lead.whatsapp
+                id: lead.id, full_name: lead.full_name, role: 'client', mentor_id: session.user.id, whatsapp: lead.whatsapp
             }]);
 
-            // 2. Remover do banco de leads
+            if (pError) { alert(pError.message); return; }
+
             await sb.from('leads').delete().eq('id', leadId);
-            
             alert('Lead convertido com sucesso!');
-            loadLeads();
+            loadLeads(session.user.id);
         }
 
-        function copyFunnelLink() {
-            const link = window.location.origin + window.location.pathname.replace('leads_admin.html', 'calculadora.html') + `?mentor=${currentUser.id}`;
+        async function copyFunnelLink() {
+            const { data: { session } } = await sb.auth.getSession();
+            const link = window.location.origin + window.location.pathname.replace('leads_admin.html', 'calculadora.html') + `?mentor=${session.user.id}`;
             navigator.clipboard.writeText(link);
             alert('Link do Funil copiado!');
         }
 
-        async function handleLogout() { await sb.auth.signOut(); window.location.href = 'index.html'; }
-
         init();
     </script>
+</body>
+</html>
 </body>
 </html>

@@ -7,92 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #f8faf9;
-            --primary: #2F5948;
-            --primary-light: #3d755e;
-            --accent: #D96C2B;
-            --text-main: #1a1c1b;
-            --text-dim: #64748b;
-            --white: #ffffff;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            --nav-bg: rgba(255, 255, 255, 0.8);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-main); display: flex; min-height: 100vh; }
-
-        /* Sidebar */
-        .sidebar { width: 280px; background: var(--primary); padding: 40px 24px; display: flex; flex-direction: column; color: white; position: sticky; top: 0; height: 100vh; }
-        .logo { font-size: 1.8rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 48px; cursor: pointer; }
-        .logo span { color: var(--accent); }
-        .nav-links { display: flex; flex-direction: column; gap: 8px; }
-        .nav-item { padding: 14px 18px; border-radius: 12px; color: rgba(255, 255, 255, 0.6); text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 500; }
-        .nav-item.active { background: rgba(255, 255, 255, 0.1); color: white; }
-        .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
-
-        /* Content */
-        .main-content { flex: 1; padding: 48px; max-width: 1200px; margin: 0 auto; }
-        .header { margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
-        .page-title { font-size: 2.2rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
-
-        .btn-add { background: var(--primary); color: white; padding: 14px 24px; border-radius: 16px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
-        .btn-add:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(47, 89, 72, 0.2); }
-
-        /* Video Grid */
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
-        .video-card { background: white; border-radius: 24px; overflow: hidden; box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.02); transition: 0.3s; }
-        .video-card:hover { transform: translateY(-5px); }
-
-        .video-thumb { width: 100%; aspect-ratio: 16/9; background-size: cover; background-position: center; position: relative; cursor: pointer; }
-        .play-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; }
-        .video-thumb:hover .play-overlay { opacity: 1; }
-        .play-overlay i { font-size: 3rem; color: white; }
-
-        .video-info { padding: 20px; }
-        .video-info h4 { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
-
-        .colab-badge { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; color: var(--text-dim); margin-bottom: 16px; }
-        .colab-badge.active { color: #27ae60; }
-
-        .video-actions { display: flex; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 15px; }
-        .btn-action { flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid #f1f5f9; background: white; color: var(--primary); font-weight: 700; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.2s; }
-        .btn-action:hover { background: #f8faf9; border-color: var(--primary); }
-        .btn-action.danger { color: #ef4444; }
-        .btn-action.danger:hover { background: #fef2f2; border-color: #ef4444; }
-
-        /* Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-card { background: white; padding: 32px; border-radius: 24px; max-width: 500px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; }
-        .form-group input { width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px; }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { 
-                width: 100%; height: 72px; padding: 0; position: fixed; 
-                bottom: 0; left: 0; top: auto;
-                flex-direction: row; background: var(--nav-bg); backdrop-filter: blur(20px); 
-                border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000; 
-            }
-            .logo { display: none; }
-            .nav-links { 
-                flex-direction: row; width: 100%; height: 100%; gap: 0; 
-                overflow-x: auto; scrollbar-width: none; 
-            }
-            .nav-links::-webkit-scrollbar { display: none; }
-            .nav-item { 
-                flex: 0 0 80px; flex-direction: column; gap: 5px; border-radius: 0; 
-                font-size: 0.65rem; color: #94a3b8; padding: 10px 0;
-            }
-            .nav-item.active { background: transparent; color: var(--primary); }
-            .main-content { padding: 24px; padding-bottom: 120px; }
-            .header { flex-direction: column; align-items: flex-start; gap: 20px; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -102,101 +17,95 @@
     </aside>
 
     <main class="main-content">
-        <header class="header">
+        <header class="header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
             <div>
                 <h1 class="page-title">Minha Biblioteca</h1>
                 <p style="color: var(--text-dim);">Gerencie seus conteúdos e colaborações.</p>
             </div>
-            <button class="btn-add" onclick="showAddModal()">
+            <button class="btn btn-primary" onclick="showAddModal()">
                 <i class="fas fa-plus-circle"></i> Adicionar Vídeo
             </button>
         </header>
 
-        <div id="video-grid" class="video-grid">
+        <div id="video-grid" class="grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
             <!-- Vídeos -->
         </div>
     </main>
 
     <!-- Add Modal -->
-    <div id="addModal" class="modal">
+    <div id="addModal" class="modal" onclick="if(event.target === this) closeModal()">
         <div class="modal-card">
-            <h2 style="font-weight: 800; color: var(--primary); margin-bottom: 24px;">Novo Vídeo</h2>
-            <div class="form-group"><label>Título</label><input type="text" id="v-title" placeholder="Ex: Treino de Superiores"></div>
-            <div class="form-group"><label>Link do YouTube</label><input type="text" id="v-url" placeholder="https://youtube.com/watch?v=..."></div>
-            <div class="form-group" style="display: flex; align-items: center; gap: 10px; background: #f8faf9; padding: 15px; border-radius: 12px;">
-                <input type="checkbox" id="v-colab" style="width: 20px; height: 20px;">
-                <label style="margin-bottom: 0; text-transform: none;">Disponibilizar para colaboração (Parcerias)?</label>
+            <h2 class="modal-title">Novo Vídeo</h2>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Título</label>
+                <input type="text" id="v-title" placeholder="Ex: Treino de Superiores" style="width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px; outline: none;">
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 24px;">
-                <button class="btn-action" onclick="closeModal()">Cancelar</button>
-                <button class="btn-action" style="background: var(--primary); color: white; border: none;" onclick="saveVideo()">Salvar Vídeo</button>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Link do YouTube</label>
+                <input type="text" id="v-url" placeholder="https://youtube.com/watch?v=..." style="width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px; outline: none;">
+            </div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px; background: #f8faf9; padding: 15px; border-radius: 12px; margin-bottom: 24px;">
+                <input type="checkbox" id="v-colab" style="width: 20px; height: 20px; cursor: pointer;">
+                <label style="margin-bottom: 0; text-transform: none; cursor: pointer;">Disponibilizar para colaboração?</label>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveVideo()">Salvar Vídeo</button>
             </div>
         </div>
     </div>
 
     <!-- Player Modal -->
     <div id="playerModal" class="modal" onclick="closePlayer()">
-        <div style="width: 100%; max-width: 900px; aspect-ratio: 16/9; background: black; border-radius: 16px; overflow: hidden;">
+        <div style="width: 100%; max-width: 900px; aspect-ratio: 16/9; background: black; border-radius: 16px; overflow: hidden; position: relative;">
             <iframe id="videoIframe" width="100%" height="100%" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
     </div>
 
+    <script src="js/config.js"></script>
     <script>
-        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
-        let currentUser = null;
+        let allVideos = [];
 
         async function init() {
-            const { data: { session } } = await sb.auth.getSession();
-            if (!session) { window.location.href = 'index.html'; return; }
-            currentUser = session.user;
+            const session = await checkAuth();
+            if (!session) return;
             
-            const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-            if (profile) setupNav(profile);
+            const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+            if (profile) setupNav(profile, 'videos.html');
 
-            loadVideos();
+            loadVideos(session.user.id);
         }
 
-        function setupNav(profile) {
-            const nav = document.getElementById('nav-links');
-            let navHtml = `
-                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
-                <a href="crm_dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Gestão 360</span></a>
-                <a href="vendas.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Vendas</span></a>
-            `;
-            if (profile.role === 'admin' || profile.role === 'superadmin') {
-                navHtml += `
-                    <a href="videos.html" class="nav-item active"><i class="fas fa-play-circle"></i><span>Vídeos</span></a>
-                    <a href="parcerias.html" class="nav-item"><i class="fas fa-handshake"></i><span>Parcerias</span></a>
-                    <a href="alunos.html" class="nav-item"><i class="fas fa-users"></i><span>Alunos</span></a>
-                    <a href="leads_admin.html" class="nav-item"><i class="fas fa-filter"></i><span>Leads</span></a>
-                    <a href="configuracoes.html" class="nav-item"><i class="fas fa-cog"></i><span>Ajustes</span></a>
-                `;
-            }
-            navHtml += `<a href="#" class="nav-item" onclick="handleLogout()" style="margin-top:auto; color:#ef4444;"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>`;
-            nav.innerHTML = navHtml;
+        async function loadVideos(mentorId) {
+            const { data: videos } = await sb.from('videos').select('*').eq('mentor_id', mentorId);
+            allVideos = videos || [];
+            renderVideos(allVideos);
         }
 
-        async function loadVideos() {
-            const { data: videos } = await sb.from('videos').select('*').eq('mentor_id', currentUser.id);
+        function renderVideos(videos) {
             const grid = document.getElementById('video-grid');
-            grid.innerHTML = '';
+            grid.innerHTML = videos.length ? '' : '<div style="grid-column: 1/-1; text-align: center; padding: 60px; color: var(--text-dim);">Nenhum vídeo cadastrado.</div>';
 
-            videos?.forEach(v => {
+            videos.forEach(v => {
                 const ytId = v.youtube_url.includes('v=') ? v.youtube_url.split('v=')[1].split('&')[0] : v.youtube_url.split('/').pop();
                 const card = document.createElement('div');
-                card.className = 'video-card';
+                card.className = 'card video-card';
+                card.style.padding = '0';
+                card.style.overflow = 'hidden';
                 card.innerHTML = `
-                    <div class="video-thumb" style="background-image: url('https://img.youtube.com/vi/${ytId}/mqdefault.jpg')" onclick="openPlayer('${ytId}')">
-                        <div class="play-overlay"><i class="fas fa-play"></i></div>
+                    <div style="width: 100%; aspect-ratio: 16/9; background: url('https://img.youtube.com/vi/${ytId}/mqdefault.jpg') center/cover; position: relative; cursor: pointer;" onclick="openPlayer('${ytId}')">
+                        <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0">
+                            <i class="fas fa-play" style="font-size: 3rem; color: white;"></i>
+                        </div>
                     </div>
-                    <div class="video-info">
-                        <h4>${v.title}</h4>
-                        <div class="colab-badge ${v.is_colab ? 'active' : ''}">
+                    <div style="padding: 20px;">
+                        <h4 style="font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 12px;">${v.title}</h4>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; color: ${v.is_colab ? '#27ae60' : 'var(--text-dim)'}; margin-bottom: 16px;">
                             <i class="fas fa-share-alt"></i> ${v.is_colab ? 'Disponível para Parcerias' : 'Privado (Apenas Alunos)'}
                         </div>
-                        <div class="video-actions">
-                            <button class="btn-action" onclick="toggleColab('${v.id}', ${v.is_colab})">Alternar Colab</button>
-                            <button class="btn-action danger" onclick="deleteVideo('${v.id}')"><i class="fas fa-trash"></i></button>
+                        <div style="display: flex; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
+                            <button class="btn btn-outline" style="flex: 1; font-size: 0.8rem; padding: 10px;" onclick="toggleColab('${v.id}', ${v.is_colab})">Alternar Colab</button>
+                            <button class="btn btn-outline" style="color: #ef4444; border-color: #ef4444; padding: 10px;" onclick="deleteVideo('${v.id}')"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
@@ -205,24 +114,28 @@
         }
 
         async function saveVideo() {
+            const { data: { session } } = await sb.auth.getSession();
             const title = document.getElementById('v-title').value;
             const url = document.getElementById('v-url').value;
             const colab = document.getElementById('v-colab').checked;
             if (!title || !url) return alert('Preencha os campos!');
 
-            await sb.from('videos').insert([{ mentor_id: currentUser.id, title, youtube_url: url, is_colab: colab }]);
-            closeModal(); loadVideos();
+            await sb.from('videos').insert([{ mentor_id: session.user.id, title, youtube_url: url, is_colab: colab }]);
+            closeModal(); 
+            loadVideos(session.user.id);
         }
 
         async function toggleColab(id, current) {
+            const { data: { session } } = await sb.auth.getSession();
             await sb.from('videos').update({ is_colab: !current }).eq('id', id);
-            loadVideos();
+            loadVideos(session.user.id);
         }
 
         async function deleteVideo(id) {
+            const { data: { session } } = await sb.auth.getSession();
             if (confirm('Excluir este vídeo?')) {
                 await sb.from('videos').delete().eq('id', id);
-                loadVideos();
+                loadVideos(session.user.id);
             }
         }
 
@@ -236,9 +149,10 @@
         }
         function showAddModal() { document.getElementById('addModal').style.display = 'flex'; }
         function closeModal() { document.getElementById('addModal').style.display = 'none'; }
-        async function handleLogout() { await sb.auth.signOut(); window.location.href = 'index.html'; }
 
         init();
     </script>
+</body>
+</html>
 </body>
 </html>

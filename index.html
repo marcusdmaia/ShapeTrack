@@ -185,43 +185,42 @@
     </div>
 </div>
 
-<script>
-    const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
-
-    async function checkSession() {
-        const { data: { session } } = await sb.auth.getSession();
-        if (session) window.location.href = 'dashboard.html';
-    }
-    checkSession();
-
-    const loginBtn = document.getElementById('loginBtn');
-    const msg = document.getElementById('message');
-
-    loginBtn.addEventListener('click', async () => {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        if (!email || !password) {
-            msg.innerHTML = '<span class="error">Preencha todos os campos.</span>';
-            return;
+    <script src="js/config.js"></script>
+    <script>
+        async function checkSession() {
+            const session = await checkAuth();
+            if (session) window.location.href = 'dashboard.html';
         }
+        checkSession();
 
-        loginBtn.disabled = true;
-        loginBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Entrando...';
-        msg.innerHTML = '';
-        
-        const { error } = await sb.auth.signInWithPassword({ email, password });
+        const loginBtn = document.getElementById('loginBtn');
+        const msg = document.getElementById('message');
 
-        if (error) {
-            msg.innerHTML = `<span class="error">Erro: ${error.message}</span>`;
-            loginBtn.disabled = false;
-            loginBtn.innerHTML = 'Acessar Plataforma';
-        } else {
-            msg.innerHTML = '<span class="success">Login realizado! Redirecionando...</span>';
-            setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
-        }
-    });
-</script>
+        loginBtn.addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            if (!email || !password) {
+                msg.innerHTML = '<span class="error">Preencha todos os campos.</span>';
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Entrando...';
+            msg.innerHTML = '';
+            
+            const { error } = await sb.auth.signInWithPassword({ email, password });
+
+            if (error) {
+                msg.innerHTML = `<span class="error">Erro: ${error.message}</span>`;
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = 'Acessar Plataforma';
+            } else {
+                msg.innerHTML = '<span class="success">Login realizado! Redirecionando...</span>';
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+            }
+        });
+    </script>
 
 </body>
 </html>   }

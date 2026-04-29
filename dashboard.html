@@ -7,431 +7,76 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #f8faf9;
-            --primary: #2F5948;
-            --primary-light: #3d755e;
-            --accent: #D96C2B;
-            --text-main: #1a1c1b;
-            --text-dim: #64748b;
-            --white: #ffffff;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            --nav-bg: rgba(255, 255, 255, 0.8);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Desktop */
-        .sidebar {
-            width: 280px;
-            background: var(--primary);
-            padding: 40px 24px;
-            display: flex;
-            flex-direction: column;
-            color: white;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            transition: all 0.3s ease;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            margin-bottom: 48px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .logo span { color: var(--accent); }
-
-        .nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .nav-item {
-            padding: 14px 18px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 500;
-        }
-
-        .nav-item i {
-            font-size: 1.2rem;
-            width: 24px;
-            text-align: center;
-        }
-
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-        }
-
-        .nav-item.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 48px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header {
-            margin-bottom: 48px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .welcome-section h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            color: var(--primary);
-            margin-bottom: 4px;
-        }
-
-        .welcome-section p {
-            color: var(--text-dim);
-            font-weight: 500;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--white);
-            padding: 8px 16px 8px 8px;
-            border-radius: 50px;
-            box-shadow: var(--card-shadow);
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .user-name {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--primary);
-        }
-
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .card {
-            background: var(--white);
-            padding: 32px;
-            border-radius: 24px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(0,0,0,0.02);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-        }
-
-        .card-icon {
-            width: 48px;
-            height: 48px;
-            background: #f1f5f9;
-            color: var(--primary);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-        }
-
-        .card h3 {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        .card p {
-            font-size: 0.95rem;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
-
-        .btn-card {
-            margin-top: 8px;
-            background: var(--primary);
-            color: white;
-            padding: 14px;
-            border-radius: 12px;
-            text-decoration: none;
-            text-align: center;
-            font-weight: 700;
-            transition: 0.2s;
-        }
-
-        .btn-card:hover {
-            background: var(--primary-light);
-        }
-
-        /* Client Section */
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin: 48px 0 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .video-card {
-            background: var(--white);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-            transition: 0.3s;
-        }
-
-        .video-card:hover { transform: scale(1.02); }
-
-        .video-thumb {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .play-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: 0.3s;
-        }
-
-        .video-thumb:hover .play-overlay { opacity: 1; }
-
-        .play-overlay i {
-            font-size: 3rem;
-            color: white;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
-        .video-info { padding: 16px; }
-        .video-info h4 { font-weight: 700; color: var(--primary); }
-
-        /* Modal Player */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(10px);
-            z-index: 3000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal-content {
-            width: 100%;
-            max-width: 900px;
-            aspect-ratio: 16/9;
-            background: black;
-            border-radius: 16px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: -50px;
-            right: 0;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            font-weight: 700;
-        }
-
-        /* Animations */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeInUp { 
-            from { opacity: 0; transform: translateY(20px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 1024px) {
-            .sidebar { width: 80px; padding: 40px 15px; }
-            .logo { font-size: 0; margin-bottom: 40px; justify-content: center; }
-            .logo span { font-size: 1.8rem; }
-            .nav-item span { display: none; }
-            .nav-item { justify-content: center; padding: 15px; }
-            .main-content { padding: 32px; }
-        }
-
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar {
-                width: 100%; height: 72px; padding: 0; position: fixed; 
-                bottom: 0; left: 0; top: auto;
-                flex-direction: row; background: var(--nav-bg); backdrop-filter: blur(20px);
-                border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000; box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
-            }
-            .logo { display: none; }
-            .nav-links { 
-                flex-direction: row; width: 100%; height: 100%; gap: 0; 
-                overflow-x: auto; scrollbar-width: none; 
-            }
-            .nav-links::-webkit-scrollbar { display: none; }
-            .nav-item { 
-                flex: 0 0 80px; flex-direction: column; gap: 5px; padding: 10px 0; 
-                border-radius: 0; color: #94a3b8; font-size: 0.65rem; font-weight: 600; 
-            }
-            .nav-item i { font-size: 1.3rem; }
-            .nav-item.active { background: transparent; color: var(--primary); }
-            .main-content { padding: 24px; padding-bottom: 120px; }
-            .header { flex-direction: column; align-items: flex-start; gap: 24px; }
-            .user-profile { width: 100%; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <aside class="sidebar">
         <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
-        <nav id="nav-links" class="nav-links">
-            <!-- Dynamic Links -->
-        </nav>
+        <nav id="nav-links" class="nav-links"></nav>
     </aside>
 
     <main class="main-content">
         <header class="header">
-            <div class="welcome-section">
-                <h1 id="welcome-msg">Carregando...</h1>
-                <p>Bem-vindo ao seu painel de controle.</p>
+            <div>
+                <h1 id="welcome-msg" class="page-title">Carregando...</h1>
+                <p style="color: var(--text-dim);">Bem-vindo ao seu painel de controle.</p>
             </div>
-            <div class="user-profile">
-                <div class="avatar" id="user-avatar">?</div>
-                <span class="user-name" id="user-name">Usuário</span>
+            <div style="display: flex; align-items: center; gap: 12px; background: white; padding: 8px 16px; border-radius: 50px; box-shadow: var(--card-shadow);">
+                <div id="user-avatar" style="width: 35px; height: 35px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">?</div>
+                <span id="user-name" style="font-weight: 700; font-size: 0.9rem; color: var(--primary);">Usuário</span>
             </div>
         </header>
 
-        <!-- Admin Panel -->
         <div id="admin-panel" style="display: none;">
-            <div class="dashboard-grid">
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
                 <div class="card">
-                    <div class="card-icon"><i class="fas fa-users"></i></div>
+                    <div style="width: 48px; height: 48px; background: #f1f5f9; color: var(--primary); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 16px;">
+                        <i class="fas fa-users"></i>
+                    </div>
                     <h3>Gerenciar Alunos</h3>
-                    <p>Controle os acessos, gere links de convite e acompanhe a evolução de cada aluno individualmente.</p>
-                    <a href="alunos.html" class="btn-card">Acessar Alunos</a>
+                    <p style="margin: 12px 0 20px; color: var(--text-dim); font-size: 0.9rem;">Controle os acessos, gere links de convite e acompanhe a evolução de cada aluno.</p>
+                    <a href="alunos.html" class="btn btn-primary">Acessar Alunos</a>
                 </div>
                 <div class="card">
-                    <div class="card-icon"><i class="fas fa-play-circle"></i></div>
+                    <div style="width: 48px; height: 48px; background: #f1f5f9; color: var(--primary); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 16px;">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
                     <h3>Minha Biblioteca</h3>
-                    <p>Organize seus conteúdos em vídeo e defina quais vídeos serão disponibilizados para seus parceiros.</p>
-                    <a href="videos.html" class="btn-card">Minha Biblioteca</a>
+                    <p style="margin: 12px 0 20px; color: var(--text-dim); font-size: 0.9rem;">Organize seus conteúdos em vídeo e defina quais vídeos serão disponibilizados.</p>
+                    <a href="videos.html" class="btn btn-primary">Minha Biblioteca</a>
                 </div>
                 <div class="card">
-                    <div class="card-icon"><i class="fas fa-handshake"></i></div>
+                    <div style="width: 48px; height: 48px; background: #f1f5f9; color: var(--primary); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 16px;">
+                        <i class="fas fa-handshake"></i>
+                    </div>
                     <h3>Colaborações</h3>
-                    <p>Explore vídeos de outros mentores e solicite parcerias para enriquecer o conteúdo dos seus alunos.</p>
-                    <a href="parcerias.html" class="btn-card">Ver Parcerias</a>
+                    <p style="margin: 12px 0 20px; color: var(--text-dim); font-size: 0.9rem;">Explore vídeos de outros mentores e solicite parcerias para seus alunos.</p>
+                    <a href="parcerias.html" class="btn btn-primary">Ver Parcerias</a>
                 </div>
             </div>
         </div>
 
-        <!-- Client Panel -->
         <div id="client-panel" style="display: none;">
-            <div class="section-title"><i class="fas fa-play-circle"></i> Meus Conteúdos</div>
-            <div id="client-video-grid" class="video-grid">
+            <h2 class="section-title"><i class="fas fa-play-circle"></i> Meus Conteúdos</h2>
+            <div id="client-video-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
                 <!-- Videos -->
             </div>
             
-            <div class="section-title"><i class="fas fa-chart-line"></i> Minha Evolução</div>
-            <div class="dashboard-grid">
-                <div class="card">
-                    <div class="card-icon"><i class="fas fa-clipboard-check"></i></div>
-                    <h3>Relatórios</h3>
-                    <p>Confira seus dados de evolução, fotos e medidas lançados pelo seu mentor.</p>
-                    <a href="relatorio.html" class="btn-card">Ver Relatório</a>
-                </div>
+            <h2 class="section-title" style="margin-top: 48px;"><i class="fas fa-chart-line"></i> Minha Evolução</h2>
+            <div class="card" style="max-width: 400px;">
+                <h3>Relatórios</h3>
+                <p style="margin: 12px 0 20px; color: var(--text-dim); font-size: 0.9rem;">Confira seus dados de evolução, fotos e medidas.</p>
+                <a href="relatorio.html" class="btn btn-primary">Ver Relatório</a>
             </div>
         </div>
     </main>
 
-    <!-- Player Modal -->
-    <div id="playerModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closePlayer()"><i class="fas fa-times"></i></span>
-            <iframe id="videoIframe" width="100%" height="100%" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-    </div>
-
+    <script src="js/config.js"></script>
     <script>
-        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
-
         async function init() {
-            const { data: { session } } = await sb.auth.getSession();
-            if (!session) { window.location.href = 'index.html'; return; }
+            const session = await checkAuth();
+            if (!session) return;
 
             const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
             if (profile) renderDashboard(profile);
@@ -443,7 +88,7 @@
             document.getElementById('user-name').textContent = profile.full_name;
             document.getElementById('user-avatar').textContent = firstName.charAt(0).toUpperCase();
 
-            setupNav(profile);
+            setupNav(profile, 'dashboard.html');
 
             if (profile.role === 'admin' || profile.role === 'superadmin') {
                 document.getElementById('admin-panel').style.display = 'block';
@@ -451,71 +96,6 @@
                 document.getElementById('client-panel').style.display = 'block';
                 loadClientVideos(profile.mentor_id);
             }
-        }
-
-        function setupNav(profile) {
-            const nav = document.getElementById('nav-links');
-            let navHtml = `
-                <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i><span>Início</span></a>
-                <a href="crm_dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Gestão 360</span></a>
-                <a href="vendas.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Vendas</span></a>
-            `;
-
-            if (profile.role === 'admin' || profile.role === 'superadmin') {
-                navHtml += `
-                    <a href="videos.html" class="nav-item"><i class="fas fa-play-circle"></i><span>Vídeos</span></a>
-                    <a href="parcerias.html" class="nav-item"><i class="fas fa-handshake"></i><span>Parcerias</span></a>
-                    <a href="alunos.html" class="nav-item"><i class="fas fa-users"></i><span>Alunos</span></a>
-                    <a href="leads_admin.html" class="nav-item"><i class="fas fa-filter"></i><span>Leads</span></a>
-                    <a href="configuracoes.html" class="nav-item"><i class="fas fa-cog"></i><span>Ajustes</span></a>
-                `;
-            } else {
-                navHtml += `<a href="relatorio.html" class="nav-item"><i class="fas fa-chart-line"></i><span>Evolução</span></a>`;
-            }
-
-            navHtml += `<a href="#" class="nav-item" onclick="handleLogout()" style="margin-top:auto; color:#ef4444;"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>`;
-            nav.innerHTML = navHtml;
-        }
-
-        async function loadClientVideos(mentorId) {
-            if (!mentorId) return;
-            const { data: videos } = await sb.from('videos').select('*').eq('mentor_id', mentorId);
-            const grid = document.getElementById('client-video-grid');
-            
-            if (!videos || videos.length === 0) {
-                grid.innerHTML = '<p style="color: var(--text-dim)">Nenhum vídeo disponível ainda.</p>';
-                return;
-            }
-
-            videos.forEach(video => {
-                const ytId = video.youtube_url.includes('v=') ? video.youtube_url.split('v=')[1].split('&')[0] : video.youtube_url.split('/').pop();
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                card.innerHTML = `
-                    <div class="video-thumb" style="background-image: url('https://img.youtube.com/vi/${ytId}/mqdefault.jpg')" onclick="openPlayer('${ytId}')">
-                        <div class="play-overlay"><i class="fas fa-play"></i></div>
-                    </div>
-                    <div class="video-info">
-                        <h4>${video.title}</h4>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function openPlayer(ytId) {
-            document.getElementById('videoIframe').src = `https://www.youtube.com/embed/${ytId}?autoplay=1`;
-            document.getElementById('playerModal').style.display = 'flex';
-        }
-
-        function closePlayer() {
-            document.getElementById('videoIframe').src = '';
-            document.getElementById('playerModal').style.display = 'none';
-        }
-
-        async function handleLogout() {
-            await sb.auth.signOut();
-            window.location.href = 'index.html';
         }
 
         init();

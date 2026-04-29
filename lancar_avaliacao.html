@@ -7,72 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #f8faf9;
-            --primary: #2F5948;
-            --primary-light: #3d755e;
-            --accent: #D96C2B;
-            --text-main: #1a1c1b;
-            --text-dim: #64748b;
-            --white: #ffffff;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            --nav-bg: rgba(255, 255, 255, 0.8);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-main); display: flex; min-height: 100vh; }
-
-        /* Sidebar */
-        .sidebar { width: 280px; background: var(--primary); padding: 40px 24px; display: flex; flex-direction: column; color: white; position: sticky; top: 0; height: 100vh; }
-        .logo { font-size: 1.8rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 48px; cursor: pointer; }
-        .logo span { color: var(--accent); }
-        .nav-links { display: flex; flex-direction: column; gap: 8px; }
-        .nav-item { padding: 14px 18px; border-radius: 12px; color: rgba(255, 255, 255, 0.6); text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 500; }
-        .nav-item.active { background: rgba(255, 255, 255, 0.1); color: white; }
-        .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
-
-        /* Content */
-        .main-content { flex: 1; padding: 48px; max-width: 900px; margin: 0 auto; }
-        .header { margin-bottom: 40px; }
-        .page-title { font-size: 2.2rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
-
-        .card { background: white; padding: 32px; border-radius: 24px; box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.02); }
-        .section-title { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin: 24px 0 16px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
-
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; }
-        .form-group input, .form-group select { width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px; font-size: 1rem; outline: none; transition: 0.2s; }
-        .form-group input:focus { border-color: var(--primary); }
-
-        .btn-save { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 16px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; margin-top: 24px; }
-        .btn-save:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(47, 89, 72, 0.2); }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { 
-                width: 100%; height: 72px; padding: 0; position: fixed; 
-                bottom: 0; left: 0; top: auto;
-                flex-direction: row; background: var(--nav-bg); backdrop-filter: blur(20px); 
-                border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000; 
-            }
-            .logo { display: none; }
-            .nav-links { 
-                flex-direction: row; width: 100%; height: 100%; gap: 0; 
-                overflow-x: auto; scrollbar-width: none; 
-            }
-            .nav-links::-webkit-scrollbar { display: none; }
-            .nav-item { 
-                flex: 0 0 80px; flex-direction: column; gap: 5px; border-radius: 0; 
-                font-size: 0.65rem; color: #94a3b8; padding: 10px 0;
-            }
-            .nav-item.active { background: transparent; color: var(--primary); }
-            .main-content { padding: 24px; padding-bottom: 120px; }
-            .form-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -83,82 +18,89 @@
 
     <main class="main-content">
         <header class="header">
-            <h1 class="page-title">Lançar Avaliação</h1>
-            <p style="color: var(--text-dim);">Registre os dados de bioimpedância e medidas do aluno.</p>
+            <div>
+                <h1 class="page-title">Lançar Avaliação</h1>
+                <p style="color: var(--text-dim);">Registre os dados de bioimpedância e medidas do aluno.</p>
+            </div>
         </header>
 
         <div class="card">
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 32px;">
                 <label>Aluno</label>
                 <select id="select-aluno">
                     <option value="">Selecione um aluno...</option>
                 </select>
             </div>
 
-            <div class="section-title">Dados de Bioimpedância</div>
-            <div class="form-grid">
-                <div class="form-group"><label>Peso (kg)</label><input type="number" id="weight" step="0.1"></div>
-                <div class="form-group"><label>% Gordura Corporal</label><input type="number" id="body_fat" step="0.1"></div>
-                <div class="form-group"><label>% Massa Muscular</label><input type="number" id="muscle_mass" step="0.1"></div>
-                <div class="form-group"><label>Gordura Visceral</label><input type="number" id="visceral_fat" step="1"></div>
-                <div class="form-group"><label>Idade Metabólica</label><input type="number" id="metabolic_age" step="1"></div>
-                <div class="form-group"><label>Água Corporal (%)</label><input type="number" id="body_water" step="0.1"></div>
+            <h3 class="section-header">Dados de Bioimpedância</h3>
+            <div class="grid-inputs">
+                <div class="form-group">
+                    <label>Peso (kg)</label>
+                    <input type="number" id="weight" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>% Gordura Corporal</label>
+                    <input type="number" id="body_fat" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>% Massa Muscular</label>
+                    <input type="number" id="muscle_mass" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Gordura Visceral</label>
+                    <input type="number" id="visceral_fat" step="1">
+                </div>
+                <div class="form-group">
+                    <label>Idade Metabólica</label>
+                    <input type="number" id="metabolic_age" step="1">
+                </div>
+                <div class="form-group">
+                    <label>Água Corporal (%)</label>
+                    <input type="number" id="body_water" step="0.1">
+                </div>
             </div>
 
-            <div class="section-title">Medidas (cm)</div>
-            <div class="form-grid">
-                <div class="form-group"><label>Cintura</label><input type="number" id="waist" step="0.1"></div>
-                <div class="form-group"><label>Abdomen</label><input type="number" id="abdomen" step="0.1"></div>
-                <div class="form-group"><label>Quadril</label><input type="number" id="hip" step="0.1"></div>
+            <h3 class="section-header">Medidas (cm)</h3>
+            <div class="grid-inputs">
+                <div class="form-group">
+                    <label>Cintura</label>
+                    <input type="number" id="waist" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Abdomen</label>
+                    <input type="number" id="abdomen" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Quadril</label>
+                    <input type="number" id="hip" step="0.1">
+                </div>
             </div>
 
-            <div class="section-title">Próximo Passo</div>
-            <div class="form-group">
+            <h3 class="section-header">Próximo Passo</h3>
+            <div class="form-group" style="margin-bottom: 32px;">
                 <label>Data da Próxima Avaliação</label>
                 <input type="date" id="next_assessment_date">
             </div>
 
-            <button class="btn-save" id="btn-save">Salvar Avaliação</button>
+            <button class="btn btn-primary" id="btn-save" style="width: 100%;">Salvar Avaliação</button>
+        </div>
         </div>
     </main>
 
+    <script src="js/config.js"></script>
     <script>
-        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
-        let currentUser = null;
-
         async function init() {
-            const { data: { session } } = await sb.auth.getSession();
-            if (!session) { window.location.href = 'index.html'; return; }
-            currentUser = session.user;
+            const session = await checkAuth();
+            if (!session) return;
             
-            const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-            if (profile) setupNav(profile);
+            const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+            if (profile) setupNav(profile, 'lancar_avaliacao.html');
 
-            loadAlunos();
+            loadAlunos(session.user.id);
         }
 
-        function setupNav(profile) {
-            const nav = document.getElementById('nav-links');
-            let navHtml = `
-                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
-                <a href="crm_dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Gestão 360</span></a>
-                <a href="vendas.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Vendas</span></a>
-            `;
-            if (profile.role === 'admin' || profile.role === 'superadmin') {
-                navHtml += `
-                    <a href="videos.html" class="nav-item"><i class="fas fa-play-circle"></i><span>Vídeos</span></a>
-                    <a href="parcerias.html" class="nav-item"><i class="fas fa-handshake"></i><span>Parcerias</span></a>
-                    <a href="alunos.html" class="nav-item"><i class="fas fa-users"></i><span>Alunos</span></a>
-                    <a href="leads_admin.html" class="nav-item"><i class="fas fa-filter"></i><span>Leads</span></a>
-                    <a href="configuracoes.html" class="nav-item"><i class="fas fa-cog"></i><span>Ajustes</span></a>
-                `;
-            }
-            navHtml += `<a href="#" class="nav-item" onclick="handleLogout()" style="margin-top:auto; color:#ef4444;"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>`;
-            nav.innerHTML = navHtml;
-        }
-
-        async function loadAlunos() {
-            const { data: alunos } = await sb.from('profiles').select('id, full_name').eq('mentor_id', currentUser.id).eq('role', 'client');
+        async function loadAlunos(mentorId) {
+            const { data: alunos } = await sb.from('profiles').select('id, full_name').eq('mentor_id', mentorId).eq('role', 'client');
             const select = document.getElementById('select-aluno');
             alunos?.forEach(a => {
                 const opt = document.createElement('option');
@@ -173,6 +115,7 @@
         }
 
         document.getElementById('btn-save').onclick = async () => {
+            const { data: { session } } = await sb.auth.getSession();
             const btn = document.getElementById('btn-save');
             const alunoId = document.getElementById('select-aluno').value;
             if (!alunoId) return alert('Selecione um aluno');
@@ -181,7 +124,7 @@
 
             const assessment = {
                 student_id: alunoId,
-                mentor_id: currentUser.id,
+                mentor_id: session.user.id,
                 weight: parseFloat(document.getElementById('weight').value),
                 body_fat: parseFloat(document.getElementById('body_fat').value),
                 muscle_mass: parseFloat(document.getElementById('muscle_mass').value),
@@ -205,9 +148,9 @@
             } catch (err) { alert(err.message); } finally { btn.disabled = false; btn.textContent = 'Salvar Avaliação'; }
         };
 
-        async function handleLogout() { await sb.auth.signOut(); window.location.href = 'index.html'; }
-
         init();
     </script>
+</body>
+</html>
 </body>
 </html>

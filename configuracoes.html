@@ -7,78 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #f8faf9;
-            --primary: #2F5948;
-            --primary-light: #3d755e;
-            --accent: #D96C2B;
-            --text-main: #1a1c1b;
-            --text-dim: #64748b;
-            --white: #ffffff;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            --nav-bg: rgba(255, 255, 255, 0.8);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-color); color: var(--text-main); display: flex; min-height: 100vh; }
-
-        /* Sidebar */
-        .sidebar { width: 280px; background: var(--primary); padding: 40px 24px; display: flex; flex-direction: column; color: white; position: sticky; top: 0; height: 100vh; }
-        .logo { font-size: 1.8rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 48px; cursor: pointer; }
-        .logo span { color: var(--accent); }
-        .nav-links { display: flex; flex-direction: column; gap: 8px; }
-        .nav-item { padding: 14px 18px; border-radius: 12px; color: rgba(255, 255, 255, 0.6); text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 500; }
-        .nav-item.active { background: rgba(255, 255, 255, 0.1); color: white; }
-        .nav-item:hover { background: rgba(255, 255, 255, 0.05); color: white; }
-
-        /* Content */
-        .main-content { flex: 1; padding: 48px; max-width: 800px; margin: 0 auto; }
-        .header { margin-bottom: 40px; }
-        .page-title { font-size: 2.2rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
-
-        .card { background: white; padding: 32px; border-radius: 24px; box-shadow: var(--card-shadow); border: 1px solid rgba(0,0,0,0.02); margin-bottom: 24px; }
-        .section-title { font-size: 1.25rem; font-weight: 800; color: var(--primary); margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
-
-        .form-group { margin-bottom: 24px; }
-        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; }
-        .form-group input { width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px; font-size: 1rem; outline: none; transition: 0.2s; }
-        .form-group input:focus { border-color: var(--primary); }
-
-        .btn-save { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 16px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.3s; }
-        .btn-save:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(47, 89, 72, 0.2); }
-
-        .btn-google { background: #4285F4; color: white; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px; }
-        .google-connected { background: #34a853; }
-
-        .status-msg { padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 0.9rem; font-weight: 600; display: none; text-align: center; }
-        .status-msg.success { background: #dcfce7; color: #166534; display: block; }
-        .status-msg.error { background: #fee2e2; color: #991b1b; display: block; }
-
-        /* Mobile */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { 
-                width: 100%; height: 72px; padding: 0; position: fixed; 
-                bottom: 0; left: 0; top: auto;
-                flex-direction: row; background: var(--nav-bg); backdrop-filter: blur(20px); 
-                border-top: 1px solid rgba(0,0,0,0.05); z-index: 1000; 
-            }
-            .logo { display: none; }
-            .nav-links { 
-                flex-direction: row; width: 100%; height: 100%; gap: 0; 
-                overflow-x: auto; scrollbar-width: none; 
-            }
-            .nav-links::-webkit-scrollbar { display: none; }
-            .nav-item { 
-                flex: 0 0 80px; flex-direction: column; gap: 5px; border-radius: 0; 
-                font-size: 0.65rem; color: #94a3b8; padding: 10px 0;
-            }
-            .nav-item.active { background: transparent; color: var(--primary); }
-            .main-content { padding: 24px; padding-bottom: 120px; }
-            .header { margin-bottom: 24px; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -87,99 +16,84 @@
         <nav id="nav-links" class="nav-links"></nav>
     </aside>
 
-    <main class="main-content">
-        <header class="header">
+    <main class="main-content" style="max-width: 800px; margin: 0 auto;">
+        <header class="header" style="margin-bottom: 40px;">
             <h1 class="page-title">Configurações</h1>
             <p style="color: var(--text-dim);">Gerencie seus dados e integrações da conta.</p>
         </header>
 
-        <div id="status-msg" class="status-msg"></div>
+        <div id="status-msg" class="alert" style="display: none; margin-bottom: 24px;"></div>
 
-        <div class="card">
-            <h2 class="section-title"><i class="fas fa-user-circle"></i> Perfil Profissional</h2>
-            <div class="form-group">
+        <div class="card" style="margin-bottom: 24px;">
+            <h2 class="card-title" style="margin-bottom: 24px; display: flex; align-items: center; gap: 12px;"><i class="fas fa-user-circle"></i> Perfil Profissional</h2>
+            <div class="form-group" style="margin-bottom: 24px;">
                 <label>Nome Completo</label>
-                <input type="text" id="full_name" placeholder="Seu nome">
+                <input type="text" id="full_name" placeholder="Seu nome" style="width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px; outline: none;">
             </div>
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 24px;">
                 <label>E-mail (Login)</label>
-                <input type="text" id="email_display" disabled style="background: #f8faf9; cursor: not-allowed;">
+                <input type="text" id="email_display" disabled style="background: #f8faf9; cursor: not-allowed; width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px;">
             </div>
-            <button class="btn-save" onclick="updateProfile()">Salvar Alterações</button>
+            <button class="btn btn-primary" style="width: 100%;" onclick="updateProfile()">Salvar Alterações</button>
         </div>
 
-        <div class="card">
-            <h2 class="section-title"><i class="fas fa-plug"></i> Integrações</h2>
+        <div class="card" style="margin-bottom: 24px;">
+            <h2 class="card-title" style="margin-bottom: 24px; display: flex; align-items: center; gap: 12px;"><i class="fas fa-plug"></i> Integrações</h2>
             <p style="color: var(--text-dim); margin-bottom: 20px; font-size: 0.9rem;">Conecte sua agenda para sincronizar avaliações e lembretes de cobrança.</p>
             <div id="google-status" style="margin-bottom: 15px; font-weight: 700; font-size: 0.9rem;">Verificando conexão...</div>
-            <button class="btn-save btn-google" id="btn-google" onclick="startGoogleAuth()">
+            <button class="btn btn-primary" id="btn-google" onclick="startGoogleAuth()" style="width: 100%; background: #4285F4; border: none;">
                 <i class="fab fa-google"></i> <span id="google-btn-text">Conectar Google Calendar</span>
             </button>
         </div>
 
-        <div class="card" style="border-color: #fee2e2;">
-            <h2 class="section-title" style="color: #991b1b;"><i class="fas fa-sign-out-alt"></i> Sair</h2>
+        <div class="card" style="border-left: 4px solid #ef4444;">
+            <h2 class="card-title" style="color: #ef4444; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;"><i class="fas fa-sign-out-alt"></i> Sair</h2>
             <p style="color: var(--text-dim); margin-bottom: 20px; font-size: 0.9rem;">Encerrar sua sessão atual com segurança.</p>
-            <button class="btn-save" style="background: #991b1b;" onclick="handleLogout()">Sair da Conta</button>
+            <button class="btn btn-outline" style="width: 100%; color: #ef4444; border-color: #ef4444;" onclick="handleLogout()">Sair da Conta</button>
         </div>
     </main>
 
+    <script src="js/config.js"></script>
     <script>
-        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
         const GOOGLE_CLIENT_ID = '859217445398-8jutv09ole7ci2fmj3djv8skk0gekkjh.apps.googleusercontent.com';
         const REDIRECT_URI = window.location.origin + window.location.pathname;
 
-        let currentUser = null;
-
         async function init() {
-            const { data: { session } } = await sb.auth.getSession();
-            if (!session) { window.location.href = 'index.html'; return; }
-            currentUser = session.user;
+            const session = await checkAuth();
+            if (!session) return;
             
-            const { data: profile } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+            const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
             if (profile) {
-                setupNav(profile);
-                loadProfile(profile);
+                setupNav(profile, 'configuracoes.html');
+                loadProfile(profile, session.user);
                 checkGoogleConnection(profile);
             }
 
-            // Callback Google
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
-            if (code) handleGoogleCallback(code);
+            if (code) handleGoogleCallback(code, session.user.id);
         }
 
-        function setupNav(profile) {
-            const nav = document.getElementById('nav-links');
-            let navHtml = `
-                <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
-                <a href="crm_dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Gestão 360</span></a>
-                <a href="vendas.html" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Vendas</span></a>
-            `;
-            if (profile.role === 'admin' || profile.role === 'superadmin') {
-                navHtml += `
-                    <a href="videos.html" class="nav-item"><i class="fas fa-play-circle"></i><span>Vídeos</span></a>
-                    <a href="parcerias.html" class="nav-item"><i class="fas fa-handshake"></i><span>Parcerias</span></a>
-                    <a href="alunos.html" class="nav-item"><i class="fas fa-users"></i><span>Alunos</span></a>
-                    <a href="leads_admin.html" class="nav-item"><i class="fas fa-filter"></i><span>Leads</span></a>
-                    <a href="configuracoes.html" class="nav-item active"><i class="fas fa-cog"></i><span>Ajustes</span></a>
-                `;
-            }
-            navHtml += `<a href="#" class="nav-item" onclick="handleLogout()" style="margin-top:auto; color:#ef4444;"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>`;
-            nav.innerHTML = navHtml;
-        }
-
-        function loadProfile(profile) {
+        function loadProfile(profile, user) {
             document.getElementById('full_name').value = profile.full_name || '';
-            document.getElementById('email_display').value = currentUser.email;
+            document.getElementById('email_display').value = user.email;
         }
 
         async function updateProfile() {
+            const { data: { session } } = await sb.auth.getSession();
             const name = document.getElementById('full_name').value;
-            const { error } = await sb.from('profiles').update({ full_name: name }).eq('id', currentUser.id);
+            const { error } = await sb.from('profiles').update({ full_name: name }).eq('id', session.user.id);
+            
             const msg = document.getElementById('status-msg');
-            if (error) { msg.textContent = error.message; msg.className = "status-msg error"; }
-            else { msg.textContent = "Perfil atualizado!"; msg.className = "status-msg success"; setTimeout(() => msg.style.display = 'none', 3000); }
+            msg.style.display = 'block';
+            if (error) { 
+                msg.textContent = error.message; 
+                msg.className = "alert alert-error"; 
+            } else { 
+                msg.textContent = "Perfil atualizado!"; 
+                msg.className = "alert alert-success"; 
+                setTimeout(() => msg.style.display = 'none', 3000); 
+            }
         }
 
         function checkGoogleConnection(profile) {
@@ -190,7 +104,7 @@
             if (profile.google_refresh_token) {
                 status.innerHTML = '<span style="color:#34a853;"><i class="fas fa-check-circle"></i> Agenda Conectada</span>';
                 text.textContent = 'Reconectar Agenda';
-                btn.classList.add('google-connected');
+                btn.style.background = '#34a853';
             } else {
                 status.innerHTML = '<span style="color:#64748b;"><i class="fas fa-times-circle"></i> Não Conectada</span>';
             }
@@ -201,29 +115,38 @@
             window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
         }
 
-        async function handleGoogleCallback(code) {
-            const response = await fetch('https://oauth2.googleapis.com/token', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ 
-                    code, 
-                    client_id: GOOGLE_CLIENT_ID, 
-                    // A chave secreta foi removida por segurança. Para produção, use uma Edge Function.
-                    client_secret: '', 
-                    redirect_uri: REDIRECT_URI, 
-                    grant_type: 'authorization code' 
-                })
-            });
-            const data = await response.json();
-            if (data.refresh_token) {
-                await sb.from('profiles').update({ google_refresh_token: data.refresh_token }).eq('id', currentUser.id);
-                window.location.href = 'configuracoes.html';
+        async function handleGoogleCallback(code, userId) {
+            const status = document.getElementById('google-status');
+            status.innerHTML = '<span style="color:var(--primary);">Finalizando conexão...</span>';
+
+            try {
+                // Chamada segura para a Edge Function do Supabase
+                const { data, error } = await sb.functions.invoke('google-auth-exchange', {
+                    body: { code, redirect_uri: REDIRECT_URI }
+                });
+
+                if (error) throw error;
+
+                if (data.refresh_token) {
+                    await sb.from('profiles').update({ 
+                        google_refresh_token: data.refresh_token 
+                    }).eq('id', userId);
+                    
+                    // Limpar URL e recarregar
+                    window.location.href = 'configuracoes.html';
+                } else {
+                    throw new Error('Nenhum refresh_token recebido do Google');
+                }
+            } catch (err) {
+                console.error('Erro na conexão Google:', err);
+                alert('Erro ao conectar com o Google: ' + err.message);
+                status.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Erro na Conexão</span>';
             }
         }
 
-        async function handleLogout() { await sb.auth.signOut(); window.location.href = 'index.html'; }
-
         init();
     </script>
+</body>
+</html>
 </body>
 </html>
