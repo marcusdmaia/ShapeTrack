@@ -3,80 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão 360 | ShapeTrack</title>
+    <title>Gestão 360 // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=3.0">
+    <style>
+        table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+        th { text-align: left; padding: 16px; font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--glass-border); }
+        td { padding: 16px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .badge { padding: 4px 10px; border-radius: 100px; font-size: 0.7rem; font-weight: 700; }
+        .badge-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .badge-warning { background: rgba(217, 108, 43, 0.1); color: var(--accent); }
+    </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
-        <nav id="nav-links" class="nav-links"></nav>
-    </aside>
+    <nav class="navbar reveal">
+        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <div id="nav-links" class="nav-links desktop-only"></div>
+    </nav>
 
-    <main class="main-content">
-        <header class="header">
-            <div>
-                <h1 class="page-title">Gestão 360</h1>
-                <p style="color: var(--text-dim);">Visão completa da retenção e financeiro do seu negócio.</p>
-            </div>
-        </header>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 40px;">
-            <div class="card" style="padding: 24px; margin-bottom: 0;">
-                <span style="color: var(--text-dim); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; display: block;">Contas a Receber</span>
-                <div id="stat-receivables" style="font-size: 1.8rem; font-weight: 800; color: var(--primary);">R$ 0,00</div>
-            </div>
-            <div class="card" style="padding: 24px; margin-bottom: 0;">
-                <span style="color: var(--text-dim); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; display: block;">Clientes Inativos</span>
-                <div id="stat-inactive" style="font-size: 1.8rem; font-weight: 800; color: #ef4444;">0</div>
-            </div>
-            <div class="card" style="padding: 24px; margin-bottom: 0;">
-                <span style="color: var(--text-dim); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; display: block;">Aniversariantes (Mês)</span>
-                <div id="stat-birthdays" style="font-size: 1.8rem; font-weight: 800; color: var(--accent);">0</div>
+    <div class="bento-grid">
+        <!-- Header -->
+        <div class="card-shell reveal" style="grid-column: span 12;">
+            <div class="card-core">
+                <span class="eyebrow">Monitoramento Ativo</span>
+                <h1>GESTÃO 360º</h1>
+                <p style="color: var(--text-secondary); margin-top: 8px;">Visão completa da retenção e saúde financeira do ecossistema.</p>
             </div>
         </div>
 
-        <div class="card" style="margin-bottom: 24px;">
-            <h2 class="section-title"><i class="fas fa-user-clock"></i> Alerta de Retenção</h2>
-            <div class="table-container" style="overflow-x: auto;">
-                <table>
-                    <thead>
-                        <tr><th>Cliente</th><th>Última Compra</th><th>Dias Inativo</th><th>Ações</th></tr>
-                    </thead>
-                    <tbody id="retention-list">
-                        <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-dim);">Analisando base de dados...</td></tr>
-                    </tbody>
-                </table>
+        <!-- Finance Stats -->
+        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.1s;">
+            <div class="card-core">
+                <span class="label" style="font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 0.1em;">CONTAS A RECEBER</span>
+                <h2 id="stat-receivables" style="font-size: 2rem; margin-top: 12px; color: var(--accent);">R$ 0,00</h2>
             </div>
         </div>
 
-        <div class="card" style="margin-bottom: 24px;">
-            <h2 class="section-title" style="color: var(--accent);"><i class="fas fa-hand-holding-usd"></i> Pendências Financeiras</h2>
-            <div class="table-container" style="overflow-x: auto;">
-                <table>
-                    <thead>
-                        <tr><th>Cliente</th><th>Valor Devido</th><th>Vencimento</th><th>Ações</th></tr>
-                    </thead>
-                    <tbody id="receivables-list">
-                        <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-dim);">Tudo em dia!</td></tr>
-                    </tbody>
-                </table>
+        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.2s;">
+            <div class="card-core">
+                <span class="label" style="font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 0.1em;">RISCO DE EVASÃO</span>
+                <h2 id="stat-inactive" style="font-size: 2rem; margin-top: 12px; color: #ef4444;">0</h2>
             </div>
         </div>
-    </main>
 
-    <script src="js/config.js"></script>
+        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.3s;">
+            <div class="card-core">
+                <span class="label" style="font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 0.1em;">ANIVERSARIANTES</span>
+                <h2 id="stat-birthdays" style="font-size: 2rem; margin-top: 12px; color: #FFF;">0</h2>
+            </div>
+        </div>
+
+        <!-- Lists -->
+        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.4s;">
+            <div class="card-core">
+                <h3><i class="ph-light ph-warning-octagon" style="color: #ef4444; margin-right: 8px;"></i> ALERTA DE RETENÇÃO</h3>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr><th>Cliente</th><th>Última Atividade</th><th>Status</th><th>Ação</th></tr>
+                        </thead>
+                        <tbody id="retention-list">
+                            <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-secondary);">PROCESSANDO DADOS...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.5s;">
+            <div class="card-core">
+                <h3><i class="ph-light ph-hand-coins" style="color: var(--accent); margin-right: 8px;"></i> PENDÊNCIAS FINANCEIRAS</h3>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr><th>Cliente</th><th>Valor em Aberto</th><th>Vencimento</th><th>Ação</th></tr>
+                        </thead>
+                        <tbody id="receivables-list">
+                            <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-secondary);">TUDO EM DIA.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js?v=3.0"></script>
     <script>
         async function init() {
-            const session = await checkAuth();
-            if (!session) return;
-
-            const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
-            if (profile) setupNav(profile, 'crm_dashboard.html');
-            loadCRMData(session.user.id);
+            const context = await App.init('crm_dashboard.html');
+            if (!context) return;
+            loadCRMData(context.session.user.id);
         }
 
         async function loadCRMData(mentorId) {
@@ -86,15 +104,15 @@
 
             const pendingSales = sales.filter(s => s.payment_status === 'Parcial' || s.payment_status === 'Pendente');
             const totalDue = pendingSales.reduce((acc, s) => acc + (s.total_price - (s.amount_paid || 0)), 0);
-            document.getElementById('stat-receivables').textContent = `R$ ${totalDue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+            document.getElementById('stat-receivables').textContent = totalDue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             document.getElementById('receivables-list').innerHTML = pendingSales.length ? pendingSales.map(s => `
                 <tr>
-                    <td style="font-weight:700;">${s.profiles?.full_name || 'Desconhecido'}</td>
+                    <td style="font-weight:700; color:#FFF;">${s.profiles?.full_name || 'Desconhecido'}</td>
                     <td style="color:#ef4444; font-weight:800;">R$ ${(s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
                     <td>${s.due_date ? new Date(s.due_date).toLocaleDateString('pt-BR') : '--'}</td>
-                    <td><button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;" onclick="alert('Baixa em breve')">Dar Baixa</button></td>
-                </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Tudo pago!</td></tr>';
+                    <td><button class="btn" style="padding: 8px 16px; font-size: 0.7rem; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color:#FFF;" onclick="alert('Funcionalidade em manutenção')">COBRAR</button></td>
+                </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Sem pendências.</td></tr>';
 
             const now = new Date();
             const inactiveClients = clients.map(c => {
@@ -107,11 +125,11 @@
             document.getElementById('stat-inactive').textContent = inactiveClients.length;
             document.getElementById('retention-list').innerHTML = inactiveClients.length ? inactiveClients.sort((a,b) => b.days - a.days).map(c => `
                 <tr>
-                    <td style="font-weight:700;">${c.full_name}</td>
-                    <td>${c.lastDate}</td>
-                    <td><span class="badge ${c.days > 90 ? 'badge-danger' : 'badge-warning'}">${c.days} dias</span></td>
-                    <td><a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;"><i class="fab fa-whatsapp"></i> Chamar</a></td>
-                </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Clientes ativos!</td></tr>';
+                    <td style="font-weight:700; color:#FFF;">${c.full_name}</td>
+                    <td style="color:var(--text-secondary);">${c.lastDate}</td>
+                    <td><span class="badge ${c.days > 90 ? 'badge-danger' : 'badge-warning'}">${c.days} DIAS INATIVO</span></td>
+                    <td><a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="padding: 8px 16px; font-size: 0.7rem; background: #25D366; color:#000;"><i class="ph-fill ph-whatsapp-logo"></i> RESGATAR</a></td>
+                </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Base 100% ativa.</td></tr>';
 
             document.getElementById('stat-birthdays').textContent = clients.filter(c => c.birthday && parseInt(c.birthday.split('-')[1]) === (now.getMonth() + 1)).length;
         }

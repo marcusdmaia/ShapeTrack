@@ -3,228 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShapeTrack | Login</title>
-    
-    <meta name="description" content="Plataforma de mentoria fitness premium. Acompanhe sua evolução e alcance sua melhor versão.">
-    <meta property="og:title" content="ShapeTrack | Sua Melhor Versão">
-    <meta property="og:description" content="Acesse sua área de aluno e acompanhe sua evolução física.">
-    <meta property="og:type" content="website">
-    <meta name="theme-color" content="#2F5948">
-    
+    <title>ShapeTrack // Premium Mentorship Access</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=3.0">
     <style>
-        :root {
-            --bg-color: #f8faf9;
-            --primary: #2F5948;
-            --primary-light: #3d755e;
-            --accent: #D96C2B;
-            --text-main: #1a1c1b;
-            --text-dim: #64748b;
-            --white: #ffffff;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        .login-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100dvh;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 24px;
-            background: linear-gradient(135deg, #f8faf9 0%, #edf2f0 100%);
-        }
-
-        .login-card {
-            width: 100%;
-            max-width: 420px;
-            background: var(--white);
-            padding: 56px 40px;
-            border-radius: 32px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(255,255,255,0.7);
-            text-align: center;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        .logo {
-            font-size: 2.4rem;
-            font-weight: 800;
-            letter-spacing: -1.8px;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        .logo span { color: var(--accent); }
-
-        .subtitle {
-            font-size: 0.95rem;
-            color: var(--text-dim);
-            margin-bottom: 40px;
-            font-weight: 500;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-            text-align: left;
-        }
-
-        label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        input {
-            width: 100%;
-            padding: 16px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            font-size: 1rem;
-            transition: all 0.2s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-            box-shadow: 0 0 0 4px rgba(47, 89, 72, 0.05);
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 18px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 8px;
-            box-shadow: 0 4px 15px rgba(47, 89, 72, 0.2);
-        }
-
-        .btn-login:hover {
-            background: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(47, 89, 72, 0.3);
-        }
-
-        .footer-links {
-            margin-top: 32px;
-            font-size: 0.9rem;
+        
+        .login-visual {
+            background: linear-gradient(135deg, #050807 0%, #2F5948 100%);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            justify-content: center;
+            padding: 80px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .footer-links a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 700;
+        .login-visual::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            opacity: 0.1;
         }
 
-        #message {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            min-height: 20px;
+        .login-form-side {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background: var(--bg-dark);
         }
 
-        .error { color: #dc2626; }
-        .success { color: #059669; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 480px) {
-            .login-card { padding: 48px 24px; border-radius: 24px; }
+        @media (max-width: 900px) {
+            .login-container { grid-template-columns: 1fr; }
+            .login-visual { display: none; }
         }
     </style>
 </head>
 <body>
 
-<div class="login-card">
-    <div class="logo">SHAPE<span>TRACK</span></div>
-    <p class="subtitle">Sua jornada de evolução começa aqui.</p>
+    <div class="login-container">
+        <!-- Visual Side -->
+        <div class="login-visual reveal">
+            <span class="eyebrow" style="color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1);">Protocolo Ativo</span>
+            <h1 style="font-size: 5rem; color: #FFF; margin-bottom: 24px;">SHAPE<br><span style="color: var(--accent);">TRACK</span></h1>
+            <p style="color: rgba(255,255,255,0.6); font-size: 1.1rem; max-width: 400px; line-height: 1.6;">
+                A plataforma definitiva para mentoria de alta performance. 
+                Spatial rhythm, fluid motion, and human-centric data.
+            </p>
+        </div>
 
-    <div class="form-group">
-        <label>E-mail de acesso</label>
-        <input type="email" id="email" placeholder="seu@email.com" required>
+        <!-- Form Side -->
+        <div class="login-form-side">
+            <div class="card-shell reveal" style="width: 100%; max-width: 440px; animation-delay: 0.2s;">
+                <div class="card-core">
+                    <h2 style="margin-bottom: 8px;">BEM-VINDO</h2>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 32px;">Insira suas credenciais de acesso premium.</p>
+                    
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label>E-MAIL CORPORATIVO</label>
+                            <input type="email" id="email" placeholder="nome@exemplo.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>CHAVE DE ACESSO</label>
+                            <input type="password" id="password" placeholder="••••••••" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">
+                            AUTENTICAR SISTEMA
+                            <div class="btn-icon"><i class="ph-light ph-fingerprint"></i></div>
+                        </button>
+                    </form>
+                    
+                    <div style="margin-top: 32px; text-align: center;">
+                        <a href="recuperar_senha.html" style="color: var(--text-secondary); font-size: 0.75rem; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">ESQUECEU SUA CHAVE?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label>Sua senha</label>
-        <input type="password" id="password" placeholder="••••••••" required>
-    </div>
-
-    <button class="btn-login" id="loginBtn">Acessar Plataforma</button>
-    
-    <div id="message"></div>
-
-    <div class="footer-links">
-        <a href="recuperar_senha.html">Esqueceu a senha?</a>
-        <p style="color: var(--text-dim)">Não possui conta? <a href="#">Fale com seu mentor</a></p>
-    </div>
-</div>
-
-    <script src="js/config.js"></script>
+    <script src="js/config.js?v=3.0"></script>
     <script>
-        async function checkSession() {
-            const session = await checkAuth();
-            if (session) window.location.href = 'dashboard.html';
-        }
-        checkSession();
-
-        const loginBtn = document.getElementById('loginBtn');
-        const msg = document.getElementById('message');
-
-        loginBtn.addEventListener('click', async () => {
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            if (!email || !password) {
-                msg.innerHTML = '<span class="error">Preencha todos os campos.</span>';
-                return;
-            }
-
-            loginBtn.disabled = true;
-            loginBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Entrando...';
-            msg.innerHTML = '';
-            
-            const { error } = await sb.auth.signInWithPassword({ email, password });
+            const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
             if (error) {
-                msg.innerHTML = `<span class="error">Erro: ${error.message}</span>`;
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = 'Acessar Plataforma';
+                showToast(error.message, 'error');
             } else {
-                msg.innerHTML = '<span class="success">Login realizado! Redirecionando...</span>';
-                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+                showToast('Acesso Autorizado');
+                setTimeout(() => window.location.href = 'dashboard.html', 1500);
             }
         });
+
+        // Check if already logged in
+        async function checkSession() {
+            const { data: { session } } = await sb.auth.getSession();
+            if (session) window.location.href = 'dashboard.html';
+        }
+        checkSession();
     </script>
-
-</body>
-</html>   }
-</script>
-
 </body>
 </html>

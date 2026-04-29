@@ -2,133 +2,92 @@ const SUPABASE_URL = 'https://xsgjttyrxhwmtxlvbdoa.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/**
- * Exibe uma notificação temporária na tela.
- * @param {string} message - A mensagem a ser exibida.
- * @param {string} type - 'success' ou 'error'.
- */
-function showToast(message, type = 'success') {
-    const toast = document.createElement('div');
-    toast.className = `alert alert-${type === 'success' ? 'success' : 'error'}`;
-    toast.style.position = 'fixed';
-    toast.style.top = '20px';
-    toast.style.right = '20px';
-    toast.style.zIndex = '9999';
-    toast.style.minWidth = '300px';
-    toast.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
-    toast.style.animation = 'slideIn 0.3s ease-out';
-    toast.textContent = message;
-
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-        toast.style.animation = 'slideOut 0.3s ease-in';
-        setTimeout(() => toast.remove(), 300);
-    }, 4000);
-}
-
-// Estilos de animação para o toast
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-    @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
-`;
-document.head.appendChild(style);
-
-// Captura global de erros não tratados
-window.addEventListener('unhandledrejection', event => {
-    console.error('Erro não tratado:', event.reason);
-    showToast('Erro de conexão ou sistema. Tente novamente.', 'error');
-});
-
-/**
- * Configura o menu de navegação dinamicamente com base no perfil do usuário.
- * @param {Object} profile - O perfil do usuário vindo do banco.
- * @param {string} activePage - O nome do arquivo da página atual (ex: 'dashboard.html').
- */
-function setupNav(profile, activePage) {
-    const nav = document.getElementById('nav-links');
-    if (!nav) return;
-
-    let navHtml = `
-        <a href="dashboard.html" class="nav-item ${activePage === 'dashboard.html' ? 'active' : ''}"><i class="fas fa-home"></i><span>Início</span></a>
-        <a href="crm_dashboard.html" class="nav-item ${activePage === 'crm_dashboard.html' ? 'active' : ''}"><i class="fas fa-chart-pie"></i><span>Gestão 360</span></a>
-        <a href="vendas.html" class="nav-item ${activePage === 'vendas.html' ? 'active' : ''}"><i class="fas fa-shopping-cart"></i><span>Vendas</span></a>
-    `;
-
-    if (profile.role === 'admin' || profile.role === 'superadmin') {
-        navHtml += `
-            <a href="videos.html" class="nav-item ${activePage === 'videos.html' ? 'active' : ''}"><i class="fas fa-play-circle"></i><span>Vídeos</span></a>
-            <a href="parcerias.html" class="nav-item ${activePage === 'parcerias.html' ? 'active' : ''}"><i class="fas fa-handshake"></i><span>Parcerias</span></a>
-            <a href="alunos.html" class="nav-item ${activePage === 'alunos.html' ? 'active' : ''}"><i class="fas fa-users"></i><span>Alunos</span></a>
-            <a href="leads_admin.html" class="nav-item ${activePage === 'leads_admin.html' ? 'active' : ''}"><i class="fas fa-filter"></i><span>Leads</span></a>
-            <a href="configuracoes.html" class="nav-item ${activePage === 'configuracoes.html' ? 'active' : ''}"><i class="fas fa-cog"></i><span>Ajustes</span></a>
-        `;
-    } else {
-        navHtml += `
-            <a href="relatorio.html" class="nav-item ${activePage === 'relatorio.html' ? 'active' : ''}"><i class="fas fa-chart-line"></i><span>Evolução</span></a>
-            <a href="configuracoes.html" class="nav-item ${activePage === 'configuracoes.html' ? 'active' : ''}"><i class="fas fa-cog"></i><span>Ajustes</span></a>
-        `;
-    }
-
-    navHtml += `<a href="#" class="nav-item" onclick="handleLogout()" style="margin-top:auto; color:#ef4444;"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>`;
-    nav.innerHTML = navHtml;
-
-    // Adiciona o botão de toggle no header (apenas se não existir)
-    const header = document.querySelector('.header');
-    if (header && !document.querySelector('.menu-toggle')) {
-        const toggle = document.createElement('button');
-        toggle.className = 'menu-toggle';
-        toggle.innerHTML = '<i class="fas fa-bars"></i>';
-        toggle.onclick = () => toggleSidebar(true);
-        header.prepend(toggle);
-    }
-
-    // Adiciona o overlay no body (apenas se não existir)
-    if (!document.querySelector('.sidebar-overlay')) {
-        const overlay = document.createElement('div');
-        overlay.className = 'sidebar-overlay';
-        overlay.onclick = () => toggleSidebar(false);
-        document.body.appendChild(overlay);
-    }
-}
-
-/**
- * Abre ou fecha a sidebar no mobile.
- * @param {boolean} open - Se deve abrir ou fechar.
- */
-function toggleSidebar(open) {
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.querySelector('.sidebar-overlay');
-    if (sidebar) sidebar.classList.toggle('active', open);
-    if (overlay) overlay.classList.toggle('active', open);
-}
-
-/**
- * Realiza o logout do usuário e redireciona para a home.
- */
-async function handleLogout() {
-    await sb.auth.signOut();
-    window.location.href = 'index.html';
-}
-
-/**
- * Verifica a sessão atual. Se não houver sessão, redireciona para o login.
- * @returns {Promise<Object>} A sessão do usuário.
- */
-async function checkAuth() {
-    try {
-        const { data: { session }, error } = await sb.auth.getSession();
-        if (error) throw error;
-
-        if (!session && !window.location.pathname.endsWith('index.html') && !window.location.pathname.endsWith('recuperar_senha.html') && !window.location.pathname.endsWith('resetar_senha.html')) {
-            window.location.href = 'index.html';
+// Global Application Object
+const App = {
+    profile: null,
+    async init(pageId) {
+        const { data: { session } } = await sb.auth.getSession();
+        if (!session) {
+            if (!window.location.pathname.endsWith('index.html') && !window.location.pathname.endsWith('recuperar_senha.html')) {
+                window.location.href = 'index.html';
+            }
             return null;
         }
-        return session;
-    } catch (err) {
-        showToast('Falha na autenticação. Faça login novamente.', 'error');
-        window.location.href = 'index.html';
-        return null;
+
+        // Try to get cached profile
+        let profile = JSON.parse(sessionStorage.getItem('st_profile'));
+        if (!profile || profile.id !== session.user.id) {
+            const { data, error } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+            if (error) {
+                console.error('Profile fetch error:', error);
+                return null;
+            }
+            profile = data;
+            sessionStorage.setItem('st_profile', JSON.stringify(profile));
+        }
+
+        this.profile = profile;
+        if (pageId) setupNav(profile, pageId);
+        return { session, profile };
     }
+};
+
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = 'card-shell reveal';
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        width: auto;
+    `;
+    toast.innerHTML = `
+        <div class="card-core" style="padding: 16px 24px; display: flex; align-items: center; gap: 12px; background: ${type === 'success' ? '#0A0C0B' : '#451010'};">
+            <i class="ph-light ${type === 'success' ? 'ph-check-circle' : 'ph-warning-circle'}" style="color: ${type === 'success' ? 'var(--accent)' : '#ff4d4d'}; font-size: 1.2rem;"></i>
+            <span style="font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">${message}</span>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+}
+
+function setupNav(profile, activePage) {
+    const navbar = document.querySelector('.navbar');
+    if (!navbar) return;
+
+    let links = [
+        { name: 'INÍCIO', url: 'dashboard.html' },
+        { name: 'GESTÃO 360', url: 'crm_dashboard.html' },
+        { name: 'VENDAS', url: 'vendas.html' }
+    ];
+
+    if (profile.role === 'admin' || profile.role === 'superadmin') {
+        links = links.concat([
+            { name: 'VÍDEOS', url: 'videos.html' },
+            { name: 'PARCERIAS', url: 'parcerias.html' },
+            { name: 'ALUNOS', url: 'alunos.html' },
+            { name: 'LEADS', url: 'leads_admin.html' }
+        ]);
+    } else {
+        links.push({ name: 'EVOLUÇÃO', url: 'relatorio.html' });
+    }
+    
+    links.push({ name: 'AJUSTES', url: 'configuracoes.html' });
+
+    let navLinks = document.getElementById('nav-links');
+    if (!navLinks) {
+        navLinks = document.createElement('div');
+        navLinks.id = 'nav-links';
+        navLinks.className = 'nav-links desktop-only';
+        navbar.appendChild(navLinks);
+    }
+
+    navLinks.innerHTML = links.map(link => `
+        <a href="${link.url}" class="nav-link ${activePage === link.url ? 'active' : ''}">
+            ${link.name}
+        </a>
+    `).join('') + `
+        <a href="#" onclick="sessionStorage.removeItem('st_profile'); sb.auth.signOut().then(() => window.location.href='index.html')" class="nav-link" style="color: #ff00ff;">SAIR</a>
+    `;
 }
