@@ -53,8 +53,13 @@ function showToast(message, type = 'success') {
 }
 
 function setupNav(profile, activePage) {
-    const navbar = document.querySelector('.navbar');
-    if (!navbar) return;
+    // 1. Desktop Navbar Generation/Sync
+    let navbar = document.querySelector('.navbar');
+    if (!navbar) {
+        navbar = document.createElement('nav');
+        navbar.className = 'navbar reveal';
+        document.body.prepend(navbar);
+    }
 
     let links = [
         { name: 'INÍCIO', url: 'dashboard.html', icon: 'ph-house' },
@@ -75,21 +80,17 @@ function setupNav(profile, activePage) {
     
     links.push({ name: 'AJUSTES', url: 'configuracoes.html', icon: 'ph-gear' });
 
-    // Desktop Navbar
-    let navLinks = document.getElementById('nav-links');
-    if (!navLinks) {
-        navLinks = document.createElement('div');
-        navLinks.id = 'nav-links';
-        navLinks.className = 'nav-links desktop-only';
-        navbar.appendChild(navLinks);
-    }
-    navLinks.innerHTML = links.map(link => `
-        <a href="${link.url}" class="nav-link ${activePage === link.url ? 'active' : ''}">${link.name}</a>
-    `).join('') + `
-        <a href="#" onclick="sessionStorage.removeItem('st_profile'); sb.auth.signOut().then(() => window.location.href='index.html')" class="nav-link" style="color: #ff4d4d;">SAIR</a>
+    navbar.innerHTML = `
+        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <div class="nav-links desktop-only">
+            ${links.map(link => `
+                <a href="${link.url}" class="nav-link ${activePage === link.url ? 'active' : ''}">${link.name}</a>
+            `).join('')}
+            <a href="#" onclick="App.logout()" class="nav-link" style="color: #ff4d4d;">SAIR</a>
+        </div>
     `;
 
-    // Mobile Bottom Nav
+    // 2. Mobile Bottom Nav Generation/Sync
     let bottomNav = document.querySelector('.bottom-nav');
     if (!bottomNav) {
         bottomNav = document.createElement('div');
@@ -102,9 +103,14 @@ function setupNav(profile, activePage) {
             <span>${link.name.split(' ')[0]}</span>
         </a>
     `).join('') + `
-        <a href="#" onclick="sessionStorage.removeItem('st_profile'); sb.auth.signOut().then(() => window.location.href='index.html')" class="bottom-nav-link" style="color: #ff4d4d;">
+        <a href="#" onclick="App.logout()" class="bottom-nav-link" style="color: #ff4d4d;">
             <i class="ph-light ph-sign-out"></i>
             <span>SAIR</span>
         </a>
     `;
 }
+
+App.logout = () => {
+    sessionStorage.removeItem('st_profile');
+    sb.auth.signOut().then(() => window.location.href='index.html');
+};
