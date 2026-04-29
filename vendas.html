@@ -3,174 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendas | ShapeTrack</title>
+    <title>Vendas // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
-        <nav id="nav-links" class="nav-links"></nav>
-    </aside>
+    <nav class="navbar reveal">
+        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <div id="nav-links" class="nav-links desktop-only"></div>
+    </nav>
 
-    <main class="main-content">
-        <header class="header">
-            <div>
-                <h1 class="page-title">Nova Venda</h1>
-                <p style="color: var(--text-dim);">Registre o consumo e venda de produtos Herbalife.</p>
+    <div class="bento-grid">
+        <!-- Header -->
+        <div class="card-shell reveal" style="grid-column: span 12;">
+            <div class="card-core">
+                <span class="eyebrow">Registro de Transação</span>
+                <h1>NOVA VENDA</h1>
+                <p style="color: var(--text-secondary); margin-top: 8px;">Controle de consumo e fluxo de caixa premium.</p>
             </div>
-        </header>
+        </div>
 
-        <div class="grid-vendas">
-            <!-- Left: Products -->
-            <div class="card">
-                <h2 class="section-title"><i class="fas fa-shopping-basket"></i> Itens no Carrinho</h2>
+        <!-- Selection & Cart -->
+        <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.1s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-shopping-cart" style="color: var(--accent);"></i> CARRINHO ATIVO</h3>
                 
-                <div class="grid-inputs" style="margin-bottom: 20px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
                     <div class="form-group">
-                        <label>Cliente / Aluno</label>
-                        <input type="text" id="client-search" placeholder="🔍 Filtrar cliente..." oninput="filterClientList()" style="margin-bottom: 8px;">
-                        <select id="select-client">
-                            <option value="">Selecione um cliente...</option>
+                        <label>CLIENTE / PROTOCOLO</label>
+                        <select id="select-client" style="background: rgba(255,255,255,0.02);">
+                            <option value="">SELECIONAR CLIENTE...</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Nível de Desconto</label>
-                        <select id="select-discount">
-                            <option value="consumer">Preço Cheio (Venda Direta)</option>
-                            <option value="c25">Cliente Premium / Consultor (25%)</option>
-                            <option value="c35">Consultor Senior (35%)</option>
-                            <option value="c42">Produtor Qualificado (42%)</option>
-                            <option value="c50">Supervisor (50%)</option>
+                        <label>NÍVEL DE DESCONTO</label>
+                        <select id="select-discount" style="background: rgba(255,255,255,0.02);">
+                            <option value="consumer">PREÇO CHEIO (VENDA DIRETA)</option>
+                            <option value="c25">CLIENTE PREMIUM / CONSULTOR (25%)</option>
+                            <option value="c35">CONSULTOR SENIOR (35%)</option>
+                            <option value="c42">PRODUTOR QUALIFICADO (42%)</option>
+                            <option value="c50">SUPERVISOR (50%)</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group" style="position: relative;">
-                    <label>Buscar Produto (Nome ou SKU)</label>
-                    <input type="text" id="product-input" placeholder="Ex: Shake Baunilha, Protein Crunch...">
-                    <div id="search-results" style="position: absolute; top: 100%; left: 0; right: 0; background: white; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 100; max-height: 300px; overflow-y: auto; display: none; margin-top: 5px;"></div>
+                    <label>BUSCAR ITEM (SKU/NOME)</label>
+                    <input type="text" id="product-input" placeholder="DIGITE PARA BUSCAR...">
+                    <div id="search-results" style="position: absolute; top: 100%; left: 0; right: 0; background: #0A0C0B; border: 1px solid var(--glass-border); border-radius: 12px; z-index: 100; max-height: 200px; overflow-y: auto; display: none; margin-top: 8px;"></div>
                 </div>
 
-                <div id="cart-list" style="margin-top: 24px;">
-                    <p style="text-align: center; color: var(--text-dim); padding: 40px;">Seu carrinho está vazio.</p>
-                </div>
-
-                <button onclick="toggleCustomProduct()" style="width: 100%; border: 2px dashed #e2e8f0; padding: 15px; border-radius: 12px; background: transparent; color: var(--text-dim); font-weight: 700; cursor: pointer; margin-top: 10px;">
-                    <i class="fas fa-plus-circle"></i> Adicionar Produto Personalizado
-                </button>
-
-                <div id="custom-product-form" style="display: none; margin-top: 20px; background: #f8faf9; padding: 20px; border-radius: 16px;">
-                    <div class="form-group"><label>Nome do Item</label><input type="text" id="custom-name"></div>
-                    <div class="grid-inputs" style="margin-bottom: 10px;">
-                        <div class="form-group"><label>Preço Venda (R$)</label><input type="number" id="custom-price" step="0.01"></div>
-                        <div class="form-group"><label>Pontos (PV)</label><input type="number" id="custom-pv" step="0.1"></div>
+                <div id="cart-list" style="margin-top: 32px;">
+                    <div style="text-align: center; padding: 48px; border: 1px dashed var(--glass-border); border-radius: 20px; color: var(--text-secondary);">
+                        CARRINHO DISPONÍVEL PARA INPUT
                     </div>
-                    <button class="btn btn-accent" onclick="addCustomItem()" style="width: 100%;">Adicionar ao Carrinho</button>
                 </div>
             </div>
+        </div>
 
-            <!-- Right: Summary & Payment -->
-            <div class="card">
-                <h2 class="section-title"><i class="fas fa-receipt"></i> Resumo e Pagamento</h2>
+        <!-- Summary & Action -->
+        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.2s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-receipt" style="color: var(--accent);"></i> RESUMO</h3>
                 
+                <div style="background: rgba(255,255,255,0.02); padding: 24px; border-radius: 20px; border: 1px solid var(--glass-border); margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-secondary); font-size: 0.8rem;">
+                        <span>VOLUME TOTAL (PV)</span>
+                        <span id="total-pv" style="color: #FFF; font-weight: 700;">0.00</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-secondary); font-size: 0.8rem;">
+                        <span>LUCRO ESTIMADO</span>
+                        <span id="est-profit" style="color: #2ecc71; font-weight: 700;">R$ 0,00</span>
+                    </div>
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 800; font-size: 1.2rem;">TOTAL</span>
+                        <span id="total-price" style="font-size: 1.5rem; font-weight: 800; color: var(--accent);">R$ 0,00</span>
+                    </div>
+                </div>
+
                 <div class="form-group">
-                    <label>Forma de Pagamento</label>
-                    <select id="payment-type" onchange="togglePartialPayment()">
-                        <option value="total">Pago Integralmente</option>
-                        <option value="partial">Pagamento Parcial (Entrada)</option>
-                        <option value="later">Pagar Depois (Total Pendente)</option>
+                    <label>CONDIÇÃO DE PAGAMENTO</label>
+                    <select id="payment-type" onchange="togglePartialPayment()" style="background: rgba(255,255,255,0.02);">
+                        <option value="total">PAGO INTEGRALMENTE</option>
+                        <option value="partial">PAGAMENTO PARCIAL</option>
+                        <option value="later">PAGAMENTO PENDENTE</option>
                     </select>
                 </div>
 
-                <div id="partial-fields" style="display: none;">
+                <div id="partial-fields" style="display: none; animation: fadeInUp 0.5s var(--bezier);">
                     <div class="form-group">
-                        <label>Valor Recebido Agora (R$)</label>
+                        <label>VALOR RECEBIDO (R$)</label>
                         <input type="number" id="amount-paid" step="0.01">
                     </div>
                     <div class="form-group">
-                        <label>Data para Saldo Devedor</label>
+                        <label>DATA DE VENCIMENTO</label>
                         <input type="date" id="due-date">
                     </div>
                 </div>
 
-                <div class="form-group" style="background: #f0fdf4; padding: 15px; border-radius: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
-                    <i class="fas fa-coins" style="color: #16a34a; font-size: 1.2rem;"></i>
-                    <div style="flex: 1;">
-                        <span style="display: block; font-size: 0.75rem; color: #166534; font-weight: 700; text-transform: uppercase;">Lucro Estimado</span>
-                        <div id="est-profit" style="font-size: 1.2rem; font-weight: 800; color: #166534;">R$ 0,00</div>
-                    </div>
-                </div>
-
-                <div style="background: #f8faf9; padding: 20px; border-radius: 20px; margin-bottom: 24px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-dim); font-weight: 600;">
-                        <span>Itens:</span> <span id="total-items">0</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-dim); font-weight: 600;">
-                        <span>Volume (PV):</span> <span id="total-pv">0.00</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 2px dashed #e2e8f0; color: var(--primary); font-weight: 800; font-size: 1.3rem;">
-                        <span>Total:</span> <span id="total-price">R$ 0,00</span>
-                    </div>
-                </div>
-
-                <div class="form-group" style="display: flex; align-items: center; gap: 10px; background: #f8faf9; padding: 15px; border-radius: 12px; margin-bottom: 24px;">
-                    <input type="checkbox" id="business-presented" style="width: 20px; height: 20px;">
-                    <label style="margin-bottom: 0; text-transform: none;">Apresentei o Plano de Negócio?</label>
-                </div>
-
-                <button class="btn btn-primary" id="btn-finish" style="width: 100%; padding: 18px; font-size: 1.1rem;">Finalizar e Registrar Venda</button>
+                <button id="btn-finish" class="btn btn-primary" style="width: 100%; margin-top: 24px;">
+                    FINALIZAR VENDA
+                    <div class="btn-icon"><i class="ph-light ph-check"></i></div>
+                </button>
             </div>
         </div>
-    </main>
+    </div>
 
-    <script src="js/config.js"></script>
+    <script src="js/config.js?v=3.0"></script>
     <script>
         const products = [
-            { sku: '1', name: 'Shake Herbalife (Vários Sabores)', consumer: 195.00, c25: 146.25, c35: 126.75, c42: 113.10, c50: 97.50, pv: 23.95 },
-            { sku: '2', name: 'Chá 100g (Original/Limão)', consumer: 210.00, c25: 157.50, c35: 136.50, c42: 121.80, c50: 105.00, pv: 34.95 },
-            { sku: '3', name: 'NutreV', consumer: 45.00, c25: 33.75, c35: 29.25, c42: 26.10, c50: 22.50, pv: 5.45 },
-            { sku: '4', name: 'Protein Crunch', consumer: 105.00, c25: 78.75, c35: 68.25, c42: 60.90, c50: 52.50, pv: 14.50 },
-            { sku: '5', name: 'Liftoff (Caixa 10 unid)', consumer: 115.00, c25: 86.25, c35: 74.75, c42: 66.70, c50: 57.50, pv: 12.95 }
+            { sku: '1', name: 'SHAKE HERBALIFE', consumer: 195.00, c25: 146.25, c35: 126.75, c42: 113.10, c50: 97.50, pv: 23.95 },
+            { sku: '2', name: 'CHÁ 100G', consumer: 210.00, c25: 157.50, c35: 136.50, c42: 121.80, c50: 105.00, pv: 34.95 },
+            { sku: '3', name: 'NUTREV', consumer: 45.00, c25: 33.75, c35: 29.25, c42: 26.10, c50: 22.50, pv: 5.45 },
+            { sku: '4', name: 'PROTEIN CRUNCH', consumer: 105.00, c25: 78.75, c35: 68.25, c42: 60.90, c50: 52.50, pv: 14.50 },
+            { sku: '5', name: 'LIFTOFF', consumer: 115.00, c25: 86.25, c35: 74.75, c42: 66.70, c50: 57.50, pv: 12.95 }
         ];
 
         let cart = [];
         let allClients = [];
 
         async function init() {
-            const session = await checkAuth();
-            if (!session) return;
-            
-            const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
-            if (profile) setupNav(profile, 'vendas.html');
-
-            loadClients();
+            const context = await App.init('vendas.html');
+            if (!context) return;
+            loadClients(context.session.user.id);
             setupSearch();
         }
 
-        async function loadClients() {
-            const { data: clients } = await sb.from('profiles').select('id, full_name').eq('role', 'client');
+        async function loadClients(mentorId) {
+            const { data: clients } = await sb.from('profiles').select('id, full_name').eq('mentor_id', mentorId).eq('role', 'client');
             allClients = clients || [];
-            renderClientOptions(allClients);
-        }
-
-        function renderClientOptions(list) {
             const select = document.getElementById('select-client');
-            select.innerHTML = '<option value="">Selecione um cliente...</option>';
-            list.forEach(c => {
+            allClients.forEach(c => {
                 const opt = document.createElement('option');
                 opt.value = c.id;
-                opt.textContent = c.full_name;
+                opt.textContent = c.full_name.toUpperCase();
                 select.appendChild(opt);
             });
-        }
-
-        function filterClientList() {
-            const q = document.getElementById('client-search').value.toLowerCase();
-            renderClientOptions(allClients.filter(c => c.full_name.toLowerCase().includes(q)));
         }
 
         function setupSearch() {
@@ -179,16 +149,15 @@
             input.addEventListener('input', () => {
                 const q = input.value.toLowerCase();
                 if (!q) { results.style.display = 'none'; return; }
-                const filtered = products.filter(p => p.name.toLowerCase().includes(q) || p.sku.includes(q));
+                const filtered = products.filter(p => p.name.toLowerCase().includes(q));
                 results.innerHTML = filtered.map(p => `
-                    <div style="padding: 15px; cursor: pointer; border-bottom: 1px solid #f1f5f9; hover: background: #f8faf9;" onclick="addToCart('${p.sku}')">
-                        <div style="font-weight: 700; font-size: 0.9rem;">${p.name}</div>
-                        <div style="font-size: 0.8rem; color: var(--text-dim);">R$ ${p.consumer.toFixed(2)} | ${p.pv} PV</div>
+                    <div style="padding: 16px; cursor: pointer; border-bottom: 1px solid var(--glass-border);" onclick="addToCart('${p.sku}')">
+                        <div style="font-weight: 700; color: #FFF; font-size: 0.85rem;">${p.name}</div>
+                        <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 4px;">R$ ${p.consumer.toFixed(2)} | ${p.pv} PV</div>
                     </div>
                 `).join('');
                 results.style.display = filtered.length ? 'block' : 'none';
             });
-            document.addEventListener('click', (e) => { if (!e.target.closest('.form-group')) results.style.display = 'none'; });
         }
 
         function addToCart(sku) {
@@ -200,61 +169,40 @@
             document.getElementById('search-results').style.display = 'none';
         }
 
+        function renderCart() {
+            const container = document.getElementById('cart-list');
+            const discount = document.getElementById('select-discount').value;
+            if (cart.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 48px; border: 1px dashed var(--glass-border); border-radius: 20px; color: var(--text-secondary);">CARRINHO DISPONÍVEL PARA INPUT</div>';
+                updateSummary(0, 0, 0); return;
+            }
+            let totalPV = 0, totalPrice = 0, totalCost = 0;
+            container.innerHTML = cart.map(item => {
+                const price = item[discount] || item.consumer;
+                totalPV += item.pv * item.qty;
+                totalPrice += price * item.qty;
+                totalCost += item.c50 * item.qty;
+                return `
+                    <div style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 16px; margin-bottom: 12px;">
+                        <div style="flex: 1; font-weight: 700; font-size: 0.85rem; color: #FFF;">${item.name}</div>
+                        <div style="font-weight: 800; color: var(--accent); font-size: 0.9rem;">R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                        <div style="color: #ef4444; cursor: pointer; padding: 8px;" onclick="removeFromCart('${item.sku}')"><i class="ph-light ph-trash"></i></div>
+                    </div>
+                `;
+            }).join('');
+            updateSummary(totalPV, totalPrice, totalCost);
+        }
+
         function removeFromCart(sku) {
             cart = cart.filter(i => i.sku !== sku);
             renderCart();
         }
 
-        function updateQty(sku, qty) {
-            const item = cart.find(i => i.sku === sku);
-            if (item) { item.qty = parseInt(qty) || 1; renderCart(); }
-        }
-
-        function renderCart() {
-            const container = document.getElementById('cart-list');
-            const discount = document.getElementById('select-discount').value;
-            if (cart.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: var(--text-dim); padding: 40px;">Seu carrinho está vazio.</p>';
-                updateSummary(0,0,0,0); return;
-            }
-            let totalPV = 0, totalPrice = 0, totalCost = 0;
-            container.innerHTML = cart.map(item => {
-                const price = item.custom ? item.consumer : (item[discount] || item.consumer);
-                totalPV += item.pv * item.qty;
-                totalPrice += price * item.qty;
-                totalCost += (item.custom ? price * 0.5 : item.c50) * item.qty;
-                return `
-                    <div class="cart-item" style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #f8faf9; border-radius: 16px; margin-bottom: 12px;">
-                        <div style="flex: 1; font-weight: 700; font-size: 0.9rem;">${item.name} ${item.custom ? '⭐' : ''}</div>
-                        <input type="number" style="width: 60px; padding: 8px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center;" value="${item.qty}" min="1" onchange="updateQty('${item.sku}', this.value)">
-                        <div style="font-weight: 800; color: var(--primary);">R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
-                        <div style="color: #ef4444; cursor: pointer; padding: 8px;" onclick="removeFromCart('${item.sku}')"><i class="fas fa-trash"></i></div>
-                    </div>
-                `;
-            }).join('');
-            updateSummary(cart.length, totalPV, totalPrice, totalCost);
-        }
-
-        function updateSummary(items, pv, price, cost) {
-            document.getElementById('total-items').textContent = items;
+        function updateSummary(pv, price, cost) {
             document.getElementById('total-pv').textContent = pv.toFixed(2);
             document.getElementById('total-price').textContent = `R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
             const profit = price - cost;
             document.getElementById('est-profit').textContent = `R$ ${Math.max(0, profit).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
-        }
-
-        function toggleCustomProduct() {
-            const f = document.getElementById('custom-product-form');
-            f.style.display = f.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function addCustomItem() {
-            const name = document.getElementById('custom-name').value;
-            const price = parseFloat(document.getElementById('custom-price').value);
-            const pv = parseFloat(document.getElementById('custom-pv').value);
-            if (!name || isNaN(price)) return alert('Dados inválidos');
-            cart.push({ sku: 'CUSTOM-'+Date.now(), name, pv: pv||0, consumer: price, custom: true, qty: 1 });
-            renderCart(); toggleCustomProduct();
         }
 
         function togglePartialPayment() {
@@ -264,31 +212,27 @@
 
         document.getElementById('btn-finish').onclick = async () => {
             const btn = document.getElementById('btn-finish');
-            if (cart.length === 0) return alert('Carrinho vazio');
+            if (cart.length === 0) return showToast('Carrinho vazio', 'error');
             const clientId = document.getElementById('select-client').value;
-            if (!clientId) return alert('Selecione um cliente');
+            if (!clientId) return showToast('Selecione um cliente', 'error');
 
-            btn.disabled = true; btn.textContent = 'Processando...';
-
+            btn.disabled = true;
             try {
-                const { data: { session } } = await sb.auth.getSession();
                 const total = parseFloat(document.getElementById('total-price').textContent.replace('R$ ', '').replace('.', '').replace(',', '.'));
                 const type = document.getElementById('payment-type').value;
-
                 const { error } = await sb.from('sales').insert([{
-                    client_id: clientId, mentor_id: session.user.id,
+                    client_id: clientId, mentor_id: App.profile.id,
                     total_price: total, total_pv: parseFloat(document.getElementById('total-pv').textContent),
                     payment_status: type === 'total' ? 'Pago' : (type === 'partial' ? 'Parcial' : 'Pendente'),
                     amount_paid: parseFloat(document.getElementById('amount-paid').value || 0),
                     due_date: document.getElementById('due-date').value || null,
                     discount_level: document.getElementById('select-discount').value,
-                    items: cart, business_presented_at_sale: document.getElementById('business-presented').checked
+                    items: cart
                 }]);
-
                 if (error) throw error;
-                alert('Venda registrada com sucesso!');
-                window.location.href = 'crm_dashboard.html';
-            } catch (err) { alert(err.message); } finally { btn.disabled = false; btn.textContent = 'Finalizar e Registrar Venda'; }
+                showToast('Venda registrada com sucesso!');
+                setTimeout(() => window.location.href = 'crm_dashboard.html', 1500);
+            } catch (err) { showToast(err.message, 'error'); } finally { btn.disabled = false; }
         };
 
         document.getElementById('select-discount').onchange = renderCart;

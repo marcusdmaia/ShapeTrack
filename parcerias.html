@@ -3,46 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parcerias | ShapeTrack</title>
+    <title>Marketplace de Colaboração // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
-        <nav id="nav-links" class="nav-links"></nav>
-    </aside>
+    <nav class="navbar reveal">
+        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <div id="nav-links" class="nav-links desktop-only"></div>
+    </nav>
 
-    <main class="main-content">
-        <header class="header" style="margin-bottom: 40px;">
-            <h1 class="page-title">Marketplace de Parcerias</h1>
-            <p style="color: var(--text-dim);">Encontre conteúdos de outros mentores e enriqueça a experiência dos seus alunos.</p>
-        </header>
-
-        <h2 class="card-title" style="margin-bottom: 24px; display: flex; align-items: center; gap: 12px;"><i class="fas fa-search-dollar"></i> Vídeos Disponíveis</h2>
-        <div id="marketplace-grid" class="grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin-bottom: 60px;">
-            <!-- Vídeos Colab -->
+    <div class="bento-grid">
+        <!-- Header -->
+        <div class="card-shell reveal" style="grid-column: span 12;">
+            <div class="card-core">
+                <span class="eyebrow">Ecossistema de Inteligência</span>
+                <h1>COLLAB MARKET</h1>
+                <p style="color: var(--text-secondary); margin-top: 8px;">Conecte-se a ativos de outros mentores para escala exponencial.</p>
+            </div>
         </div>
 
-        <h2 class="card-title" style="margin-bottom: 24px; display: flex; align-items: center; gap: 12px;"><i class="fas fa-check-double"></i> Meus Vídeos Compartilhados</h2>
-        <div id="shared-grid" class="grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
-            <!-- Vídeos que já peguei -->
+        <!-- Marketplace Grid -->
+        <div class="card-shell reveal" style="grid-column: span 12; background: transparent; border: none; padding: 0;">
+            <h3 style="margin-bottom: 24px; padding-left: 12px;"><i class="ph-light ph-planet" style="color: var(--accent);"></i> ATIVOS DISPONÍVEIS NA REDE</h3>
+            <div id="marketplace-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+                <!-- Vídeos Colab -->
+            </div>
         </div>
-    </main>
+    </div>
 
-    <script src="js/config.js"></script>
+    <script src="js/config.js?v=3.0"></script>
     <script>
         async function init() {
-            const session = await checkAuth();
-            if (!session) return;
-            
-            const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
-            if (profile) setupNav(profile, 'parcerias.html');
-
-            loadMarketplace(session.user.id);
+            const context = await App.init('parcerias.html');
+            if (!context) return;
+            loadMarketplace(context.session.user.id);
         }
 
         async function loadMarketplace(mentorId) {
@@ -51,26 +48,26 @@
             const sharedIds = shared?.map(s => s.video_id) || [];
 
             const grid = document.getElementById('marketplace-grid');
-            grid.innerHTML = videos?.length ? '' : '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-dim)">Nenhum vídeo disponível para parceria no momento.</p>';
+            grid.innerHTML = videos?.length ? '' : '<div class="card-shell" style="grid-column: 1/-1;"><div class="card-core" style="text-align: center; padding: 64px; color: var(--text-secondary);">NENHUM ATIVO DISPONÍVEL PARA PARCERIA NO MOMENTO.</div></div>';
 
             videos?.forEach(v => {
                 const isRequested = sharedIds.includes(v.id);
                 const ytId = v.youtube_url.includes('v=') ? v.youtube_url.split('v=')[1].split('&')[0] : v.youtube_url.split('/').pop();
                 const card = document.createElement('div');
-                card.className = 'card video-card';
-                card.style.padding = '0';
-                card.style.overflow = 'hidden';
+                card.className = 'card-shell reveal';
                 card.innerHTML = `
-                    <div style="width: 100%; aspect-ratio: 16/9; background: url('https://img.youtube.com/vi/${ytId}/mqdefault.jpg') center/cover;"></div>
-                    <div style="padding: 20px;">
-                        <h4 style="font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 8px;">${v.title}</h4>
-                        <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-dim); margin-bottom: 16px; display: flex; align-items: center; gap: 6px;">
-                            <i class="fas fa-user-tie"></i> Mentor: ${v.profiles?.full_name || 'Desconhecido'}
+                    <div class="card-core" style="padding: 12px;">
+                        <div style="width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-inner); background: url('https://img.youtube.com/vi/${ytId}/mqdefault.jpg') center/cover; border: 1px solid var(--glass-border);"></div>
+                        <div style="padding: 16px 8px;">
+                            <h4 style="font-size: 0.9rem; font-weight: 800; color: #FFF; margin-bottom: 8px;">${v.title.toUpperCase()}</h4>
+                            <div style="font-size: 0.65rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 16px; display: flex; align-items: center; gap: 6px;">
+                                <i class="ph-light ph-user-focus"></i> MENTOR: ${v.profiles?.full_name?.toUpperCase() || 'AUTOR EXTERNO'}
+                            </div>
+                            <button class="btn ${isRequested ? '' : 'btn-primary'}" style="width: 100%; font-size: 0.7rem; padding: 12px; ${isRequested ? 'background: rgba(255,255,255,0.05); color: #FFF; opacity: 0.5;' : ''}" onclick="${isRequested ? '' : `requestColab('${v.id}')`}" ${isRequested ? 'disabled' : ''}>
+                                <i class="ph-light ${isRequested ? 'ph-check-circle' : 'ph-plus'}"></i> 
+                                ${isRequested ? 'NA SUA BIBLIOTECA' : 'SOLICITAR PARCERIA'}
+                            </button>
                         </div>
-                        <button class="btn ${isRequested ? 'btn-outline' : 'btn-primary'}" style="width: 100%; font-size: 0.85rem;" onclick="${isRequested ? '' : `requestColab('${v.id}')`}" ${isRequested ? 'disabled' : ''}>
-                            <i class="fas ${isRequested ? 'fa-check-circle' : 'fa-plus'}"></i> 
-                            ${isRequested ? 'Já em sua biblioteca' : 'Solicitar Parceria'}
-                        </button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -78,15 +75,13 @@
         }
 
         async function requestColab(videoId) {
-            const { data: { session } } = await sb.auth.getSession();
-            await sb.from('shared_videos').insert([{ video_id: videoId, mentor_id: session.user.id }]);
-            alert('Vídeo adicionado à sua biblioteca para alunos!');
-            loadMarketplace(session.user.id);
+            const { error } = await sb.from('shared_videos').insert([{ video_id: videoId, mentor_id: App.profile.id }]);
+            if (error) return showToast(error.message, 'error');
+            showToast('Ativo vinculado com sucesso!');
+            loadMarketplace(App.profile.id);
         }
 
         init();
     </script>
-</body>
-</html>
 </body>
 </html>

@@ -3,100 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lançar Avaliação | ShapeTrack</title>
+    <title>Captura Biométrica // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
-        <nav id="nav-links" class="nav-links"></nav>
-    </aside>
+    <nav class="navbar reveal">
+        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <div id="nav-links" class="nav-links desktop-only"></div>
+    </nav>
 
-    <main class="main-content">
-        <header class="header">
-            <div>
-                <h1 class="page-title">Lançar Avaliação</h1>
-                <p style="color: var(--text-dim);">Registre os dados de bioimpedância e medidas do aluno.</p>
+    <div class="bento-grid">
+        <!-- Header -->
+        <div class="card-shell reveal" style="grid-column: span 12;">
+            <div class="card-core">
+                <span class="eyebrow">Input de Performance</span>
+                <h1>LANÇAR AVALIAÇÃO</h1>
+                <p style="color: var(--text-secondary); margin-top: 8px;">Registro preciso de dados antropométricos e bioimpedância.</p>
             </div>
-        </header>
-
-        <div class="card">
-            <div class="form-group" style="margin-bottom: 32px;">
-                <label>Aluno</label>
-                <select id="select-aluno">
-                    <option value="">Selecione um aluno...</option>
-                </select>
-            </div>
-
-            <h3 class="section-header">Dados de Bioimpedância</h3>
-            <div class="grid-inputs">
-                <div class="form-group">
-                    <label>Peso (kg)</label>
-                    <input type="number" id="weight" step="0.1">
-                </div>
-                <div class="form-group">
-                    <label>% Gordura Corporal</label>
-                    <input type="number" id="body_fat" step="0.1">
-                </div>
-                <div class="form-group">
-                    <label>% Massa Muscular</label>
-                    <input type="number" id="muscle_mass" step="0.1">
-                </div>
-                <div class="form-group">
-                    <label>Gordura Visceral</label>
-                    <input type="number" id="visceral_fat" step="1">
-                </div>
-                <div class="form-group">
-                    <label>Idade Metabólica</label>
-                    <input type="number" id="metabolic_age" step="1">
-                </div>
-                <div class="form-group">
-                    <label>Água Corporal (%)</label>
-                    <input type="number" id="body_water" step="0.1">
-                </div>
-            </div>
-
-            <h3 class="section-header">Medidas (cm)</h3>
-            <div class="grid-inputs">
-                <div class="form-group">
-                    <label>Cintura</label>
-                    <input type="number" id="waist" step="0.1">
-                </div>
-                <div class="form-group">
-                    <label>Abdomen</label>
-                    <input type="number" id="abdomen" step="0.1">
-                </div>
-                <div class="form-group">
-                    <label>Quadril</label>
-                    <input type="number" id="hip" step="0.1">
-                </div>
-            </div>
-
-            <h3 class="section-header">Próximo Passo</h3>
-            <div class="form-group" style="margin-bottom: 32px;">
-                <label>Data da Próxima Avaliação</label>
-                <input type="date" id="next_assessment_date">
-            </div>
-
-            <button class="btn btn-primary" id="btn-save" style="width: 100%;">Salvar Avaliação</button>
         </div>
-        </div>
-    </main>
 
-    <script src="js/config.js"></script>
+        <!-- Student Selection -->
+        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.1s;">
+            <div class="card-core">
+                <div class="form-group">
+                    <label>IDENTIFICAÇÃO DO ALUNO</label>
+                    <select id="select-aluno" style="background: rgba(255,255,255,0.02);">
+                        <option value="">SELECIONE UM ATIVO NA REDE...</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bioimpedance Data -->
+        <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.2s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-activity" style="color: var(--accent);"></i> BIOIMPEDÂNCIA</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+                    <div class="form-group">
+                        <label>PESO (KG)</label>
+                        <input type="number" id="weight" step="0.1" placeholder="00.0">
+                    </div>
+                    <div class="form-group">
+                        <label>% GORDURA</label>
+                        <input type="number" id="body_fat" step="0.1" placeholder="00.0">
+                    </div>
+                    <div class="form-group">
+                        <label>% MUSCULAR</label>
+                        <input type="number" id="muscle_mass" step="0.1" placeholder="00.0">
+                    </div>
+                    <div class="form-group">
+                        <label>GORD. VISCERAL</label>
+                        <input type="number" id="visceral_fat" step="1" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>IDADE METAB.</label>
+                        <input type="number" id="metabolic_age" step="1" placeholder="00">
+                    </div>
+                    <div class="form-group">
+                        <label>% ÁGUA</label>
+                        <input type="number" id="body_water" step="0.1" placeholder="00.0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Measurements & Next Date -->
+        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.3s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-ruler" style="color: var(--accent);"></i> MEDIDAS (CM)</h3>
+                <div class="form-group">
+                    <label>CINTURA</label>
+                    <input type="number" id="waist" step="0.1" placeholder="00.0">
+                </div>
+                <div class="form-group">
+                    <label>ABDOMEN</label>
+                    <input type="number" id="abdomen" step="0.1" placeholder="00.0">
+                </div>
+                <div class="form-group" style="margin-bottom: 32px;">
+                    <label>QUADRIL</label>
+                    <input type="number" id="hip" step="0.1" placeholder="00.0">
+                </div>
+                
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-calendar-plus" style="color: var(--accent);"></i> AGENDA</h3>
+                <div class="form-group">
+                    <label>PRÓXIMO RETORNO</label>
+                    <input type="date" id="next_assessment_date">
+                </div>
+
+                <button class="btn btn-primary" id="btn-save" style="width: 100%; margin-top: 24px;">
+                    SALVAR DADOS
+                    <div class="btn-icon"><i class="ph-light ph-check"></i></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js?v=3.0"></script>
     <script>
         async function init() {
-            const session = await checkAuth();
-            if (!session) return;
-            
-            const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
-            if (profile) setupNav(profile, 'lancar_avaliacao.html');
-
-            loadAlunos(session.user.id);
+            const context = await App.init('lancar_avaliacao.html');
+            if (!context) return;
+            loadAlunos(context.session.user.id);
         }
 
         async function loadAlunos(mentorId) {
@@ -105,7 +115,7 @@
             alunos?.forEach(a => {
                 const opt = document.createElement('option');
                 opt.value = a.id;
-                opt.textContent = a.full_name;
+                opt.textContent = a.full_name.toUpperCase();
                 select.appendChild(opt);
             });
 
@@ -115,42 +125,38 @@
         }
 
         document.getElementById('btn-save').onclick = async () => {
-            const { data: { session } } = await sb.auth.getSession();
             const btn = document.getElementById('btn-save');
             const alunoId = document.getElementById('select-aluno').value;
-            if (!alunoId) return alert('Selecione um aluno');
+            if (!alunoId) return showToast('Selecione um aluno', 'error');
 
-            btn.disabled = true; btn.textContent = 'Salvando...';
-
+            btn.disabled = true;
             const assessment = {
-                student_id: alunoId,
-                mentor_id: session.user.id,
-                weight: parseFloat(document.getElementById('weight').value),
-                body_fat: parseFloat(document.getElementById('body_fat').value),
-                muscle_mass: parseFloat(document.getElementById('muscle_mass').value),
-                visceral_fat: parseFloat(document.getElementById('visceral_fat').value),
-                metabolic_age: parseFloat(document.getElementById('metabolic_age').value),
-                body_water: parseFloat(document.getElementById('body_water').value),
-                waist: parseFloat(document.getElementById('waist').value),
-                abdomen: parseFloat(document.getElementById('abdomen').value),
-                hip: parseFloat(document.getElementById('hip').value)
+                student_id: alunoId, mentor_id: App.profile.id,
+                weight: parseFloat(document.getElementById('weight').value || 0),
+                body_fat: parseFloat(document.getElementById('body_fat').value || 0),
+                muscle_mass: parseFloat(document.getElementById('muscle_mass').value || 0),
+                visceral_fat: parseFloat(document.getElementById('visceral_fat').value || 0),
+                metabolic_age: parseFloat(document.getElementById('metabolic_age').value || 0),
+                body_water: parseFloat(document.getElementById('body_water').value || 0),
+                waist: parseFloat(document.getElementById('waist').value || 0),
+                abdomen: parseFloat(document.getElementById('abdomen').value || 0),
+                hip: parseFloat(document.getElementById('hip').value || 0)
             };
 
             const nextDate = document.getElementById('next_assessment_date').value;
 
             try {
-                await sb.from('assessments').insert([assessment]);
+                const { error } = await sb.from('assessments').insert([assessment]);
+                if (error) throw error;
                 if (nextDate) {
                     await sb.from('profiles').update({ next_assessment_date: nextDate }).eq('id', alunoId);
                 }
-                alert('Avaliação salva com sucesso!');
-                window.location.href = 'alunos.html';
-            } catch (err) { alert(err.message); } finally { btn.disabled = false; btn.textContent = 'Salvar Avaliação'; }
+                showToast('Avaliação processada!');
+                setTimeout(() => window.location.href = 'alunos.html', 1500);
+            } catch (err) { showToast(err.message, 'error'); } finally { btn.disabled = false; }
         };
 
         init();
     </script>
-</body>
-</html>
 </body>
 </html>

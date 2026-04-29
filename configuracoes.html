@@ -3,110 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações | ShapeTrack</title>
+    <title>Protocolos de Segurança // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="logo" onclick="window.location.href='dashboard.html'">SHAPE<span>TRACK</span></div>
-        <nav id="nav-links" class="nav-links"></nav>
-    </aside>
+    <nav class="navbar reveal">
+        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <div id="nav-links" class="nav-links desktop-only"></div>
+    </nav>
 
-    <main class="main-content" style="max-width: 800px; margin: 0 auto;">
-        <header class="header" style="margin-bottom: 40px;">
-            <h1 class="page-title">Configurações</h1>
-            <p style="color: var(--text-dim);">Gerencie seus dados e integrações da conta.</p>
-        </header>
-
-        <div id="status-msg" class="alert" style="display: none; margin-bottom: 24px;"></div>
-
-        <div class="card" style="margin-bottom: 24px;">
-            <h2 class="card-title" style="margin-bottom: 24px; display: flex; align-items: center; gap: 12px;"><i class="fas fa-user-circle"></i> Perfil Profissional</h2>
-            <div class="form-group" style="margin-bottom: 24px;">
-                <label>Nome Completo</label>
-                <input type="text" id="full_name" placeholder="Seu nome" style="width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px; outline: none;">
+    <div class="bento-grid" style="max-width: 900px;">
+        <!-- Header -->
+        <div class="card-shell reveal" style="grid-column: span 12;">
+            <div class="card-core">
+                <span class="eyebrow">Ajustes de Sistema</span>
+                <h1>CONFIGURAÇÕES</h1>
+                <p style="color: var(--text-secondary); margin-top: 8px;">Gerencie suas chaves de acesso e conexões neurais.</p>
             </div>
-            <div class="form-group" style="margin-bottom: 24px;">
-                <label>E-mail (Login)</label>
-                <input type="text" id="email_display" disabled style="background: #f8faf9; cursor: not-allowed; width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 12px;">
+        </div>
+
+        <!-- Profile Settings -->
+        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.1s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-user-circle" style="color: var(--accent);"></i> IDENTIDADE PROFISSIONAL</h3>
+                <div class="form-group">
+                    <label>NOME COMPLETO</label>
+                    <input type="text" id="full_name" placeholder="IDENTIFICAÇÃO NO SISTEMA">
+                </div>
+                <div class="form-group">
+                    <label>E-MAIL DE ACESSO (PROTEGIDO)</label>
+                    <input type="text" id="email_display" disabled style="opacity: 0.5; cursor: not-allowed;">
+                </div>
+                <button class="btn btn-primary" onclick="updateProfile()" style="width: 100%;">
+                    SALVAR ALTERAÇÕES
+                    <div class="btn-icon"><i class="ph-light ph-floppy-disk"></i></div>
+                </button>
             </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="updateProfile()">Salvar Alterações</button>
         </div>
 
-        <div class="card" style="margin-bottom: 24px;">
-            <h2 class="card-title" style="margin-bottom: 24px; display: flex; align-items: center; gap: 12px;"><i class="fas fa-plug"></i> Integrações</h2>
-            <p style="color: var(--text-dim); margin-bottom: 20px; font-size: 0.9rem;">Conecte sua agenda para sincronizar avaliações e lembretes de cobrança.</p>
-            <div id="google-status" style="margin-bottom: 15px; font-weight: 700; font-size: 0.9rem;">Verificando conexão...</div>
-            <button class="btn btn-primary" id="btn-google" onclick="startGoogleAuth()" style="width: 100%; background: #4285F4; border: none;">
-                <i class="fab fa-google"></i> <span id="google-btn-text">Conectar Google Calendar</span>
-            </button>
+        <!-- Google Integration -->
+        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.2s;">
+            <div class="card-core">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-google-logo" style="color: #4285F4;"></i> SINCRONISMO GOOGLE</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 24px;">Conecte sua agenda para orquestração automática de avaliações e lembretes.</p>
+                <div id="google-status" style="margin-bottom: 16px; font-size: 0.8rem; font-weight: 700;">VERIFICANDO CONEXÃO...</div>
+                <button class="btn" id="btn-google" onclick="startGoogleAuth()" style="width: 100%; background: #4285F4; color: #FFF;">
+                    CONECTAR GOOGLE CALENDAR
+                    <div class="btn-icon" style="background: rgba(255,255,255,0.2);"><i class="ph-light ph-link"></i></div>
+                </button>
+            </div>
         </div>
 
-        <div class="card" style="border-left: 4px solid #ef4444;">
-            <h2 class="card-title" style="color: #ef4444; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;"><i class="fas fa-sign-out-alt"></i> Sair</h2>
-            <p style="color: var(--text-dim); margin-bottom: 20px; font-size: 0.9rem;">Encerrar sua sessão atual com segurança.</p>
-            <button class="btn btn-outline" style="width: 100%; color: #ef4444; border-color: #ef4444;" onclick="handleLogout()">Sair da Conta</button>
+        <!-- Logout -->
+        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.3s;">
+            <div class="card-core" style="border: 1px solid rgba(239, 68, 68, 0.2);">
+                <h3 style="color: #ef4444; margin-bottom: 8px;"><i class="ph-light ph-power"></i> FINALIZAR SESSÃO</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 24px;">Encerrar seu acesso ao console ShapeTrack com segurança total.</p>
+                <button class="btn" onclick="handleLogout()" style="width: 100%; border: 1px solid #ef4444; color: #ef4444; background: transparent;">SAIR DO SISTEMA</button>
+            </div>
         </div>
-    </main>
+    </div>
 
-    <script src="js/config.js"></script>
+    <script src="js/config.js?v=3.0"></script>
     <script>
         const GOOGLE_CLIENT_ID = '859217445398-8jutv09ole7ci2fmj3djv8skk0gekkjh.apps.googleusercontent.com';
         const REDIRECT_URI = window.location.origin + window.location.pathname;
 
         async function init() {
-            const session = await checkAuth();
-            if (!session) return;
+            const context = await App.init('configuracoes.html');
+            if (!context) return;
             
-            const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
-            if (profile) {
-                setupNav(profile, 'configuracoes.html');
-                loadProfile(profile, session.user);
-                checkGoogleConnection(profile);
-            }
+            document.getElementById('full_name').value = context.profile.full_name || '';
+            document.getElementById('email_display').value = context.session.user.email;
+            checkGoogleConnection(context.profile);
 
             const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-            if (code) handleGoogleCallback(code, session.user.id);
-        }
-
-        function loadProfile(profile, user) {
-            document.getElementById('full_name').value = profile.full_name || '';
-            document.getElementById('email_display').value = user.email;
+            if (urlParams.get('code')) handleGoogleCallback(urlParams.get('code'), context.session.user.id);
         }
 
         async function updateProfile() {
-            const { data: { session } } = await sb.auth.getSession();
             const name = document.getElementById('full_name').value;
-            const { error } = await sb.from('profiles').update({ full_name: name }).eq('id', session.user.id);
-            
-            const msg = document.getElementById('status-msg');
-            msg.style.display = 'block';
-            if (error) { 
-                msg.textContent = error.message; 
-                msg.className = "alert alert-error"; 
-            } else { 
-                msg.textContent = "Perfil atualizado!"; 
-                msg.className = "alert alert-success"; 
-                setTimeout(() => msg.style.display = 'none', 3000); 
+            const { error } = await sb.from('profiles').update({ full_name: name }).eq('id', App.profile.id);
+            if (error) showToast(error.message, 'error');
+            else {
+                sessionStorage.removeItem('st_profile'); // Clear cache
+                showToast('Identidade atualizada');
             }
         }
 
         function checkGoogleConnection(profile) {
             const status = document.getElementById('google-status');
             const btn = document.getElementById('btn-google');
-            const text = document.getElementById('google-btn-text');
-
             if (profile.google_refresh_token) {
-                status.innerHTML = '<span style="color:#34a853;"><i class="fas fa-check-circle"></i> Agenda Conectada</span>';
-                text.textContent = 'Reconectar Agenda';
-                btn.style.background = '#34a853';
+                status.innerHTML = '<span style="color:#2ecc71;"><i class="ph-fill ph-check-circle"></i> CONEXÃO ATIVA</span>';
+                btn.innerHTML = 'RECONECTAR AGENDA <div class="btn-icon" style="background: rgba(255,255,255,0.2);"><i class="ph-light ph-arrows-clockwise"></i></div>';
             } else {
-                status.innerHTML = '<span style="color:#64748b;"><i class="fas fa-times-circle"></i> Não Conectada</span>';
+                status.innerHTML = '<span style="color:var(--text-secondary);"><i class="ph-light ph-x-circle"></i> STATUS: DESCONECTADO</span>';
             }
         }
 
@@ -116,37 +111,26 @@
         }
 
         async function handleGoogleCallback(code, userId) {
-            const status = document.getElementById('google-status');
-            status.innerHTML = '<span style="color:var(--primary);">Finalizando conexão...</span>';
-
+            showToast('Sincronizando com Google...');
             try {
-                // Chamada segura para a Edge Function do Supabase
                 const { data, error } = await sb.functions.invoke('google-auth-exchange', {
                     body: { code, redirect_uri: REDIRECT_URI }
                 });
-
                 if (error) throw error;
-
                 if (data.refresh_token) {
-                    await sb.from('profiles').update({ 
-                        google_refresh_token: data.refresh_token 
-                    }).eq('id', userId);
-                    
-                    // Limpar URL e recarregar
+                    await sb.from('profiles').update({ google_refresh_token: data.refresh_token }).eq('id', userId);
                     window.location.href = 'configuracoes.html';
-                } else {
-                    throw new Error('Nenhum refresh_token recebido do Google');
                 }
-            } catch (err) {
-                console.error('Erro na conexão Google:', err);
-                alert('Erro ao conectar com o Google: ' + err.message);
-                status.innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Erro na Conexão</span>';
-            }
+            } catch (err) { showToast('Erro na sincronização', 'error'); }
+        }
+
+        async function handleLogout() {
+            sessionStorage.removeItem('st_profile');
+            await sb.auth.signOut();
+            window.location.href = 'index.html';
         }
 
         init();
     </script>
-</body>
-</html>
 </body>
 </html>

@@ -3,236 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro | ShapeTrack</title>
+    <title>Iniciação de Protocolo // ShapeTrack Premium</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=3.0">
     <style>
-        :root {
-            --bg-color: #f8faf9;
-            --primary: #2F5948;
-            --primary-light: #3d755e;
-            --accent: #D96C2B;
-            --text-main: #1a1c1b;
-            --text-dim: #64748b;
-            --white: #ffffff;
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 24px;
-        }
-
-        .signup-card {
-            width: 100%;
-            max-width: 440px;
-            background: var(--white);
-            padding: 48px 40px;
-            border-radius: 32px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(0,0,0,0.02);
-            text-align: center;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        .logo {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            color: var(--primary);
-            margin-bottom: 12px;
-        }
-
-        .logo span { color: var(--accent); }
-
-        .mentor-info {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #f1f5f9;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            color: var(--primary);
-            font-weight: 700;
-            margin-bottom: 32px;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-            text-align: left;
-        }
-
-        label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        input {
-            width: 100%;
-            padding: 16px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            font-size: 1rem;
-            transition: all 0.2s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-            box-shadow: 0 0 0 4px rgba(47, 89, 72, 0.05);
-        }
-
-        .btn-signup {
-            width: 100%;
-            padding: 18px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(47, 89, 72, 0.2);
-        }
-
-        .btn-signup:hover {
-            background: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(47, 89, 72, 0.3);
-        }
-
-        #message {
-            margin-top: 24px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            min-height: 20px;
-        }
-
-        .success { color: #059669; }
-        .error { color: #dc2626; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 480px) {
-            .signup-card { padding: 40px 24px; border-radius: 24px; }
-        }
+        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+        .onboarding-card { width: 100%; max-width: 440px; }
     </style>
 </head>
 <body>
 
-<div class="signup-card">
-    <div class="logo">SHAPE<span>TRACK</span></div>
-    <div id="mentor-info" class="mentor-info">
-        <i class="fas fa-spinner fa-spin"></i> Validando convite...
+    <div class="card-shell onboarding-card reveal">
+        <div class="card-core" style="text-align: center;">
+            <div class="nav-logo" style="margin-bottom: 24px; font-size: 2rem;">SHAPE<span>TRACK</span></div>
+            
+            <div id="mentor-info" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.02); padding: 8px 16px; border-radius: 50px; font-size: 0.75rem; border: 1px solid var(--glass-border); margin-bottom: 32px; color: var(--text-secondary); font-weight: 700;">
+                <i class="ph-light ph-spinner ph-spin"></i> VALIDANDO ACESSO...
+            </div>
+
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin-bottom: 32px;">Seja bem-vindo ao ecossistema ShapeTrack. Complete sua identificação para iniciar o protocolo.</p>
+
+            <div class="form-group">
+                <label>NOME COMPLETO</label>
+                <input type="text" id="name" placeholder="EX: JOÃO SILVA">
+            </div>
+
+            <div class="form-group">
+                <label>E-MAIL DE ACESSO</label>
+                <input type="email" id="email" placeholder="seu@email.com">
+            </div>
+
+            <div class="form-group">
+                <label>CHAVE DE ACESSO (SENHA)</label>
+                <input type="password" id="password" placeholder="MÍNIMO 6 CARACTERES">
+            </div>
+
+            <button class="btn btn-primary" id="signupBtn" style="width: 100%; margin-top: 12px;">
+                CRIAR MINHA CONTA
+                <div class="btn-icon"><i class="ph-light ph-user-plus"></i></div>
+            </button>
+
+            <div id="message" style="margin-top: 24px; font-size: 0.8rem; font-weight: 700;"></div>
+        </div>
     </div>
-    
-    <p style="color: var(--text-dim); margin-bottom: 32px; font-size: 0.95rem; line-height: 1.6;">Bem-vindo! Complete seu cadastro para iniciar sua jornada de evolução.</p>
 
-    <div class="form-group">
-        <label>Nome Completo</label>
-        <input type="text" id="name" placeholder="Como quer ser chamado?">
-    </div>
+    <script>
+        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
+        const urlParams = new URLSearchParams(window.location.search);
+        const mentorId = urlParams.get('mentor'); // Updated to match alunos.html link generation
 
-    <div class="form-group">
-        <label>E-mail</label>
-        <input type="email" id="email" placeholder="seu@email.com">
-    </div>
-
-    <div class="form-group">
-        <label>Senha de Acesso</label>
-        <input type="password" id="password" placeholder="Mínimo 6 caracteres">
-    </div>
-
-    <button class="btn-signup" id="signupBtn">Criar minha conta</button>
-    <div id="message"></div>
-</div>
-
-<script>
-    const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const mentorId = urlParams.get('ref');
-
-    async function checkMentor() {
-        if (!mentorId) {
-            document.body.innerHTML = '<div style="text-align:center; padding:40px;"><h1>Convite Inválido</h1><p>Peça um novo link ao seu mentor.</p></div>';
-            return;
-        }
-
-        const { data: mentor } = await sb.from('profiles').select('full_name').eq('id', mentorId).single();
-
-        if (mentor) {
-            document.getElementById('mentor-info').innerHTML = `<i class="fas fa-user-check"></i> Convite de: ${mentor.full_name}`;
-        }
-    }
-
-    document.getElementById('signupBtn').addEventListener('click', async () => {
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const msg = document.getElementById('message');
-        const btn = document.getElementById('signupBtn');
-
-        if (!name || !email || !password) {
-            msg.innerHTML = '<span class="error">Preencha todos os campos.</span>';
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Criando conta...';
-
-        const { data, error } = await sb.auth.signUp({ email, password });
-
-        if (error) {
-            msg.innerHTML = `<span class="error">Erro: ${error.message}</span>`;
-            btn.disabled = false;
-            btn.innerHTML = 'Criar minha conta';
-            return;
-        }
-
-        if (data.user) {
-            const { error: profileError } = await sb.from('profiles').insert([{ 
-                id: data.user.id, 
-                full_name: name, 
-                role: 'client', 
-                mentor_id: mentorId 
-            }]);
-
-            if (profileError) {
-                msg.innerHTML = `<span class="error">Erro ao vincular perfil: ${profileError.message}</span>`;
-            } else {
-                msg.innerHTML = '<span class="success">Sucesso! Redirecionando...</span>';
-                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+        async function checkMentor() {
+            if (!mentorId) {
+                document.body.innerHTML = '<div class="card-shell reveal" style="max-width: 400px;"><div class="card-core" style="text-align:center;"><h1>CONVITE INVÁLIDO</h1><p style="color:var(--text-secondary); margin-top:16px;">SOLICITE UM NOVO LINK AO SEU MENTOR.</p></div></div>';
+                return;
+            }
+            const { data: mentor } = await sb.from('profiles').select('full_name').eq('id', mentorId).single();
+            if (mentor) {
+                document.getElementById('mentor-info').innerHTML = `<i class="ph-fill ph-user-check" style="color: var(--accent);"></i> MENTOR: ${mentor.full_name.toUpperCase()}`;
             }
         }
-    });
 
-    checkMentor();
-</script>
+        document.getElementById('signupBtn').addEventListener('click', async () => {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const msg = document.getElementById('message');
+            const btn = document.getElementById('signupBtn');
 
+            if (!name || !email || !password) {
+                msg.style.color = '#ef4444';
+                msg.textContent = 'PREENCHA TODOS OS CAMPOS.';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = 'PROCESSANDO... <div class="btn-icon"><i class="ph-light ph-spinner ph-spin"></i></div>';
+
+            const { data, error } = await sb.auth.signUp({ email, password });
+            if (error) {
+                msg.style.color = '#ef4444';
+                msg.textContent = `ERRO: ${error.message.toUpperCase()}`;
+                btn.disabled = false;
+                btn.innerHTML = 'CRIAR MINHA CONTA <div class="btn-icon"><i class="ph-light ph-user-plus"></i></div>';
+                return;
+            }
+
+            if (data.user) {
+                const { error: profileError } = await sb.from('profiles').insert([{ 
+                    id: data.user.id, full_name: name, role: 'client', mentor_id: mentorId 
+                }]);
+
+                if (profileError) {
+                    msg.style.color = '#ef4444';
+                    msg.textContent = 'ERRO AO VINCULAR PERFIL.';
+                } else {
+                    msg.style.color = '#2ecc71';
+                    msg.textContent = 'CONTA CRIADA! REDIRECIONANDO...';
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+                }
+            }
+        });
+
+        checkMentor();
+    </script>
 </body>
 </html>
