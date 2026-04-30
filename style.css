@@ -217,7 +217,26 @@ h1, h2, h3 {
     border: 1px solid rgba(217, 108, 43, 0.15);
 }
 
-/* Form Styles - High End */
+/* Component: Tables */
+table, .st-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+th { text-align: left; padding: 16px; font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--glass-border); }
+td { padding: 16px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.02); }
+
+/* Component: Badges */
+.badge { padding: 4px 10px; border-radius: 100px; font-size: 0.7rem; font-weight: 700; }
+.badge-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+.badge-warning { background: rgba(217, 108, 43, 0.1); color: var(--accent); }
+
+/* Component: Modals */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(24px); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 24px; }
+.modal-card { width: 100%; max-width: 480px; }
+
+/* Component: Video Thumbnails */
+.video-thumb { width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-inner); overflow: hidden; position: relative; border: 1px solid var(--glass-border); }
+.play-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s var(--bezier); }
+.video-thumb:hover .play-overlay { opacity: 1; }
+
+/* Forms */
 .form-group { margin-bottom: 24px; }
 
 .form-group label {
@@ -351,7 +370,7 @@ html { scroll-behavior: smooth; }
     }
 
     .form-group input, .form-group select, .form-group textarea {
-        min-width: 100% !important;
+        width: 100% !important;
         font-size: 0.9rem !important;
         padding: 12px !important;
     }
@@ -408,5 +427,19 @@ html { scroll-behavior: smooth; }
     .btn-icon {
         width: 32px !important;
         height: 32px !important;
+    }
+
+    /* Safety net for table overflow */
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Force word wrap on long identifiers */
+    h1, h2, h3, .stat-value, td, p, span {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 }

@@ -114,3 +114,25 @@ App.logout = () => {
     sessionStorage.removeItem('st_profile');
     sb.auth.signOut().then(() => window.location.href='index.html');
 };
+
+// 3. Reveal Observer for Premium Animations
+document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+        // Force immediate reveal if already in view or for critical elements
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+            el.classList.add('active');
+        } else {
+            observer.observe(el);
+        }
+    });
+});

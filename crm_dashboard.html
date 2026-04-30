@@ -7,14 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="style.css?v=3.0">
-    <style>
-        table { width: 100%; border-collapse: collapse; margin-top: 24px; }
-        th { text-align: left; padding: 16px; font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--glass-border); }
-        td { padding: 16px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255,0.02); }
-        .badge { padding: 4px 10px; border-radius: 100px; font-size: 0.7rem; font-weight: 700; }
-        .badge-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-        .badge-warning { background: rgba(217, 108, 43, 0.1); color: var(--accent); }
-    </style>
 </head>
 <body>
 
@@ -107,7 +99,7 @@
 
             const pendingSales = sales.filter(s => s.payment_status === 'Parcial' || s.payment_status === 'Pendente');
             const totalDue = pendingSales.reduce((acc, s) => acc + (s.total_price - (s.amount_paid || 0)), 0);
-            document.getElementById('stat-receivables').textContent = totalDue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('pending-revenue').textContent = totalDue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             document.getElementById('receivables-list').innerHTML = pendingSales.length ? pendingSales.map(s => `
                 <tr>
@@ -125,7 +117,7 @@
                 return { ...c, days: Math.floor((now - new Date(lastSale.created_at)) / (1000 * 60 * 60 * 24)), lastDate: new Date(lastSale.created_at).toLocaleDateString('pt-BR') };
             }).filter(c => c.days > 30);
 
-            document.getElementById('stat-inactive').textContent = inactiveClients.length;
+            document.getElementById('churn-risk').textContent = inactiveClients.length;
             document.getElementById('retention-list').innerHTML = inactiveClients.length ? inactiveClients.sort((a,b) => b.days - a.days).map(c => `
                 <tr>
                     <td style="font-weight:700; color:#FFF;">${c.full_name}</td>
@@ -134,7 +126,7 @@
                     <td><a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="padding: 8px 16px; font-size: 0.7rem; background: #25D366; color:#000;"><i class="ph-fill ph-whatsapp-logo"></i> RESGATAR</a></td>
                 </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Base 100% ativa.</td></tr>';
 
-            document.getElementById('stat-birthdays').textContent = clients.filter(c => c.birthday && parseInt(c.birthday.split('-')[1]) === (now.getMonth() + 1)).length;
+            document.getElementById('birthdays').textContent = clients.filter(c => c.birthday && parseInt(c.birthday.split('-')[1]) === (now.getMonth() + 1)).length;
         }
 
         init();

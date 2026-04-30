@@ -89,11 +89,11 @@
         async function loadStats(userId) {
             try {
                 const { data: clients } = await sb.from('profiles').select('id').eq('mentor_id', userId).eq('role', 'client');
-                const { data: sales } = await sb.from('sales').select('value').eq('mentor_id', userId);
+                const { data: sales } = await sb.from('sales').select('total_price').eq('mentor_id', userId);
                 
                 if (clients) document.getElementById('total-clients').innerText = clients.length;
                 if (sales) {
-                    const total = sales.reduce((sum, s) => sum + parseFloat(s.value), 0);
+                    const total = sales.reduce((sum, s) => sum + parseFloat(s.total_price || 0), 0);
                     document.getElementById('total-revenue').innerText = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 }
             } catch (e) {

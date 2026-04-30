@@ -28,13 +28,13 @@
                 <h3 style="margin-bottom: 24px;"><i class="ph-light ph-shopping-cart" style="color: var(--accent);"></i> CARRINHO ATIVO</h3>
                 
                 <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
-                    <div class="form-group" style="flex: 1; min-width: 240px;">
+                    <div class="form-group" style="flex: 1; min-width: 200px;">
                         <label>CLIENTE / PROTOCOLO</label>
                         <select id="select-client" style="background: rgba(255,255,255,0.02);">
                             <option value="">SELECIONAR CLIENTE...</option>
                         </select>
                     </div>
-                    <div class="form-group" style="flex: 1; min-width: 240px;">
+                    <div class="form-group" style="flex: 1; min-width: 200px;">
                         <label>NÍVEL DE DESCONTO</label>
                         <select id="select-discount" onchange="renderCart(); setupSearch();" style="background: rgba(255,255,255,0.02);">
                             <option value="consumer">PREÇO CHEIO (VENDA DIRETA)</option>
@@ -190,13 +190,17 @@
             let totalPV = 0, totalPrice = 0, totalCost = 0;
             container.innerHTML = cart.map(item => {
                 const price = item[discount] || item.consumer;
+                const isDiscounted = price < item.consumer;
                 totalPV += item.pv * item.qty;
                 totalPrice += price * item.qty;
                 totalCost += item.c50 * item.qty;
                 return `
                     <div style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 16px; margin-bottom: 12px;">
                         <div style="flex: 1; font-weight: 700; font-size: 0.85rem; color: #FFF;">${item.name}</div>
-                        <div style="font-weight: 800; color: var(--accent); font-size: 0.9rem;">R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 800; color: var(--accent); font-size: 0.9rem;">R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                            ${isDiscounted ? `<div style="font-size: 0.65rem; text-decoration: line-through; opacity: 0.4;">R$ ${item.consumer.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>` : ''}
+                        </div>
                         <div style="color: #ef4444; cursor: pointer; padding: 8px;" onclick="removeFromCart('${item.sku}')"><i class="ph-light ph-trash"></i></div>
                     </div>
                 `;
