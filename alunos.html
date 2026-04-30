@@ -123,6 +123,7 @@
                             <button class="btn" style="background: rgba(255,255,255,0.05); color: #FFF; font-size: 0.7rem; padding: 10px;" onclick="openCRM('${aluno.id}')"><i class="ph-light ph-user-circle-gear"></i> PERFIL</button>
                             <a href="relatorio.html?aluno=${aluno.id}" class="btn" style="background: rgba(255,255,255,0.05); color: #FFF; font-size: 0.7rem; padding: 10px;"><i class="ph-light ph-chart-line-up"></i> EVOLUÇÃO</a>
                             <a href="https://wa.me/55${aluno.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="background: #25D366; color: #000; font-size: 0.7rem; padding: 10px;"><i class="ph-fill ph-whatsapp-logo"></i> CONTATO</a>
+                            <button class="btn" style="background: rgba(255,75,75,0.1); color: #ff4b4b; font-size: 0.7rem; padding: 10px; grid-column: span 2;" onclick="deleteAluno('${aluno.id}')"><i class="ph-light ph-trash"></i> EXCLUIR PERFIL</button>
                         </div>
                     </div>
                 `;
@@ -157,6 +158,14 @@
             if (error) return showToast(error.message, 'error');
             showToast('Dados salvos!');
             closeModal();
+            loadAlunos(App.profile.id);
+        }
+
+        async function deleteAluno(alunoId) {
+            if (!confirm('Deseja realmente excluir este perfil? Isso removerá todos os dados vinculados.')) return;
+            const { error } = await sb.from('profiles').delete().eq('id', alunoId);
+            if (error) return showToast(error.message, 'error');
+            showToast('Perfil removido!');
             loadAlunos(App.profile.id);
         }
 
