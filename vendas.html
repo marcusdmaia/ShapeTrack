@@ -38,7 +38,10 @@
                         <label>NÍVEL DE DESCONTO</label>
                         <select id="select-discount" onchange="renderCart(); setupSearch();" style="background: rgba(255,255,255,0.02);">
                             <option value="consumer">PREÇO CHEIO (VENDA DIRETA)</option>
-                            <option value="c25">CLIENTE PREMIUM / CONSULTOR (25%)</option>
+                            <option value="c14">CLIENTE PREMIUM BRONZE (14%)</option>
+                            <option value="c23">CLIENTE PREMIUM PRATA (23%)</option>
+                            <option value="c25">CONSULTOR (25%)</option>
+                            <option value="c32">CLIENTE PREMIUM OURO (32%)</option>
                             <option value="c35">CONSULTOR SENIOR (35%)</option>
                             <option value="c42">PRODUTOR QUALIFICADO (42%)</option>
                             <option value="c50">SUPERVISOR (50%)</option>
@@ -111,11 +114,11 @@
     <script src="js/config.js?v=3.1"></script>
     <script>
         const products = [
-            { sku: '1', name: 'SHAKE HERBALIFE', consumer: 195.00, c25: 146.25, c35: 126.75, c42: 113.10, c50: 97.50, pv: 23.95 },
-            { sku: '2', name: 'CHÁ 100G', consumer: 210.00, c25: 157.50, c35: 136.50, c42: 121.80, c50: 105.00, pv: 34.95 },
-            { sku: '3', name: 'NUTREV', consumer: 45.00, c25: 33.75, c35: 29.25, c42: 26.10, c50: 22.50, pv: 5.45 },
-            { sku: '4', name: 'PROTEIN CRUNCH', consumer: 105.00, c25: 78.75, c35: 68.25, c42: 60.90, c50: 52.50, pv: 14.50 },
-            { sku: '5', name: 'LIFTOFF', consumer: 115.00, c25: 86.25, c35: 74.75, c42: 66.70, c50: 57.50, pv: 12.95 }
+            { sku: '1', name: 'SHAKE HERBALIFE', consumer: 195.00, c14: 167.70, c23: 150.15, c25: 146.25, c32: 132.60, c35: 126.75, c42: 113.10, c50: 97.50, pv: 23.95 },
+            { sku: '2', name: 'CHÁ 100G', consumer: 210.00, c14: 180.60, c23: 161.70, c25: 157.50, c32: 142.80, c35: 136.50, c42: 121.80, c50: 105.00, pv: 34.95 },
+            { sku: '3', name: 'NUTREV', consumer: 45.00, c14: 38.70, c23: 34.65, c25: 33.75, c32: 30.60, c35: 29.25, c42: 26.10, c50: 22.50, pv: 5.45 },
+            { sku: '4', name: 'PROTEIN CRUNCH', consumer: 105.00, c14: 90.30, c23: 80.85, c25: 78.75, c32: 71.40, c35: 68.25, c42: 60.90, c50: 52.50, pv: 14.50 },
+            { sku: '5', name: 'LIFTOFF', consumer: 115.00, c14: 98.90, c23: 88.55, c25: 86.25, c32: 78.20, c35: 74.75, c42: 66.70, c50: 57.50, pv: 12.95 }
         ];
 
         let cart = [];

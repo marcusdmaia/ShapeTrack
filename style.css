@@ -263,11 +263,15 @@ input, select, textarea {
     transition: all 0.4s var(--bezier);
 }
 
-input:focus, select:focus {
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
     outline: none;
     border-color: var(--accent);
-    background: rgba(255,255,255,0.04);
-    box-shadow: 0 0 40px rgba(217, 108, 43, 0.05);
+    background: rgba(217, 108, 43, 0.05);
+}
+
+select option {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
 }
 
 /* UI Feedback System (Toast) */
