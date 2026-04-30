@@ -193,6 +193,7 @@ img, video, iframe {
     grid-template-columns: repeat(12, 1fr);
     gap: 24px;
     padding: 120px 24px 60px;
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
 }
