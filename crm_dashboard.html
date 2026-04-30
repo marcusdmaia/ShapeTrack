@@ -137,9 +137,9 @@
             const now = new Date();
             const inactiveClients = clients.map(c => {
                 const clientSales = sales.filter(s => s.client_id === c.id);
-                if (clientSales.length === 0) return { ...c, days: 999, lastDate: 'Nunca' };
+                if (clientSales.length === 0) return { ...c, days: 999, lastDate: 'Nunca', isNever: true };
                 const lastSale = clientSales.reduce((a, b) => new Date(a.created_at) > new Date(b.created_at) ? a : b);
-                return { ...c, days: Math.floor((now - new Date(lastSale.created_at)) / (1000 * 60 * 60 * 24)), lastDate: new Date(lastSale.created_at).toLocaleDateString('pt-BR') };
+                return { ...c, days: Math.floor((now - new Date(lastSale.created_at)) / (1000 * 60 * 60 * 24)), lastDate: new Date(lastSale.created_at).toLocaleDateString('pt-BR'), isNever: false };
             }).filter(c => c.days > 30);
 
             document.getElementById('churn-risk').textContent = inactiveClients.length;
@@ -147,7 +147,7 @@
                 <tr>
                     <td style="font-weight:700; color:#FFF;">${c.full_name}</td>
                     <td style="color:var(--text-secondary);">${c.lastDate}</td>
-                    <td><span class="badge ${c.days > 90 ? 'badge-danger' : 'badge-warning'}">${c.days} DIAS INATIVO</span></td>
+                    <td><span class="badge ${c.days > 90 ? 'badge-danger' : 'badge-warning'}">${c.isNever ? 'INATIVO' : c.days + ' DIAS INATIVO'}</span></td>
                     <td><a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="padding: 8px 16px; font-size: 0.7rem; background: #25D366; color:#000;"><i class="ph-fill ph-whatsapp-logo"></i> RESGATAR</a></td>
                 </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Base 100% ativa.</td></tr>';
 
