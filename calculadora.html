@@ -238,7 +238,8 @@
             const resultsData = { calories: cal, protein: prot, carbs: carb, fats: fat, water: water };
 
             // Save Lead
-            await sb.from('leads').insert([{ mentor_id: mentorId, full_name: name, whatsapp: wa, goal: answers.goal, calculated_data: resultsData }]);
+            const { error: insertError } = await sb.from('leads').insert([{ mentor_id: mentorId, full_name: name, whatsapp: wa, goal: answers.goal, calculated_data: resultsData }]);
+            if (insertError) console.error("Erro de banco de dados (RLS):", insertError.message);
 
             // Mentor Contact
             let mentorPhone = '5511999999999'; // Fallback

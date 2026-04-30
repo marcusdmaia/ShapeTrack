@@ -127,6 +127,13 @@
                 </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Base 100% ativa.</td></tr>';
 
             document.getElementById('birthdays').textContent = clients.filter(c => c.birthday && parseInt(c.birthday.split('-')[1]) === (now.getMonth() + 1)).length;
+
+            const { data: leads } = await sb.from('leads').select('id');
+            if (leads) {
+                const total = clients.length + leads.length;
+                const rate = total > 0 ? (clients.length / total) * 100 : 0;
+                document.getElementById('conversion-rate').textContent = `${Math.round(rate)}%`;
+            }
         }
 
         init();

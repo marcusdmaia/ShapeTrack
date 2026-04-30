@@ -101,11 +101,11 @@
                         </div>
                         <div style="padding: 16px 8px;">
                             <h4 style="font-size: 0.9rem; font-weight: 800; color: #FFF; margin-bottom: 8px;">${v.title.toUpperCase()}</h4>
-                            <div style="display: flex; align-items: center; gap: 8px; font-size: 0.65rem; font-weight: 700; color: ${v.is_colab ? 'var(--accent)' : 'var(--text-secondary)'}; margin-bottom: 16px;">
-                                <i class="ph-light ${v.is_colab ? 'ph-share-network' : 'ph-lock'}"></i> ${v.is_colab ? 'DISPONÍVEL PARA PARCERIAS' : 'CONTEÚDO PRIVADO'}
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 0.65rem; font-weight: 700; color: ${v.is_public_to_mentors ? 'var(--accent)' : 'var(--text-secondary)'}; margin-bottom: 16px;">
+                                <i class="ph-light ${v.is_public_to_mentors ? 'ph-share-network' : 'ph-lock'}"></i> ${v.is_public_to_mentors ? 'DISPONÍVEL PARA PARCERIAS' : 'CONTEÚDO PRIVADO'}
                             </div>
                             <div style="display: flex; gap: 8px; border-top: 1px solid var(--glass-border); padding-top: 16px;">
-                                <button class="btn" style="flex: 1; font-size: 0.65rem; padding: 8px; background: rgba(255,255,255,0.05); color: #FFF;" onclick="toggleColab('${v.id}', ${v.is_colab})">ALTERNAR COLAB</button>
+                                <button class="btn" style="flex: 1; font-size: 0.65rem; padding: 8px; background: rgba(255,255,255,0.05); color: #FFF;" onclick="toggleColab('${v.id}', ${v.is_public_to_mentors})">ALTERNAR COLAB</button>
                                 <button class="btn" style="color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 8px; width: 40px;" onclick="deleteVideo('${v.id}')"><i class="ph-light ph-trash"></i></button>
                             </div>
                         </div>
@@ -121,7 +121,7 @@
             const colab = document.getElementById('v-colab').checked;
             if (!title || !url) return showToast('Preencha os campos!', 'error');
 
-            const { error } = await sb.from('videos').insert([{ mentor_id: App.profile.id, title, youtube_url: url, is_colab: colab }]);
+            const { error } = await sb.from('videos').insert([{ mentor_id: App.profile.id, title, youtube_url: url, is_public_to_mentors: colab }]);
             if (error) return showToast(error.message, 'error');
             
             showToast('Vídeo adicionado!');
@@ -130,7 +130,7 @@
         }
 
         async function toggleColab(id, current) {
-            await sb.from('videos').update({ is_colab: !current }).eq('id', id);
+            await sb.from('videos').update({ is_public_to_mentors: !current }).eq('id', id);
             loadVideos(App.profile.id);
         }
 

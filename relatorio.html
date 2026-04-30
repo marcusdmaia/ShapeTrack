@@ -98,7 +98,7 @@
         }
 
         async function loadAssessments(studentId) {
-            const { data: assessments } = await sb.from('assessments').select('*').eq('student_id', studentId).order('created_at', { ascending: true });
+            const { data: assessments } = await sb.from('assessments').select('*').eq('client_id', studentId).order('created_at', { ascending: true });
             
             if (!assessments || assessments.length === 0) {
                 document.getElementById('history-body').innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 64px; color: var(--text-secondary);">NENHUMA TELEMETRIA IDENTIFICADA.</td></tr>';
@@ -115,16 +115,19 @@
             document.getElementById('total-assessments').textContent = assessments.length;
 
             const historyBody = document.getElementById('history-body');
-            historyBody.innerHTML = assessments.map(a => `
+            historyBody.innerHTML = assessments.map(a => {
+                const m = a.measurements ? (typeof a.measurements === 'string' ? JSON.parse(a.measurements) : a.measurements) : {};
+                return `
                 <tr style="border-bottom: 1px solid var(--glass-border);">
                     <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${new Date(a.created_at).toLocaleDateString('pt-BR')}</td>
                     <td style="padding: 16px; font-size: 0.85rem; font-weight: 800; color: #FFF;">${a.weight.toFixed(1)} kg</td>
-                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.body_fat}%</td>
-                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.muscle_mass}%</td>
-                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.waist} cm</td>
-                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.hip} cm</td>
+                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.body_fat || a.fat_percentage || 0}%</td>
+                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.muscle_percentage || 0}%</td>
+                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${m.waist || '--'} cm</td>
+                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${m.hip || '--'} cm</td>
                 </tr>
-            `).reverse().join('');
+                `;
+            }).reverse().join('');
 
             const ctx = document.getElementById('weightChart').getContext('2d');
             const gradient = ctx.createLinearGradient(0, 0, 0, 300);

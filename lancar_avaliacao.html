@@ -127,17 +127,25 @@
             if (!alunoId) return showToast('Selecione um aluno', 'error');
 
             btn.disabled = true;
+            const weight = parseFloat(document.getElementById('weight').value || 0);
+            const height = App.profile.height || 170; // Fallback or get from profile
+            const imc = weight / ((height/100) ** 2);
+
             const assessment = {
-                student_id: alunoId, mentor_id: App.profile.id,
-                weight: parseFloat(document.getElementById('weight').value || 0),
+                client_id: alunoId, 
+                mentor_id: App.profile.id,
+                weight: weight,
                 body_fat: parseFloat(document.getElementById('body_fat').value || 0),
-                muscle_mass: parseFloat(document.getElementById('muscle_mass').value || 0),
+                muscle_percentage: parseFloat(document.getElementById('muscle_mass').value || 0),
                 visceral_fat: parseFloat(document.getElementById('visceral_fat').value || 0),
-                metabolic_age: parseFloat(document.getElementById('metabolic_age').value || 0),
-                body_water: parseFloat(document.getElementById('body_water').value || 0),
-                waist: parseFloat(document.getElementById('waist').value || 0),
-                abdomen: parseFloat(document.getElementById('abdomen').value || 0),
-                hip: parseFloat(document.getElementById('hip').value || 0)
+                body_age: parseFloat(document.getElementById('metabolic_age').value || 0),
+                imc: parseFloat(imc.toFixed(2)),
+                measurements: JSON.stringify({
+                    waist: document.getElementById('waist').value,
+                    abdomen: document.getElementById('abdomen').value,
+                    hip: document.getElementById('hip').value
+                }),
+                notes: `Água: ${document.getElementById('body_water').value}%`
             };
 
             const nextDate = document.getElementById('next_assessment_date').value;

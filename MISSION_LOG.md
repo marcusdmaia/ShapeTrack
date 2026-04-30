@@ -11,6 +11,9 @@
 - **Consolidação de Design:** Removidos blocos de estilo embutidos nos HTMLs; tudo agora reside no `style.css`.
 - **Transparência de Preços:** Carrinho de vendas agora exibe o desconto aplicado (comparando com o preço de consumidor) para todos os níveis.
 
+- **Integração Supabase:** RLS da tabela `leads` corrigido para permitir captura pública (calculadora). Sincronização de colunas `body_fat`/`fat_percentage` realizada.
+- **Dinamização de Dados:** Dashboard CRM agora calcula taxa de conversão em tempo real e exibe receitas baseadas em dados reais da tabela `sales`.
+
 ## Próximos Passos
 - **PWA:** Ativação do Service Worker para instalação como app nativo.
 - **Automatização WhatsApp:** Integração direta via API para notificações de avaliação.

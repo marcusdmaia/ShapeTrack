@@ -197,6 +197,8 @@
                 totalPV += item.pv * item.qty;
                 totalPrice += price * item.qty;
                 totalCost += item.c50 * item.qty;
+                window.currentSaleTotal = totalPrice; // Store for submission
+                window.currentSalePV = totalPV;
                 return `
                     <div style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 16px; margin-bottom: 12px;">
                         <div style="flex: 1; font-weight: 700; font-size: 0.85rem; color: #FFF;">${item.name}</div>
@@ -236,11 +238,11 @@
 
             btn.disabled = true;
             try {
-                const total = parseFloat(document.getElementById('total-price').textContent.replace('R$ ', '').replace('.', '').replace(',', '.'));
+                const total = window.currentSaleTotal || 0;
                 const type = document.getElementById('payment-type').value;
                 const { error } = await sb.from('sales').insert([{
                     client_id: clientId, mentor_id: App.profile.id,
-                    total_price: total, total_pv: parseFloat(document.getElementById('total-pv').textContent),
+                    total_price: total, total_pv: window.currentSalePV || 0,
                     payment_status: type === 'total' ? 'Pago' : (type === 'partial' ? 'Parcial' : 'Pendente'),
                     amount_paid: parseFloat(document.getElementById('amount-paid').value || 0),
                     due_date: document.getElementById('due-date').value || null,
@@ -253,7 +255,7 @@
             } catch (err) { showToast(err.message, 'error'); } finally { btn.disabled = false; }
         };
 
-        document.getElementById('select-discount').onchange = renderCart;
+        // Removed redundant onchange assignment as it's already in the HTML
         init();
     </script>
 </body>

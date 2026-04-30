@@ -40,8 +40,8 @@
         }
 
         async function loadMarketplace(mentorId) {
-            const { data: videos } = await sb.from('videos').select('*, profiles!mentor_id(full_name)').neq('mentor_id', mentorId).eq('is_colab', true);
-            const { data: shared } = await sb.from('shared_videos').select('video_id').eq('mentor_id', mentorId);
+            const { data: videos } = await sb.from('videos').select('*, profiles!mentor_id(full_name)').neq('mentor_id', mentorId).eq('is_public_to_mentors', true);
+            const { data: shared } = await sb.from('shared_videos').select('video_id').eq('target_mentor_id', mentorId);
             const sharedIds = shared?.map(s => s.video_id) || [];
 
             const grid = document.getElementById('marketplace-grid');
@@ -72,7 +72,7 @@
         }
 
         async function requestColab(videoId) {
-            const { error } = await sb.from('shared_videos').insert([{ video_id: videoId, mentor_id: App.profile.id }]);
+            const { error } = await sb.from('shared_videos').insert([{ video_id: videoId, target_mentor_id: App.profile.id }]);
             if (error) return showToast(error.message, 'error');
             showToast('Ativo vinculado com sucesso!');
             loadMarketplace(App.profile.id);
