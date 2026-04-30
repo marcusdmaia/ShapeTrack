@@ -94,6 +94,8 @@ body::after {
     transition: all 0.5s var(--bezier);
 }
 
+.bottom-nav { display: none; }
+
 img, video, iframe {
     max-width: 100%;
     height: auto;
@@ -191,7 +193,7 @@ img, video, iframe {
     grid-template-columns: repeat(12, 1fr);
     gap: 24px;
     padding: 120px 24px 60px;
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 

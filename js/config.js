@@ -78,15 +78,15 @@ function setupNav(profile, activePage) {
         links.push({ name: 'EVOLUÇÃO', url: 'relatorio.html', icon: 'ph-file-text' });
     }
     
-    links.push({ name: 'AJUSTES', url: 'configuracoes.html', icon: 'ph-gear' });
+    links.push({ name: 'CONFIGURAÇÕES', url: 'configuracoes.html', icon: 'ph-gear' });
 
     navbar.innerHTML = `
         <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
-        <div class="nav-links desktop-only">
+        <div class="nav-links desktop-only" style="flex: 1; justify-content: flex-end; overflow: hidden;">
             ${links.map(link => `
-                <a href="${link.url}" class="nav-link ${activePage === link.url ? 'active' : ''}">${link.name}</a>
+                <a href="${link.url}" class="nav-link ${activePage === link.url ? 'active' : ''}" style="white-space: nowrap;">${link.name}</a>
             `).join('')}
-            <a href="#" onclick="App.logout()" class="nav-link" style="color: #ff4d4d;">SAIR</a>
+            <a href="#" onclick="App.logout()" class="nav-link" style="color: #ff4d4d; white-space: nowrap;">SAIR</a>
         </div>
     `;
 
