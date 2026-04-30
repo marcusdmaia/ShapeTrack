@@ -73,7 +73,7 @@ function setupNav(profile, activePage) {
             { name: 'VÍDEOS', url: 'videos.html', icon: 'ph-play-circle' },
             { name: 'PARCERIAS', url: 'parcerias.html', icon: 'ph-handshake' },
             { name: 'ALUNOS', url: 'alunos.html', icon: 'ph-users' },
-            { name: 'LEADS', url: 'leads_admin.html', icon: 'ph-radar' }
+            { name: 'LEADS', url: 'leads_admin.html', icon: 'ph-target' }
         ]);
     } else {
         links.push({ name: 'EVOLUÇÃO', url: 'relatorio.html', icon: 'ph-file-text' });

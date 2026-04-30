@@ -90,6 +90,9 @@
                             <button class="btn btn-primary" onclick="convertLead('${lead.id}')" style="font-size: 0.7rem; padding: 10px;">CONVERTER</button>
                             <a href="https://wa.me/55${lead.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="background: #25D366; color: #000; font-size: 0.7rem; padding: 10px;"><i class="ph-fill ph-whatsapp-logo"></i> WHATSAPP</a>
                         </div>
+                        <button class="btn" onclick="deleteLead('${lead.id}')" style="width: 100%; margin-top: 10px; background: rgba(239, 68, 68, 0.1); color: #ef4444; font-size: 0.7rem; padding: 8px; border: 1px solid rgba(239, 68, 68, 0.2);">
+                            <i class="ph ph-trash"></i> EXCLUIR LEAD
+                        </button>
                     </div>
                 `;
                 container.appendChild(card);
@@ -99,6 +102,14 @@
         function filterLeads() {
             const query = document.getElementById('search-leads').value.toLowerCase();
             renderLeads(allLeads.filter(l => l.full_name.toLowerCase().includes(query) || l.whatsapp.includes(query)));
+        }
+
+        async function deleteLead(leadId) {
+            if (!confirm('DESEJA REALMENTE EXCLUIR ESTE LEAD DO RADAR?')) return;
+            const { error } = await sb.from('leads').delete().eq('id', leadId);
+            if (error) return showToast(error.message, 'error');
+            showToast('Lead removido!');
+            loadLeads(App.profile.id);
         }
 
         async function convertLead(leadId) {
