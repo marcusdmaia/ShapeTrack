@@ -64,6 +64,7 @@ function setupNav(profile, activePage) {
     let links = [
         { name: 'INÍCIO', url: 'dashboard.html', icon: 'ph-house' },
         { name: 'GESTÃO 360', url: 'crm_dashboard.html', icon: 'ph-chart-pie' },
+        { name: 'ESTOQUE', url: 'estoque.html', icon: 'ph-package' },
         { name: 'VENDAS', url: 'vendas.html', icon: 'ph-shopping-cart' }
     ];
 

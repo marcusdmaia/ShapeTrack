@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estoque // ShapeTrack Premium</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=3.1">
+    <style>
+        .stock-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .stock-card {
+            position: relative;
+            transition: 0.3s var(--bezier);
+        }
+        .stock-card.low-stock {
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            background: linear-gradient(135deg, rgba(255, 77, 77, 0.05), transparent);
+            box-shadow: 0 10px 30px rgba(255, 77, 77, 0.1);
+        }
+        .stock-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .badge-low { background: rgba(255, 77, 77, 0.1); color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.2); }
+        .badge-ok { background: rgba(47, 89, 72, 0.1); color: var(--accent); border: 1px solid rgba(47, 89, 72, 0.2); }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.02);
+            color: #FFF;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .qty-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--accent); }
+        .qty-val { font-size: 1.2rem; font-weight: 800; min-width: 40px; text-align: center; }
+
+        .loan-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .loan-table th {
+            text-align: left;
+            padding: 12px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .loan-table td {
+            padding: 12px;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+        }
+        .loan-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+        .status-borrowed { background: rgba(217, 108, 43, 0.1); color: var(--accent); }
+        .status-returned { background: rgba(255,255,255,0.05); color: var(--text-secondary); }
+
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(10px);
+        }
+        .modal.active { display: flex; }
+    </style>
+</head>
+<body class="dashboard-body">
+
+    <div class="container" style="padding-top: 100px; padding-bottom: 120px;">
+        
+        <div class="header-section reveal">
+            <div>
+                <h1 class="premium-title">MONITORAMENTO DE <span class="text-gradient">ESTOQUE</span></h1>
+                <p class="premium-subtitle">Controle inteligente de ativos e fluxos de produtos.</p>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-secondary" onclick="openLoanModal()">
+                    <i class="ph-bold ph-hand-coins"></i> NOVO EMPRÉSTIMO
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid reveal" style="margin-bottom: 40px;">
+            <div class="stat-card">
+                <span class="stat-label">TOTAL EM ESTOQUE</span>
+                <div class="stat-value" id="stat-total">0</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">ITENS EM ALERTA</span>
+                <div class="stat-value" id="stat-low" style="color: #ff4d4d;">0</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">EMPRÉSTIMOS ATIVOS</span>
+                <div class="stat-value" id="stat-loans" style="color: var(--accent);">0</div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="card-shell reveal" style="margin-bottom: 32px;">
+            <div class="card-core" style="padding: 16px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <div style="position: relative;">
+                        <i class="ph ph-magnifying-glass" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                        <input type="text" id="stock-search" placeholder="BUSCAR PRODUTO POR NOME OU SKU..." style="padding-left: 48px;" oninput="filterStock()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stock List -->
+        <div class="section-title reveal" style="margin-bottom: 24px;">
+            <i class="ph-fill ph-package"></i> INVENTÁRIO DISPONÍVEL
+        </div>
+        
+        <div id="stock-list" class="stock-grid reveal">
+            <div class="loading-state">CARREGANDO ESTOQUE...</div>
+        </div>
+
+        <!-- Borrowed Items Section -->
+        <div class="section-title reveal" style="margin-top: 60px; margin-bottom: 24px;">
+            <i class="ph-fill ph-hand-coins"></i> OBS: PRODUTOS EMPRESTADOS
+        </div>
+
+        <div class="card-shell reveal">
+            <div class="card-core" style="padding: 0; overflow-x: auto;">
+                <table class="loan-table">
+                    <thead>
+                        <tr>
+                            <th>QUEM EMPRESTOU</th>
+                            <th>PRODUTO</th>
+                            <th>QTD</th>
+                            <th>DATA</th>
+                            <th>STATUS</th>
+                            <th>AÇÃO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loan-list">
+                        <!-- Loans loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Loan Modal -->
+    <div id="loan-modal" class="modal">
+        <div class="card-shell" style="width: 100%; max-width: 400px;">
+            <div class="card-core">
+                <h2 style="margin-bottom: 24px; text-align: center;">REGISTRAR EMPRÉSTIMO</h2>
+                <div class="form-group">
+                    <label>NOME DE QUEM EMPRESTOU</label>
+                    <input type="text" id="loan_borrower" placeholder="EX: JOÃO SILVA">
+                </div>
+                <div class="form-group">
+                    <label>PRODUTO</label>
+                    <select id="loan_sku" style="background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); color: #FFF; padding: 12px; border-radius: 12px; width: 100%;">
+                        <!-- Populated via JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>QUANTIDADE</label>
+                    <input type="number" id="loan_qty" value="1" min="1">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
+                    <button class="btn btn-secondary" onclick="closeLoanModal()">CANCELAR</button>
+                    <button class="btn btn-primary" onclick="submitLoan()">CONFIRMAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js?v=3.1"></script>
+    <script>
+        const products_ref = [
+            { "sku": "148K", "name": "BCAA 5:1:1 204G TABLETES" },
+            { "sku": "1923", "name": "BEAUTY BOOSTER COLÁGENO 240G" },
+            { "sku": "1445", "name": "CR7 DRIVE BARRY MIX" },
+            { "sku": "325K", "name": "CREATINA 150G" },
+            { "sku": "497K", "name": "FIBER CONCENTRATE LIMÃO E MEL" },
+            { "sku": "498K", "name": "FIBER CONCENTRATE MANGA" },
+            { "sku": "496K", "name": "FIBER CONCENTRATE UVA" },
+            { "sku": "0927", "name": "FIBER POWDER" },
+            { "sku": "146K", "name": "GLUTAMINA 150G" },
+            { "sku": "061K", "name": "HERBAL CONCENTRATE 102G - CANELA" },
+            { "sku": "062K", "name": "HERBAL CONCENTRATE 102G - LARANJA" },
+            { "sku": "059K", "name": "HERBAL CONCENTRATE 102G - ORIGINAL" },
+            { "sku": "004K", "name": "HERBAL CONCENTRATE 357G - ORIGINAL" },
+            { "sku": "063K", "name": "HERBAL CONCENTRATE 51G - LIMÃO" },
+            { "sku": "060K", "name": "HERBAL CONCENTRATE 51G - ORIGINAL" },
+            { "sku": "0065", "name": "HERBALIFELINE" },
+            { "sku": "190K", "name": "LIFTOFF AMORA INTENSO (15UN)" },
+            { "sku": "371K", "name": "LIFTOFF LIMÃO ABACAXI (15UN)" },
+            { "sku": "317K", "name": "LIFTOFF LIMÃO SICILIANO (15UN)" },
+            { "sku": "3122", "name": "MULTIVITAMINAS E MINERAIS" },
+            { "sku": "056K", "name": "N-R-G. PÓ 100G - GUARANÁ TROPICAL" },
+            { "sku": "057K", "name": "N-R-G. PÓ 100G - ORIGINAL" },
+            { "sku": "003K", "name": "N-R-G. PÓ 330G - GUARANÁ TROPICAL" },
+            { "sku": "058K", "name": "N-R-G. PÓ 60G - ORIGINAL" },
+            { "sku": "1639", "name": "NUTREV" },
+            { "sku": "306B", "name": "NUTREV (10UN)" },
+            { "sku": "395K", "name": "NUTRI SOUP 416G - FRANGO COM LEGUMES" },
+            { "sku": "223K", "name": "ONACTIVE DRINK CHOCOLATE (264G)" },
+            { "sku": "040K", "name": "PROTEIN CRUNCH CHOCOLATE" },
+            { "sku": "535K", "name": "PROTEIN ICE CREAM BAUNILHA" },
+            { "sku": "534K", "name": "PROTEIN ICE CREAM CHOCOLATE" },
+            { "sku": "214K", "name": "PROTEÍNA EM BARRAS BAUNILHA (7UN)" },
+            { "sku": "0031", "name": "PROTEÍNA EM BARRAS LIMÃO (7UN)" },
+            { "sku": "0242", "name": "PROTEÍNA EM PÓ 240G" },
+            { "sku": "0246", "name": "PROTEÍNA EM PÓ 480G" },
+            { "sku": "326K", "name": "SHAKE BANANA CARAMELIZADA" },
+            { "sku": "0951", "name": "SHAKE BAUNILHA CREMOSO" },
+            { "sku": "2129", "name": "SHAKE BAUNILHA CREMOSO EMB. ECONÔMICA" },
+            { "sku": "3144", "name": "SHAKE CHOCOLATE SENSATION" },
+            { "sku": "387K", "name": "SHAKE CHOCOLATE SENSATION (GRANDE)" },
+            { "sku": "295K", "name": "SHAKE COOKIES AND CREAM" },
+            { "sku": "0930", "name": "SHAKE DE COCO" },
+            { "sku": "0940", "name": "SHAKE DOCE DE LEITE" },
+            { "sku": "2122", "name": "SHAKE DOCE DE LEITE EMB. ECONÔMICA" },
+            { "sku": "249K", "name": "SHAKE FRAPÊ DE ABACAXI" },
+            { "sku": "0953", "name": "SHAKE MORANGO CREMOSO" },
+            { "sku": "1446", "name": "SHAKE MORANGO CREMOSO EMB. ECONÔMICA" },
+            { "sku": "447K", "name": "SHAKE PISTACHE" },
+            { "sku": "0948", "name": "SHAKE SACHÊ BAUNILHA (7UN)" },
+            { "sku": "439K", "name": "SHAKE TORTA DE LIMÃO" },
+            { "sku": "318K", "name": "SHAPE CONTROL - 30 CÁPSULAS" },
+            { "sku": "445K", "name": "SOPA SACHÊ CREME DE CEBOLA (7UN)" },
+            { "sku": "448K", "name": "SOPA SACHÊ FRANGO COM LEGUMES (7UN)" },
+            { "sku": "1417", "name": "TRI-CORE PROTEIN BLEND CHOCOLATE" },
+            { "sku": "191K", "name": "WHEY PROTEIN 3W BAUNILHA 510G" },
+            { "sku": "147K", "name": "WHEY PROTEIN 3W CHOCOLATE 510G" },
+            { "sku": "0020", "name": "XTRA-CAL" }
+        ];
+
+        let inventory = [];
+        let loans = [];
+        let searchTerm = '';
+
+        async function init() {
+            const res = await App.init('estoque.html');
+            if(!res) return;
+            await loadData();
+            populateProductSelect();
+        }
+
+        async function loadData() {
+            const { data: invData, error: invError } = await sb.from('inventory').select('*').eq('mentor_id', App.profile.id);
+            inventory = invData || [];
+
+            products_ref.forEach(p => {
+                if(!inventory.find(i => i.sku === p.sku)) {
+                    inventory.push({ sku: p.sku, product_name: p.name, quantity: 0, min_threshold: 3, mentor_id: App.profile.id });
+                }
+            });
+
+            const { data: loanData, error: loanError } = await sb.from('loans').select('*').eq('mentor_id', App.profile.id).order('borrow_date', { ascending: false });
+            loans = loanData || [];
+
+            renderInventory();
+            renderLoans();
+            updateStats();
+
+            // Alert for low stock
+            const lowItems = inventory.filter(i => i.quantity <= i.min_threshold && i.quantity > 0);
+            if(lowItems.length > 0) {
+                showToast(`ATENÇÃO: ${lowItems.length} ITENS COM ESTOQUE BAIXO!`, 'error');
+            }
+        }
+
+        function updateStats() {
+            const total = inventory.reduce((sum, i) => sum + i.quantity, 0);
+            const low = inventory.filter(i => i.quantity <= i.min_threshold && i.quantity > 0).length;
+            const activeLoans = loans.filter(l => l.status === 'borrowed').length;
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-low').textContent = low;
+            document.getElementById('stat-loans').textContent = activeLoans;
+        }
+
+        function filterStock() {
+            searchTerm = document.getElementById('stock-search').value.toLowerCase();
+            renderInventory();
+        }
+
+        function renderInventory() {
+            const container = document.getElementById('stock-list');
+            const filtered = inventory.filter(i => 
+                i.product_name.toLowerCase().includes(searchTerm) || 
+                i.sku.toLowerCase().includes(searchTerm)
+            );
+
+            container.innerHTML = filtered.map(item => {
+                const isLow = item.quantity <= item.min_threshold;
+                return `
+                    <div class="card-shell stock-card ${isLow ? 'low-stock' : ''} reveal active">
+                        <div class="card-core">
+                            <span class="stock-badge ${isLow ? 'badge-low' : 'badge-ok'}">${isLow ? 'ALERTA' : 'EM DIA'}</span>
+                            <div style="font-size: 0.65rem; color: var(--text-secondary); margin-bottom: 4px;">SKU: ${item.sku}</div>
+                            <div style="font-weight: 800; font-size: 0.95rem; margin-bottom: 12px; height: 2.4rem; overflow: hidden; line-height: 1.2;">${item.product_name}</div>
+                            
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="updateQty('${item.sku}', -1)"><i class="ph ph-minus"></i></button>
+                                <div class="qty-val">${item.quantity}</div>
+                                <button class="qty-btn" onclick="updateQty('${item.sku}', 1)"><i class="ph ph-plus"></i></button>
+                            </div>
+                            <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 12px;">MÍNIMO ALERTÁVEL: ${item.min_threshold}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('') || '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);">NENHUM PRODUTO ENCONTRADO</div>';
+        }
+
+        async function updateQty(sku, delta) {
+            const item = inventory.find(i => i.sku === sku);
+            const newQty = Math.max(0, item.quantity + delta);
+            
+            item.quantity = newQty;
+            renderInventory();
+            updateStats();
+
+            const { error } = await sb.from('inventory').upsert([{ 
+                mentor_id: App.profile.id, 
+                sku: sku, 
+                product_name: item.product_name, 
+                quantity: newQty, 
+                min_threshold: item.min_threshold 
+            }], { onConflict: 'mentor_id,sku' });
+
+            if(error) console.error('Error saving stock:', error);
+        }
+
+        function renderLoans() {
+            const container = document.getElementById('loan-list');
+            container.innerHTML = loans.map(loan => `
+                <tr>
+                    <td style="font-weight: 700;">${loan.borrower_name}</td>
+                    <td>${loan.product_name}</td>
+                    <td style="font-weight: 800;">${loan.quantity}</td>
+                    <td style="font-size: 0.75rem;">${new Date(loan.borrow_date).toLocaleDateString('pt-BR')}</td>
+                    <td>
+                        <span class="loan-status ${loan.status === 'borrowed' ? 'status-borrowed' : 'status-returned'}">
+                            ${loan.status === 'borrowed' ? 'EMPRESTADO' : 'DEVOLVIDO'}
+                        </span>
+                    </td>
+                    <td>
+                        ${loan.status === 'borrowed' ? `
+                            <button class="btn" style="padding: 6px 12px; font-size: 0.65rem;" onclick="returnItem('${loan.id}', '${loan.sku}', ${loan.quantity})">
+                                DAR BAIXA
+                            </button>
+                        ` : '<i class="ph ph-check-circle" style="color: var(--accent); font-size: 1.2rem;"></i>'}
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">NENHUM EMPRÉSTIMO REGISTRADO</td></tr>';
+        }
+
+        function populateProductSelect() {
+            const select = document.getElementById('loan_sku');
+            select.innerHTML = products_ref.map(p => `<option value="${p.sku}">${p.name}</option>`).join('');
+        }
+
+        function openLoanModal() { document.getElementById('loan-modal').classList.add('active'); }
+        function closeLoanModal() { document.getElementById('loan-modal').classList.remove('active'); }
+
+        async function submitLoan() {
+            const borrower = document.getElementById('loan_borrower').value;
+            const sku = document.getElementById('loan_sku').value;
+            const qty = parseInt(document.getElementById('loan_qty').value);
+            const product = products_ref.find(p => p.sku === sku);
+
+            if(!borrower || !qty) return showToast('PREENCHA TODOS OS CAMPOS', 'error');
+
+            const { data, error } = await sb.from('loans').insert([{
+                mentor_id: App.profile.id,
+                borrower_name: borrower,
+                sku: sku,
+                product_name: product.name,
+                quantity: qty,
+                borrow_date: new Date().toISOString(),
+                status: 'borrowed'
+            }]).select().single();
+
+            if(error) return showToast('ERRO AO REGISTRAR', 'error');
+
+            await updateQty(sku, -qty);
+            showToast('EMPRÉSTIMO REGISTRADO');
+            closeLoanModal();
+            loadData();
+        }
+
+        async function returnItem(loanId, sku, qty) {
+            const { error: loanError } = await sb.from('loans').update({ status: 'returned' }).eq('id', loanId);
+            if(loanError) return showToast('ERRO AO DAR BAIXA', 'error');
+
+            await updateQty(sku, qty);
+            showToast('DEVOLVIDO AO ESTOQUE');
+            loadData();
+        }
+
+        init();
+    </script>
+</body>
+</html>
