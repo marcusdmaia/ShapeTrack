@@ -83,11 +83,19 @@ function setupNav(profile, activePage) {
 
     navbar.innerHTML = `
         <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
-        <div class="nav-links desktop-only" style="flex: 1; justify-content: flex-end; overflow: hidden;">
+        <div class="nav-links">
             ${links.map(link => `
-                <a href="${link.url}" class="nav-link ${activePage === link.url ? 'active' : ''}" style="white-space: nowrap;">${link.name}</a>
+                <a href="${link.url}" class="nav-link ${activePage === link.url ? 'active' : ''}">
+                    <i class="ph-light ${link.icon}"></i>
+                    <span>${link.name}</span>
+                </a>
             `).join('')}
-            <a href="#" onclick="App.logout()" class="nav-link" style="color: #ff4d4d; white-space: nowrap;">SAIR</a>
+            <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--glass-border);">
+                <a href="#" onclick="App.logout()" class="nav-link" style="color: #ff4d4d;">
+                    <i class="ph-light ph-sign-out"></i>
+                    <span>SAIR DO SISTEMA</span>
+                </a>
+            </div>
         </div>
     `;
 

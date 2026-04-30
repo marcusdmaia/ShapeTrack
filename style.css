@@ -72,64 +72,77 @@ body::after {
     pointer-events: none;
 }
 
-/* Floating Island Navbar */
+/* Premium Sidebar & Navigation */
 .navbar {
     position: fixed;
-    top: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 48px);
-    max-width: 1200px;
-    height: 64px;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--glass-border);
-    border-radius: 100px;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background: rgba(10, 12, 11, 0.8);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border-right: 1px solid var(--glass-border);
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
+    flex-direction: column;
+    padding: 40px 24px;
     z-index: 5000;
     transition: all 0.5s var(--bezier);
 }
 
-.bottom-nav { display: none; }
-
-img, video, iframe {
-    max-width: 100%;
-    height: auto;
-}
-
 .nav-logo {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 800;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em;
     color: #FFF;
     text-decoration: none;
+    margin-bottom: 48px;
+    padding-left: 12px;
 }
 
 .nav-logo span { color: var(--accent); }
 
 .nav-links {
     display: flex;
+    flex-direction: column;
     gap: 8px;
+    flex: 1;
 }
 
 .nav-link {
     color: var(--text-secondary);
     text-decoration: none;
     font-size: 0.85rem;
-    font-weight: 500;
-    padding: 8px 16px;
-    border-radius: 100px;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     transition: all 0.3s var(--bezier);
 }
+
+.nav-link i { font-size: 1.25rem; }
 
 .nav-link:hover, .nav-link.active {
     color: #FFF;
     background: rgba(255, 255, 255, 0.05);
 }
+
+.nav-link.active {
+    background: rgba(217, 108, 43, 0.1);
+    color: var(--accent);
+}
+
+/* Layout Adjustments for Sidebar */
+.container, .bento-grid {
+    margin-left: 260px !important;
+    width: calc(100% - 260px) !important;
+    max-width: 1400px !important;
+    padding: 40px 40px 120px !important;
+}
+
+.bottom-nav { display: none; }
 
 /* Double-Bezel Architecture (Cards) */
 .card-shell {
@@ -383,6 +396,12 @@ html { scroll-behavior: smooth; }
     }
 
     .navbar { display: none !important; }
+
+    .container, .bento-grid {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 20px 16px 100px !important;
+    }
 
     .bottom-nav {
         display: flex !important;
