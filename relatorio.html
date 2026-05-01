@@ -29,6 +29,13 @@
         
         #bmi-avatar { transition: transform 0.5s var(--bezier); }
         #bmi-avatar:hover { transform: scale(1.1) rotate(5deg); }
+        
+        .profile-edit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -36,17 +43,50 @@
     <nav class="navbar reveal"></nav>
 
     <div class="bento-grid">
-        <!-- Header -->
+        <!-- Profile Header -->
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
-                <span class="eyebrow">Análise de Dados Antropométricos</span>
-                <h1>EVOLUÇÃO BIOMÉTRICA</h1>
-                <p style="color: var(--text-secondary); margin-top: 8px;">Mapeamento histórico de performance e composição corporal.</p>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <span class="eyebrow">DADOS DO ATIVO</span>
+                        <h1 id="prof-name">CARREGANDO...</h1>
+                        <p id="prof-contact" style="color: var(--text-secondary); margin-top: 4px; font-size: 0.8rem;">--</p>
+                    </div>
+                    <button class="btn btn-secondary" onclick="toggleProfileEdit()">
+                        <i class="ph-light ph-user-circle-plus"></i> EDITAR PERFIL
+                    </button>
+                </div>
+                
+                <div id="profile-edit-section" style="display: none; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--glass-border);">
+                    <div class="profile-edit-grid">
+                        <div class="form-group">
+                            <label>NOME COMPLETO</label>
+                            <input type="text" id="edit-name">
+                        </div>
+                        <div class="form-group">
+                            <label>WHATSAPP</label>
+                            <input type="text" id="edit-phone">
+                        </div>
+                        <div class="form-group">
+                            <label>EMAIL</label>
+                            <input type="email" id="edit-email">
+                        </div>
+                        <div class="form-group">
+                            <label>NASCIMENTO</label>
+                            <input type="date" id="edit-birthday">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>OBSERVAÇÕES DO PROTOCOLO</label>
+                        <textarea id="edit-notes" style="width: 100%; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 12px; color: #FFF; padding: 12px;"></textarea>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveProfile()" style="margin-top: 16px;">SALVAR ALTERAÇÕES</button>
+                </div>
             </div>
         </div>
 
         <!-- Meta Progress -->
-        <div id="meta-container" class="card-shell reveal" style="grid-column: span 12; display: none; animation-delay: 0.05s;">
+        <div id="meta-container" class="card-shell reveal" style="grid-column: span 12; display: none;">
             <div class="card-core" style="padding: 24px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                     <span class="eyebrow" style="margin-bottom: 0;">MISSÃO EM ANDAMENTO</span>
@@ -63,36 +103,36 @@
         </div>
 
         <!-- Avatar and Comparative -->
-        <div class="card-shell reveal" style="grid-column: span 5; animation-delay: 0.1s;">
+        <div class="card-shell reveal" style="grid-column: span 5;">
             <div class="card-core" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
                 <span class="eyebrow" id="bmi-status">STATUS CORPORAL</span>
-                <div id="avatar-container" style="width: 200px; height: 200px; margin: 20px 0; position: relative;">
+                <div id="avatar-container" style="width: 200px; height: 200px; margin: 20px 0;">
                     <img id="bmi-avatar" src="" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 20px var(--accent-glow));">
                 </div>
-                <div style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.1em;">IMC ATUAL</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary);">IMC ATUAL</div>
                 <div id="current-bmi" style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-top: 4px;">--</div>
             </div>
         </div>
 
-        <div class="card-shell reveal" style="grid-column: span 7; animation-delay: 0.2s;">
+        <div class="card-shell reveal" style="grid-column: span 7;">
             <div class="card-core">
                 <span class="eyebrow">COMPARATIVO DE EVOLUÇÃO</span>
                 <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 16px;">
-                    <div id="comp-weight" class="comp-row">
+                    <div class="comp-row">
                         <span class="comp-label">PESO</span>
                         <div class="comp-deltas">
                             <div class="delta-box"><span class="label">vs ANTERIOR</span><span id="weight-prev" class="value">--</span></div>
                             <div class="delta-box"><span class="label">vs INICIAL</span><span id="weight-total" class="value">--</span></div>
                         </div>
                     </div>
-                    <div id="comp-fat" class="comp-row">
+                    <div class="comp-row">
                         <span class="comp-label">% GORDURA</span>
                         <div class="comp-deltas">
                             <div class="delta-box"><span class="label">vs ANTERIOR</span><span id="fat-prev" class="value">--</span></div>
                             <div class="delta-box"><span class="label">vs INICIAL</span><span id="fat-total" class="value">--</span></div>
                         </div>
                     </div>
-                    <div id="comp-muscle" class="comp-row">
+                    <div class="comp-row">
                         <span class="comp-label">% MUSCULAR</span>
                         <div class="comp-deltas">
                             <div class="delta-box"><span class="label">vs ANTERIOR</span><span id="muscle-prev" class="value">--</span></div>
@@ -105,32 +145,28 @@
 
         <!-- Detail Grid -->
         <div class="grid-stack" style="grid-column: span 12;">
-            <div class="card-shell reveal" style="animation-delay: 0.3s;">
+            <div class="card-shell reveal">
                 <div class="card-core" style="text-align: center;">
                     <span class="eyebrow">IDADE CORPORAL</span>
-                    <div id="metabolic-age" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div>
-                    <div style="font-size: 0.6rem; color: var(--text-secondary); margin-top: 4px;">ANOS</div>
+                    <div id="body-age" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div>
                 </div>
             </div>
-            <div class="card-shell reveal" style="animation-delay: 0.4s;">
+            <div class="card-shell reveal">
                 <div class="card-core" style="text-align: center;">
                     <span class="eyebrow">GORDURA VISCERAL</span>
                     <div id="visceral-fat" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div>
-                    <div style="font-size: 0.6rem; color: var(--text-secondary); margin-top: 4px;">NÍVEL</div>
                 </div>
             </div>
-            <div class="card-shell reveal" style="animation-delay: 0.5s;">
+            <div class="card-shell reveal">
                 <div class="card-core" style="text-align: center;">
                     <span class="eyebrow">TAXA METABÓLICA</span>
                     <div id="basal-metabolic" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div>
-                    <div style="font-size: 0.6rem; color: var(--text-secondary); margin-top: 4px;">KCAL/DIA</div>
                 </div>
             </div>
-            <div class="card-shell reveal" style="animation-delay: 0.6s;">
+            <div class="card-shell reveal">
                 <div class="card-core" style="text-align: center;">
                     <span class="eyebrow">CINTURA</span>
                     <div id="current-waist" style="font-size: 1.8rem; font-weight: 800; color: var(--accent); margin-top: 12px;">-- cm</div>
-                    <div style="font-size: 0.6rem; color: var(--text-secondary); margin-top: 4px;">CIRCUNFERÊNCIA</div>
                 </div>
             </div>
         </div>
@@ -139,9 +175,7 @@
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core" style="background: linear-gradient(135deg, rgba(217, 108, 43, 0.05), rgba(0, 0, 0, 0.2)); border: 1px solid rgba(217, 108, 43, 0.1);">
                 <span class="eyebrow" style="color: var(--accent);">INSIGHTS DE PERFORMANCE</span>
-                <div id="insight-text" style="font-size: 0.95rem; line-height: 1.6; color: #EEE; margin-top: 12px;">
-                    Analisando sua telemetria atual para gerar recomendações personalizadas...
-                </div>
+                <div id="insight-text" style="font-size: 0.95rem; line-height: 1.6; color: #EEE; margin-top: 12px;">Processando insights...</div>
             </div>
         </div>
 
@@ -169,11 +203,10 @@
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">GORDURA %</th>
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">MÚSCULO %</th>
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">CINTURA</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">AÇÃO</th>
                             </tr>
                         </thead>
-                        <tbody id="history-body">
-                            <!-- Medidas -->
-                        </tbody>
+                        <tbody id="history-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -182,114 +215,99 @@
 
     <script src="js/config.js?v=3.1"></script>
     <script>
+        let studentId = null;
         async function init() {
             const context = await App.init('relatorio.html');
             if (!context) return;
-            
             const urlParams = new URLSearchParams(window.location.search);
-            const studentId = urlParams.get('aluno') || context.session.user.id;
-            loadAssessments(studentId);
+            studentId = urlParams.get('aluno') || context.session.user.id;
+            loadData();
         }
 
-        async function loadAssessments(studentId) {
-            const { data: prof } = await sb.from('profiles').select('target_weight, initial_weight').eq('id', studentId).single();
-            const { data: assessments } = await sb.from('assessments').select('*').eq('client_id', studentId).order('created_at', { ascending: true });
-            
-            if (!assessments || assessments.length === 0) {
-                document.getElementById('history-body').innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 64px; color: var(--text-secondary);">NENHUMA TELEMETRIA IDENTIFICADA.</td></tr>';
-                return;
+        async function loadData() {
+            const { data: prof } = await sb.from('profiles').select('*').eq('id', studentId).single();
+            if (prof) {
+                document.getElementById('prof-name').textContent = prof.full_name.toUpperCase();
+                document.getElementById('prof-contact').textContent = `${prof.email} • ${prof.whatsapp || '--'}`;
+                
+                // Set edit fields
+                document.getElementById('edit-name').value = prof.full_name;
+                document.getElementById('edit-phone').value = prof.whatsapp || prof.phone || '';
+                document.getElementById('edit-email').value = prof.email;
+                document.getElementById('edit-birthday').value = prof.birthday || '';
+                document.getElementById('edit-notes').value = prof.notes || '';
             }
+
+            const { data: assessments } = await sb.from('assessments').select('*').eq('client_id', studentId).order('created_at', { ascending: true });
+            if (!assessments?.length) return;
 
             const last = assessments[assessments.length - 1];
             const prev = assessments.length > 1 ? assessments[assessments.length - 2] : last;
             const first = assessments[0];
 
-            // Helper for delta values
-            const setDelta = (id, current, compare, suffix = '', reverse = false) => {
-                const diff = current - compare;
+            // Deltas
+            const setDelta = (id, cur, comp, s='', r=false) => {
+                const diff = cur - comp;
                 const el = document.getElementById(id);
-                if (diff === 0) { el.textContent = `--`; el.className = 'value val-neutral'; return; }
-                const isGood = reverse ? diff < 0 : diff > 0;
-                el.textContent = `${diff > 0 ? '+' : ''}${diff.toFixed(1)}${suffix}`;
+                if (!el) return;
+                if (diff === 0) { el.textContent = `--`; el.className = 'value'; return; }
+                const isGood = r ? diff < 0 : diff > 0;
+                el.textContent = `${diff > 0 ? '+' : ''}${diff.toFixed(1)}${s}`;
                 el.className = `value ${isGood ? 'val-plus' : 'val-minus'}`;
             };
-
             setDelta('weight-prev', last.weight, prev.weight, ' kg', true);
             setDelta('weight-total', last.weight, first.weight, ' kg', true);
-            
-            const lastFat = last.body_fat || last.fat_percentage || 0;
-            const prevFat = prev.body_fat || prev.fat_percentage || 0;
-            const firstFat = first.body_fat || first.fat_percentage || 0;
-            setDelta('fat-prev', lastFat, prevFat, '%', true);
-            setDelta('fat-total', lastFat, firstFat, '%', true);
-
+            setDelta('fat-prev', last.body_fat || 0, prev.body_fat || 0, '%', true);
+            setDelta('fat-total', last.body_fat || 0, first.body_fat || 0, '%', true);
             setDelta('muscle-prev', last.muscle_percentage || 0, prev.muscle_percentage || 0, '%');
             setDelta('muscle-total', last.muscle_percentage || 0, first.muscle_percentage || 0, '%');
 
-            // BMI Logic and Avatar
-            const bmi = last.imc || (last.weight / Math.pow(1.75, 2));
+            // Avatar
+            const bmi = last.imc || (last.weight / 3.06); // fallback
             document.getElementById('current-bmi').textContent = bmi.toFixed(1);
-            
-            let avatar = 'bmi_normal_avatar';
-            let status = 'PESO IDEAL';
-            if (bmi < 18.5) { avatar = 'bmi_underweight_avatar'; status = 'ABAIXO DO PESO'; }
-            else if (bmi >= 25 && bmi < 30) { avatar = 'bmi_overweight_avatar'; status = 'SOBREPESO'; }
-            else if (bmi >= 30) { avatar = 'bmi_obese_avatar'; status = 'OBESIDADE'; }
-            
-            const avatarMap = {
-                'bmi_underweight_avatar': 'bmi_underweight_avatar_1777637646903.png',
-                'bmi_normal_avatar': 'bmi_normal_avatar_1777637660463.png',
-                'bmi_overweight_avatar': 'bmi_overweight_avatar_1777637677223.png',
-                'bmi_obese_avatar': 'bmi_obese_avatar_1777637691245.png'
-            };
-            
-            document.getElementById('bmi-avatar').src = avatarMap[avatar];
+            let img = 'bmi_normal.png'; let status = 'PESO IDEAL';
+            if (bmi < 18.5) { img = 'bmi_underweight.png'; status = 'ABAIXO DO PESO'; }
+            else if (bmi >= 25 && bmi < 30) { img = 'bmi_overweight.png'; status = 'SOBREPESO'; }
+            else if (bmi >= 30) { img = 'bmi_obese.png'; status = 'OBESIDADE'; }
+            document.getElementById('bmi-avatar').src = img;
             document.getElementById('bmi-status').textContent = status;
 
-            // Details
-            document.getElementById('metabolic-age').textContent = last.body_age || '--';
+            // Cards
+            document.getElementById('body-age').textContent = last.body_age || '--';
             document.getElementById('visceral-fat').textContent = last.visceral_fat || '--';
             document.getElementById('basal-metabolic').textContent = last.basal_metabolic_rate || '--';
-            
             const lastMeas = last.measurements ? (typeof last.measurements === 'string' ? JSON.parse(last.measurements) : last.measurements) : {};
             document.getElementById('current-waist').textContent = `${lastMeas.waist || '--'} cm`;
 
-            // Gamification Progress
+            // Goal
             if (prof?.target_weight) {
                 const initial = prof.initial_weight || first.weight;
                 const target = prof.target_weight;
-                const current = last.weight;
-                let progress = 0;
-                if (target < initial) progress = ((initial - current) / (initial - target)) * 100;
-                else if (target > initial) progress = ((current - initial) / (target - initial)) * 100;
-                progress = Math.min(100, Math.max(0, progress));
+                let prog = target < initial ? ((initial - last.weight)/(initial - target))*100 : ((last.weight - initial)/(target - initial))*100;
+                prog = Math.min(100, Math.max(0, prog));
                 document.getElementById('meta-container').style.display = 'block';
-                document.getElementById('meta-percentage').textContent = `${Math.round(progress)}%`;
-                document.getElementById('meta-bar').style.width = `${progress}%`;
+                document.getElementById('meta-percentage').textContent = `${Math.round(prog)}%`;
+                document.getElementById('meta-bar').style.width = `${prog}%`;
                 document.getElementById('meta-start').textContent = `${initial.toFixed(1)} kg`;
                 document.getElementById('meta-target').textContent = `${target.toFixed(1)} kg`;
             }
 
-            // Insights
-            let insights = [];
-            if (lastFat > 25) insights.push("🔥 <b>Foco Metabólico:</b> Seu percentual de gordura sugere foco em treinos de alta densidade para otimizar a queima lipídica.");
-            if (last.visceral_fat > 9) insights.push("⚠️ <b>Gordura Visceral:</b> Atenção ao nível inflamatório. Priorize sono de qualidade e reduza ultraprocessados.");
-            if (last.basal_metabolic_rate < 1500) insights.push("⚡ <b>Metabolismo:</b> Sua taxa basal indica necessidade de aumento de massa magra para queima passiva.");
-            if (last.muscle_percentage > prev.muscle_percentage) insights.push("💪 <b>Hipertrofia:</b> Evolução muscular positiva detectada! Seu metabolismo basal está aumentando.");
-            document.getElementById('insight-text').innerHTML = insights.join('<br><br>');
-
             // History Table
-            const historyBody = document.getElementById('history-body');
-            historyBody.innerHTML = assessments.map(a => {
+            document.getElementById('history-body').innerHTML = assessments.map(a => {
                 const m = a.measurements ? (typeof a.measurements === 'string' ? JSON.parse(a.measurements) : a.measurements) : {};
                 return `
                 <tr style="border-bottom: 1px solid var(--glass-border);">
-                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${new Date(a.created_at).toLocaleDateString('pt-BR')}</td>
-                    <td style="padding: 16px; font-size: 0.85rem; font-weight: 800; color: #FFF;">${a.weight.toFixed(1)} kg</td>
-                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.imc || '--'}</td>
-                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.body_fat || a.fat_percentage || 0}%</td>
-                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.muscle_percentage || 0}%</td>
-                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${m.waist || '--'} cm</td>
+                    <td style="padding:16px; font-size:0.8rem; color:var(--text-secondary);">${new Date(a.created_at).toLocaleDateString('pt-BR')}</td>
+                    <td style="padding:16px; font-weight:800; color:#FFF;">${a.weight.toFixed(1)} kg</td>
+                    <td style="padding:16px; color:var(--text-secondary);">${a.imc || '--'}</td>
+                    <td style="padding:16px; color:var(--text-secondary);">${a.body_fat || 0}%</td>
+                    <td style="padding:16px; color:var(--text-secondary);">${a.muscle_percentage || 0}%</td>
+                    <td style="padding:16px; color:var(--text-secondary);">${m.waist || '--'} cm</td>
+                    <td style="padding:16px;">
+                        <button class="btn" style="padding: 6px 12px; font-size: 0.6rem; background: rgba(255,255,255,0.05);" onclick="location.href='lancar_avaliacao.html?id=${a.id}'">
+                            <i class="ph-light ph-pencil-simple"></i> EDITAR
+                        </button>
+                    </td>
                 </tr>`;
             }).reverse().join('');
 
@@ -300,23 +318,42 @@
                 data: {
                     labels: assessments.map(a => new Date(a.created_at).toLocaleDateString('pt-BR')),
                     datasets: [
-                        { label: 'Peso (kg)', data: assessments.map(a => a.weight), borderColor: '#D96C2B', tension: 0.4, borderWidth: 3 },
-                        { label: 'Gordura (%)', data: assessments.map(a => a.body_fat || a.fat_percentage), borderColor: '#EF4444', tension: 0.4 },
-                        { label: 'Músculo (%)', data: assessments.map(a => a.muscle_percentage), borderColor: '#10B981', tension: 0.4 },
-                        { label: 'IMC', data: assessments.map(a => a.imc), borderColor: '#3B82F6', tension: 0.4 }
+                        { label: 'Peso (kg)', data: assessments.map(a => a.weight), borderColor: '#D96C2B', yAxisID: 'y' },
+                        { label: 'Gordura (%)', data: assessments.map(a => a.body_fat), borderColor: '#EF4444', yAxisID: 'y1' },
+                        { label: 'Músculo (%)', data: assessments.map(a => a.muscle_percentage), borderColor: '#10B981', yAxisID: 'y1' },
+                        { label: 'IMC', data: assessments.map(a => a.imc), borderColor: '#3B82F6', yAxisID: 'y2' }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: true, labels: { color: '#FFF', font: { size: 10 } } } },
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#FFF' } } },
                     scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.4)' } },
-                        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.4)' } }
+                        y: { type: 'linear', display: true, position: 'left', grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#D96C2B' } },
+                        y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#EF4444' } },
+                        y2: { type: 'linear', display: false }
                     }
                 }
             });
         }
+
+        function toggleProfileEdit() {
+            const sec = document.getElementById('profile-edit-section');
+            sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function saveProfile() {
+            const updates = {
+                full_name: document.getElementById('edit-name').value,
+                whatsapp: document.getElementById('edit-phone').value,
+                email: document.getElementById('edit-email').value,
+                birthday: document.getElementById('edit-birthday').value,
+                notes: document.getElementById('edit-notes').value
+            };
+            const { error } = await sb.from('profiles').update(updates).eq('id', studentId);
+            if (error) showToast(error.message, 'error');
+            else { showToast('Perfil atualizado!'); loadData(); toggleProfileEdit(); }
+        }
+
         init();
     </script>
 </body>

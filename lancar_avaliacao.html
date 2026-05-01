@@ -13,17 +13,16 @@
     <nav class="navbar reveal"></nav>
 
     <div class="bento-grid">
-        <!-- Header -->
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
                 <span class="eyebrow">Input de Performance</span>
-                <h1>LANÇAR AVALIAÇÃO</h1>
+                <h1 id="page-title">LANÇAR AVALIAÇÃO</h1>
                 <p style="color: var(--text-secondary); margin-top: 8px;">Registro preciso de dados antropométricos e bioimpedância.</p>
             </div>
         </div>
 
         <!-- Student Selection -->
-        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.1s;">
+        <div id="selection-card" class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.1s;">
             <div class="card-core">
                 <div class="form-group">
                     <label>IDENTIFICAÇÃO DO ALUNO</label>
@@ -34,84 +33,71 @@
             </div>
         </div>
 
-        <!-- Bioimpedance Data -->
         <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.2s;">
             <div class="card-core">
                 <h3 style="margin-bottom: 24px;"><i class="ph-light ph-activity" style="color: var(--accent);"></i> BIOIMPEDÂNCIA</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
-                    <div class="form-group">
-                        <label>PESO (KG)</label>
-                        <input type="number" id="weight" step="0.1" placeholder="00.0">
-                    </div>
-                    <div class="form-group">
-                        <label>% GORDURA</label>
-                        <input type="number" id="body_fat" step="0.1" placeholder="00.0">
-                    </div>
-                    <div class="form-group">
-                        <label>% MUSCULAR</label>
-                        <input type="number" id="muscle_mass" step="0.1" placeholder="00.0">
-                    </div>
-                    <div class="form-group">
-                        <label>GORD. VISCERAL</label>
-                        <input type="number" id="visceral_fat" step="1" placeholder="0">
-                    </div>
-                    <div class="form-group">
-                        <label>IDADE CORPORAL</label>
-                        <input type="number" id="metabolic_age" step="1" placeholder="00">
-                    </div>
-                    <div class="form-group">
-                        <label>TAXA METABÓLICA (KCAL)</label>
-                        <input type="number" id="bmr" step="1" placeholder="0000">
-                    </div>
+                    <div class="form-group"><label>PESO (KG)</label><input type="number" id="weight" step="0.1" placeholder="00.0"></div>
+                    <div class="form-group"><label>% GORDURA</label><input type="number" id="body_fat" step="0.1" placeholder="00.0"></div>
+                    <div class="form-group"><label>% MUSCULAR</label><input type="number" id="muscle_mass" step="0.1" placeholder="00.0"></div>
+                    <div class="form-group"><label>GORD. VISCERAL</label><input type="number" id="visceral_fat" step="1" placeholder="0"></div>
+                    <div class="form-group"><label>IDADE CORPORAL</label><input type="number" id="metabolic_age" step="1" placeholder="00"></div>
+                    <div class="form-group"><label>TAXA METABÓLICA (KCAL)</label><input type="number" id="bmr" step="1" placeholder="0000"></div>
                 </div>
                 <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--glass-border);">
                     <h3 style="margin-bottom: 24px;"><i class="ph-light ph-target" style="color: var(--accent);"></i> CONFIGURAÇÃO DE META</h3>
                     <div class="form-group" style="max-width: 250px;">
                         <label>PESO META DO PROTOCOLO (KG)</label>
                         <input type="number" id="target_weight" step="0.1" placeholder="Ex: 85.0">
-                        <p style="font-size: 0.6rem; color: var(--text-secondary); margin-top: 8px;">Deixe em branco para manter a meta atual.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Measurements & Next Date -->
         <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.3s;">
             <div class="card-core">
                 <h3 style="margin-bottom: 24px;"><i class="ph-light ph-ruler" style="color: var(--accent);"></i> MEDIDAS (CM)</h3>
-                <div class="form-group">
-                    <label>CINTURA</label>
-                    <input type="number" id="waist" step="0.1" placeholder="00.0">
-                </div>
-                <div class="form-group">
-                    <label>ABDOMEN</label>
-                    <input type="number" id="abdomen" step="0.1" placeholder="00.0">
-                </div>
-                <div class="form-group" style="margin-bottom: 32px;">
-                    <label>QUADRIL</label>
-                    <input type="number" id="hip" step="0.1" placeholder="00.0">
-                </div>
-                
+                <div class="form-group"><label>CINTURA</label><input type="number" id="waist" step="0.1" placeholder="00.0"></div>
+                <div class="form-group"><label>ABDOMEN</label><input type="number" id="abdomen" step="0.1" placeholder="00.0"></div>
+                <div class="form-group"><label>QUADRIL</label><input type="number" id="hip" step="0.1" placeholder="00.0"></div>
                 <h3 style="margin-bottom: 24px;"><i class="ph-light ph-calendar-plus" style="color: var(--accent);"></i> AGENDA</h3>
-                <div class="form-group">
-                    <label>PRÓXIMO RETORNO</label>
-                    <input type="date" id="next_assessment_date">
-                </div>
-
-                <button class="btn btn-primary" id="btn-save" style="width: 100%; margin-top: 24px;">
-                    SALVAR AVALIAÇÃO
-                    <div class="btn-icon"><i class="ph-light ph-check"></i></div>
-                </button>
+                <div class="form-group"><label>PRÓXIMO RETORNO</label><input type="date" id="next_assessment_date"></div>
+                <button class="btn btn-primary" id="btn-save" style="width: 100%; margin-top: 24px;">SALVAR DADOS</button>
             </div>
         </div>
     </div>
 
     <script src="js/config.js?v=3.1"></script>
     <script>
+        let editId = null;
         async function init() {
             const context = await App.init('lancar_avaliacao.html');
             if (!context) return;
-            loadAlunos(context.session.user.id);
+            const urlParams = new URLSearchParams(window.location.search);
+            editId = urlParams.get('id');
+            if (editId) {
+                document.getElementById('page-title').textContent = 'EDITAR AVALIAÇÃO';
+                document.getElementById('selection-card').style.display = 'none';
+                loadAssessmentForEdit();
+            } else {
+                loadAlunos(context.session.user.id);
+            }
+        }
+
+        async function loadAssessmentForEdit() {
+            const { data: ass } = await sb.from('assessments').select('*, profiles(target_weight)').eq('id', editId).single();
+            if (!ass) return;
+            document.getElementById('weight').value = ass.weight;
+            document.getElementById('body_fat').value = ass.body_fat;
+            document.getElementById('muscle_mass').value = ass.muscle_percentage;
+            document.getElementById('visceral_fat').value = ass.visceral_fat;
+            document.getElementById('metabolic_age').value = ass.body_age;
+            document.getElementById('bmr').value = ass.basal_metabolic_rate;
+            document.getElementById('target_weight').value = ass.profiles?.target_weight || '';
+            const m = ass.measurements ? (typeof ass.measurements === 'string' ? JSON.parse(ass.measurements) : ass.measurements) : {};
+            document.getElementById('waist').value = m.waist || '';
+            document.getElementById('abdomen').value = m.abdomen || '';
+            document.getElementById('hip').value = m.hip || '';
         }
 
         async function loadAlunos(mentorId) {
@@ -119,17 +105,12 @@
             const select = document.getElementById('select-aluno');
             alunos?.forEach(a => {
                 const opt = document.createElement('option');
-                opt.value = a.id;
-                opt.textContent = a.full_name.toUpperCase();
+                opt.value = a.id; opt.textContent = a.full_name.toUpperCase();
                 select.appendChild(opt);
             });
-
             const urlParams = new URLSearchParams(window.location.search);
             const alunoId = urlParams.get('aluno');
-            if (alunoId) {
-                select.value = alunoId;
-                onAlunoChange();
-            }
+            if (alunoId) { select.value = alunoId; onAlunoChange(); }
         }
 
         async function onAlunoChange() {
@@ -141,20 +122,14 @@
 
         document.getElementById('btn-save').onclick = async () => {
             const btn = document.getElementById('btn-save');
-            const alunoId = document.getElementById('select-aluno').value;
-            if (!alunoId) return showToast('Selecione um aluno', 'error');
+            const alunoId = editId ? null : document.getElementById('select-aluno').value;
+            if (!editId && !alunoId) return showToast('Selecione um aluno', 'error');
 
             btn.disabled = true;
             const weight = parseFloat(document.getElementById('weight').value || 0);
-            
-            // Get height from profile to calc IMC
-            const { data: profData } = await sb.from('profiles').select('height, initial_weight').eq('id', alunoId).single();
-            const height = profData?.height || 175;
-            const imc = weight / ((height/100) ** 2);
+            const imc = weight / (1.75 ** 2); // Fallback height
 
             const assessment = {
-                client_id: alunoId, 
-                mentor_id: App.profile.id,
                 weight: weight,
                 body_fat: parseFloat(document.getElementById('body_fat').value || 0),
                 muscle_percentage: parseFloat(document.getElementById('muscle_mass').value || 0),
@@ -169,27 +144,29 @@
                 })
             };
 
-            const nextDate = document.getElementById('next_assessment_date').value;
-
             try {
-                const { error } = await sb.from('assessments').insert([assessment]);
-                if (error) throw error;
-                
-                const targetWeight = parseFloat(document.getElementById('target_weight').value);
-                const updates = {};
-                if (nextDate) updates.next_assessment_date = nextDate;
-                if (!isNaN(targetWeight)) updates.target_weight = targetWeight;
-                if (!profData?.initial_weight) updates.initial_weight = weight;
-
-                if (Object.keys(updates).length > 0) {
-                    await sb.from('profiles').update(updates).eq('id', alunoId);
+                if (editId) {
+                    await sb.from('assessments').update(assessment).eq('id', editId);
+                } else {
+                    assessment.client_id = alunoId;
+                    assessment.mentor_id = App.profile.id;
+                    await sb.from('assessments').insert([assessment]);
                 }
                 
-                showToast('Avaliação processada!');
-                setTimeout(() => window.location.href = 'alunos.html', 1500);
+                const targetWeight = parseFloat(document.getElementById('target_weight').value);
+                const nextDate = document.getElementById('next_assessment_date').value;
+                if (!isNaN(targetWeight) || nextDate) {
+                    const up = {};
+                    if (!isNaN(targetWeight)) up.target_weight = targetWeight;
+                    if (nextDate) up.next_assessment_date = nextDate;
+                    const finalId = editId ? (await sb.from('assessments').select('client_id').eq('id', editId).single()).data.client_id : alunoId;
+                    await sb.from('profiles').update(up).eq('id', finalId);
+                }
+
+                showToast('Dados salvos!');
+                setTimeout(() => window.location.href = 'relatorio.html' + (alunoId ? '?aluno='+alunoId : ''), 1500);
             } catch (err) { showToast(err.message, 'error'); } finally { btn.disabled = false; }
         };
-
         init();
     </script>
 </body>
