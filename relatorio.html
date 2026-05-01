@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.2">
+    <link rel="stylesheet" href="style.css?v=3.3">
     <style>
         .comp-row { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--glass-border); }
         .comp-label { font-size: 0.75rem; font-weight: 800; color: var(--text-secondary); width: 120px; }
@@ -18,7 +18,7 @@
         .val-plus { color: #10B981; }
         .val-minus { color: #EF4444; }
         .val-neutral { color: #FFF; }
-        #bmi-avatar { transition: transform 0.5s var(--bezier); }
+        #bmi-avatar { transition: transform 0.5s var(--bezier); width: 100%; height: 100%; object-fit: contain; }
         #bmi-avatar:hover { transform: scale(1.1) rotate(5deg); }
         .profile-edit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
     </style>
@@ -39,12 +39,13 @@
                     </div>
                     <button class="btn btn-secondary" onclick="toggleProfileEdit()"><i class="ph-light ph-user-circle-plus"></i> EDITAR PERFIL</button>
                 </div>
+                
                 <div id="profile-edit-section" style="display: none; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--glass-border);">
                     <div class="profile-edit-grid">
                         <div class="form-group"><label>NOME COMPLETO</label><input type="text" id="edit-name"></div>
                         <div class="form-group"><label>WHATSAPP</label><input type="text" id="edit-phone"></div>
                         <div class="form-group"><label>EMAIL</label><input type="email" id="edit-email"></div>
-                        <div class="form-group"><label>NASCIMENTO</label><input type="date" id="edit-birthday"></div>
+                        <div class="form-group"><label>ALTURA (CM)</label><input type="number" id="edit-height"></div>
                     </div>
                     <div class="form-group" style="margin-top: 16px;">
                         <label>OBSERVAÇÕES DO PROTOCOLO</label>
@@ -55,19 +56,19 @@
             </div>
         </div>
 
-        <!-- Progress -->
+        <!-- Meta -->
         <div id="meta-container" class="card-shell reveal" style="grid-column: span 12; display: none;">
             <div class="card-core" style="padding: 24px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <span class="eyebrow" style="margin-bottom: 0;">MISSÃO EM ANDAMENTO</span>
+                    <span class="eyebrow">MISSÃO EM ANDAMENTO</span>
                     <span id="meta-percentage" style="font-size: 1.5rem; font-weight: 800; color: var(--accent);">0%</span>
                 </div>
                 <div style="width: 100%; height: 12px; background: rgba(255,255,255,0.05); border-radius: 100px; overflow: hidden; border: 1px solid var(--glass-border);">
                     <div id="meta-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 1.5s var(--bezier);"></div>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.7rem; font-weight: 700; color: var(--text-secondary);">
-                    <span>INÍCIO: <span id="meta-start" style="color: #FFF;">-- kg</span></span>
-                    <span>META: <span id="meta-target" style="color: #FFF;">-- kg</span></span>
+                    <span>INÍCIO: <span id="meta-start">-- kg</span></span>
+                    <span>META: <span id="meta-target">-- kg</span></span>
                 </div>
             </div>
         </div>
@@ -77,7 +78,7 @@
             <div class="card-core" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
                 <span class="eyebrow" id="bmi-status">STATUS CORPORAL</span>
                 <div id="avatar-container" style="width: 200px; height: 200px; margin: 20px 0;">
-                    <img id="bmi-avatar" src="" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 20px var(--accent-glow));">
+                    <img id="bmi-avatar" src="bmi_normal.png" style="filter: drop-shadow(0 0 20px var(--accent-glow));">
                 </div>
                 <div style="font-size: 0.7rem; color: var(--text-secondary);">IMC ATUAL</div>
                 <div id="current-bmi" style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-top: 4px;">--</div>
@@ -108,7 +109,7 @@
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core" style="background: linear-gradient(135deg, rgba(217, 108, 43, 0.05), rgba(0, 0, 0, 0.2)); border: 1px solid rgba(217, 108, 43, 0.1);">
                 <span class="eyebrow" style="color: var(--accent);">INSIGHTS DE PERFORMANCE</span>
-                <div id="insight-text" style="font-size: 0.95rem; line-height: 1.6; color: #EEE; margin-top: 12px;">Processando dados...</div>
+                <div id="insight-text" style="font-size: 0.95rem; line-height: 1.6; color: #EEE; margin-top: 12px;">Carregando inteligência...</div>
             </div>
         </div>
 
@@ -144,7 +145,7 @@
         </div>
     </div>
 
-    <script src="js/config.js?v=3.2"></script>
+    <script src="js/config.js?v=3.3"></script>
     <script>
         let studentId = null;
         async function init() {
@@ -162,17 +163,17 @@
                 const { data: prof } = await sb.from('profiles').select('*').eq('id', studentId).single();
                 if (prof) {
                     document.getElementById('prof-name').textContent = (prof.full_name || 'USUÁRIO').toUpperCase();
-                    document.getElementById('prof-contact').textContent = `${prof.email} • ${prof.whatsapp || prof.phone || '--'}`;
+                    document.getElementById('prof-contact').textContent = `${prof.email || '--'} • ${prof.whatsapp || prof.phone || '--'}`;
                     document.getElementById('edit-name').value = prof.full_name || '';
                     document.getElementById('edit-phone').value = prof.whatsapp || prof.phone || '';
                     document.getElementById('edit-email').value = prof.email || '';
-                    document.getElementById('edit-birthday').value = prof.birthday || '';
+                    document.getElementById('edit-height').value = prof.height || '';
                     document.getElementById('edit-notes').value = prof.notes || '';
                 }
 
                 const { data: assessments } = await sb.from('assessments').select('*').eq('client_id', studentId).order('created_at', { ascending: true });
                 if (!assessments?.length) {
-                    document.getElementById('insight-text').textContent = "Aguardando primeira avaliação para gerar insights.";
+                    document.getElementById('insight-text').textContent = "Aguardando telemetria inicial...";
                     return;
                 }
 
@@ -202,14 +203,16 @@
                 setDelta('muscle-prev', lastMuscle, prevMuscle, '%');
                 setDelta('muscle-total', lastMuscle, firstMuscle, '%');
 
-                const height = prof?.height || 175;
-                const bmi = last.imc || (last.weight / Math.pow(height/100, 2));
+                const h = prof?.height || 175;
+                const bmi = last.imc || (last.weight / Math.pow(h/100, 2));
                 document.getElementById('current-bmi').textContent = bmi.toFixed(1);
                 let img = 'bmi_normal.png'; let status = 'PESO IDEAL';
                 if (bmi < 18.5) { img = 'bmi_underweight.png'; status = 'ABAIXO DO PESO'; }
                 else if (bmi >= 25 && bmi < 30) { img = 'bmi_overweight.png'; status = 'SOBREPESO'; }
                 else if (bmi >= 30) { img = 'bmi_obese.png'; status = 'OBESIDADE'; }
-                document.getElementById('bmi-avatar').src = img;
+                
+                const avatarEl = document.getElementById('bmi-avatar');
+                avatarEl.src = img + '?v=' + Date.now();
                 document.getElementById('bmi-status').textContent = status;
 
                 document.getElementById('body-age').textContent = last.body_age || '--';
@@ -231,10 +234,10 @@
                 }
 
                 let insights = [];
-                if (lastFat > 25) insights.push("🔥 <b>Foco Metabólico:</b> O percentual de gordura sugere treinos de alta densidade.");
-                if (lastMuscle > 50) insights.push("💪 <b>Alta Densidade:</b> Massa muscular em excelente nível.");
-                if (last.visceral_fat > 9) insights.push("⚠️ <b>Aviso:</b> Gordura visceral elevada detectada.");
-                document.getElementById('insight-text').innerHTML = insights.length ? insights.join('<br><br>') : "Continue firme! Seus dados mostram estabilidade no protocolo.";
+                if (lastFat > 25) insights.push("🔥 <b>Foco Metabólico:</b> Percentual de gordura indica necessidade de alta densidade.");
+                if (lastMuscle > 50) insights.push("💪 <b>Massa Muscular:</b> Excelente densidade, favorecendo o metabolismo basal.");
+                if (last.visceral_fat > 9) insights.push("⚠️ <b>Gordura Visceral:</b> Atenção redobrada aos níveis inflamatórios.");
+                document.getElementById('insight-text').innerHTML = insights.length ? insights.join('<br><br>') : "Evolução estável no protocolo. Continue o foco!";
 
                 document.getElementById('history-body').innerHTML = assessments.map(a => {
                     const m = a.measurements ? (typeof a.measurements === 'string' ? JSON.parse(a.measurements) : a.measurements) : {};
@@ -257,10 +260,10 @@
                     data: {
                         labels: assessments.map(a => new Date(a.created_at).toLocaleDateString('pt-BR')),
                         datasets: [
-                            { label: 'Peso (kg)', data: assessments.map(a => a.weight), borderColor: '#D96C2B', yAxisID: 'y' },
-                            { label: 'Gordura (%)', data: assessments.map(a => a.body_fat || a.fat_percentage || 0), borderColor: '#EF4444', yAxisID: 'y1' },
-                            { label: 'Músculo (%)', data: assessments.map(a => a.muscle_percentage || 0), borderColor: '#10B981', yAxisID: 'y1' },
-                            { label: 'IMC', data: assessments.map(a => a.imc), borderColor: '#3B82F6', yAxisID: 'y2' }
+                            { label: 'Peso (kg)', data: assessments.map(a => a.weight), borderColor: '#D96C2B', yAxisID: 'y', spanGaps: true },
+                            { label: 'Gordura (%)', data: assessments.map(a => a.body_fat || a.fat_percentage || null), borderColor: '#EF4444', yAxisID: 'y1', spanGaps: true },
+                            { label: 'Músculo (%)', data: assessments.map(a => a.muscle_percentage || null), borderColor: '#10B981', yAxisID: 'y1', spanGaps: true },
+                            { label: 'IMC', data: assessments.map(a => a.imc || null), borderColor: '#3B82F6', yAxisID: 'y2', spanGaps: true }
                         ]
                     },
                     options: {
@@ -279,7 +282,13 @@
         function toggleProfileEdit() { const sec = document.getElementById('profile-edit-section'); sec.style.display = sec.style.display === 'none' ? 'block' : 'none'; }
         async function saveProfile() {
             try {
-                const updates = { full_name: document.getElementById('edit-name').value, whatsapp: document.getElementById('edit-phone').value, email: document.getElementById('edit-email').value, birthday: document.getElementById('edit-birthday').value, notes: document.getElementById('edit-notes').value };
+                const updates = { 
+                    full_name: document.getElementById('edit-name').value, 
+                    whatsapp: document.getElementById('edit-phone').value, 
+                    email: document.getElementById('edit-email').value, 
+                    height: parseFloat(document.getElementById('edit-height').value),
+                    notes: document.getElementById('edit-notes').value 
+                };
                 const { error } = await sb.from('profiles').update(updates).eq('id', studentId);
                 if (error) showToast(error.message, 'error'); else { showToast('Perfil atualizado!'); loadData(); toggleProfileEdit(); }
             } catch (e) { console.error('SaveProfile error:', e); }
