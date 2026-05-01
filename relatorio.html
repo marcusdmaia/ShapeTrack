@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.6">
+    <link rel="stylesheet" href="style.css?v=3.7">
     <style>
         .comp-row { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--glass-border); }
         .comp-label { font-size: 0.75rem; font-weight: 800; color: var(--text-secondary); width: 120px; }
@@ -83,8 +83,8 @@
                 <span class="eyebrow">RESUMO DE PERDAS E GANHOS</span>
                 <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 16px;">
                     <div class="comp-row"><span class="comp-label">PESO</span><div class="comp-deltas"><div class="delta-box"><span class="label">vs ANTERIOR</span><span id="weight-prev" class="value">--</span></div><div class="delta-box"><span class="label">vs INICIAL</span><span id="weight-total" class="value">--</span></div></div></div>
+                    <div class="comp-row"><span class="comp-label">CINTURA (CM)</span><div class="comp-deltas"><div class="delta-box"><span class="label">vs ANTERIOR</span><span id="waist-prev" class="value">--</span></div><div class="delta-box"><span class="label">vs INICIAL</span><span id="waist-total" class="value">--</span></div></div></div>
                     <div class="comp-row"><span class="comp-label">% GORDURA</span><div class="comp-deltas"><div class="delta-box"><span class="label">vs ANTERIOR</span><span id="fat-prev" class="value">--</span></div><div class="delta-box"><span class="label">vs INICIAL</span><span id="fat-total" class="value">--</span></div></div></div>
-                    <div class="comp-row"><span class="comp-label">% MUSCULAR</span><div class="comp-deltas"><div class="delta-box"><span class="label">vs ANTERIOR</span><span id="muscle-prev" class="value">--</span></div><div class="delta-box"><span class="label">vs INICIAL</span><span id="muscle-total" class="value">--</span></div></div></div>
                 </div>
             </div>
         </div>
@@ -99,6 +99,12 @@
             </div>
             <div class="card-shell reveal">
                 <div class="card-core">
+                    <span class="eyebrow"><i class="ph-light ph-ruler" style="color: #FACC15;"></i> MEDIDAS (CINTURA / ABDÔMEN)</span>
+                    <div class="chart-container"><canvas id="chart-meas"></canvas></div>
+                </div>
+            </div>
+            <div class="card-shell reveal">
+                <div class="card-core">
                     <span class="eyebrow"><i class="ph-light ph-fire" style="color: #EF4444;"></i> PERCENTUAL DE GORDURA</span>
                     <div class="chart-container"><canvas id="chart-fat"></canvas></div>
                 </div>
@@ -107,12 +113,6 @@
                 <div class="card-core">
                     <span class="eyebrow"><i class="ph-light ph-armchair" style="color: #10B981;"></i> MASSA MUSCULAR</span>
                     <div class="chart-container"><canvas id="chart-muscle"></canvas></div>
-                </div>
-            </div>
-            <div class="card-shell reveal">
-                <div class="card-core">
-                    <span class="eyebrow"><i class="ph-light ph-activity" style="color: #3B82F6;"></i> EVOLUÇÃO DO IMC</span>
-                    <div class="chart-container"><canvas id="chart-bmi"></canvas></div>
                 </div>
             </div>
         </div>
@@ -127,8 +127,9 @@
                             <tr style="text-align: left; border-bottom: 1px solid var(--glass-border);">
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">DATA</th>
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">PESO</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">CINTURA</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">ABDÔMEN</th>
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">GORDURA %</th>
-                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">MÚSCULO %</th>
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">AÇÃO</th>
                             </tr>
                         </thead>
@@ -139,7 +140,7 @@
         </div>
     </div>
 
-    <script src="js/config.js?v=3.6"></script>
+    <script src="js/config.js?v=3.7"></script>
     <script>
         let studentId = null;
         async function init() {
@@ -172,6 +173,11 @@
                 const prev = assessments.length > 1 ? assessments[assessments.length - 2] : last;
                 const first = assessments[0];
 
+                const parseMeas = (a) => a.measurements ? (typeof a.measurements === 'string' ? JSON.parse(a.measurements) : a.measurements) : {};
+                const lastM = parseMeas(last);
+                const prevM = parseMeas(prev);
+                const firstM = parseMeas(first);
+
                 const getVal = (obj, keys) => {
                     for(let k of keys) if(obj[k] !== undefined && obj[k] !== null) return parseFloat(obj[k]);
                     return null;
@@ -185,7 +191,7 @@
                 const firstMuscle = getVal(first, ['muscle_percentage']);
 
                 const setDelta = (id, cur, comp, s='', r=false) => {
-                    if (cur === null || comp === null) { document.getElementById(id).textContent = '--'; return; }
+                    if (cur === null || comp === null || isNaN(cur) || isNaN(comp)) { document.getElementById(id).textContent = '--'; return; }
                     const diff = cur - comp;
                     const el = document.getElementById(id);
                     const isGood = r ? diff < 0 : diff > 0;
@@ -198,6 +204,8 @@
                 setDelta('fat-total', lastFat, firstFat, '%', true);
                 setDelta('muscle-prev', lastMuscle, prevMuscle, '%');
                 setDelta('muscle-total', lastMuscle, firstMuscle, '%');
+                setDelta('waist-prev', parseFloat(lastM.waist), parseFloat(prevM.waist), ' cm', true);
+                setDelta('waist-total', parseFloat(lastM.waist), parseFloat(firstM.waist), ' cm', true);
 
                 const h = prof?.height || 175;
                 const getBMI = (a) => a.imc || (a.weight / Math.pow(h/100, 2));
@@ -213,29 +221,27 @@
                 // History Table
                 document.getElementById('history-body').innerHTML = assessments.map(a => {
                     const f = getVal(a, ['body_fat', 'fat_percentage']);
+                    const m = parseMeas(a);
                     return `
                     <tr style="border-bottom: 1px solid var(--glass-border);">
                         <td style="padding:16px; font-size:0.8rem; color:var(--text-secondary);">${new Date(a.created_at).toLocaleDateString('pt-BR')}</td>
                         <td style="padding:16px; font-weight:800; color:#FFF;">${a.weight.toFixed(1)} kg</td>
+                        <td style="padding:16px; color:var(--text-secondary);">${m.waist || '--'} cm</td>
+                        <td style="padding:16px; color:var(--text-secondary);">${m.abdomen || '--'} cm</td>
                         <td style="padding:16px; color:var(--text-secondary);">${f !== null ? f+'%' : '--'}</td>
-                        <td style="padding:16px; color:var(--text-secondary);">${a.muscle_percentage !== null ? a.muscle_percentage+'%' : '--'}</td>
                         <td style="padding:16px;"><button class="btn" style="padding: 6px 12px; font-size: 0.6rem; background: rgba(255,255,255,0.05);" onclick="location.href='lancar_avaliacao.html?id=${a.id}'">EDITAR</button></td>
                     </tr>`;
                 }).reverse().join('');
 
-                // Individual Charts
                 const labels = assessments.map(a => new Date(a.created_at).toLocaleDateString('pt-BR'));
-                const chartConfig = (id, label, data, color) => {
+                const createChart = (id, datasets) => {
                     const ctx = document.getElementById(id).getContext('2d');
                     new Chart(ctx, {
                         type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: [{ label: label, data: data, borderColor: color, backgroundColor: color + '20', fill: true, tension: 0.4, spanGaps: true }]
-                        },
+                        data: { labels: labels, datasets: datasets },
                         options: {
                             responsive: true, maintainAspectRatio: false,
-                            plugins: { legend: { display: false } },
+                            plugins: { legend: { display: datasets.length > 1, labels: { color: '#FFF', font: { size: 9 } } } },
                             scales: {
                                 y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 10 } } },
                                 x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 9 } } }
@@ -244,10 +250,15 @@
                     });
                 };
 
-                chartConfig('chart-weight', 'Peso (kg)', assessments.map(a => a.weight), '#D96C2B');
-                chartConfig('chart-fat', 'Gordura (%)', assessments.map(a => getVal(a, ['body_fat', 'fat_percentage'])), '#EF4444');
-                chartConfig('chart-muscle', 'Músculo (%)', assessments.map(a => a.muscle_percentage), '#10B981');
-                chartConfig('chart-bmi', 'IMC', assessments.map(a => getBMI(a)), '#3B82F6');
+                createChart('chart-weight', [{ label: 'Peso', data: assessments.map(a => a.weight), borderColor: '#D96C2B', backgroundColor: '#D96C2B20', fill: true, tension: 0.4 }]);
+                createChart('chart-fat', [{ label: 'Gordura %', data: assessments.map(a => getVal(a, ['body_fat', 'fat_percentage'])), borderColor: '#EF4444', backgroundColor: '#EF444420', fill: true, tension: 0.4 }]);
+                createChart('chart-muscle', [{ label: 'Músculo %', data: assessments.map(a => a.muscle_percentage), borderColor: '#10B981', backgroundColor: '#10B98120', fill: true, tension: 0.4 }]);
+                
+                // Measurements Chart (Waist and Abdomen)
+                createChart('chart-meas', [
+                    { label: 'Cintura (cm)', data: assessments.map(a => parseFloat(parseMeas(a).waist) || null), borderColor: '#FACC15', backgroundColor: '#FACC1520', fill: false, tension: 0.4 },
+                    { label: 'Abdômen (cm)', data: assessments.map(a => parseFloat(parseMeas(a).abdomen) || null), borderColor: '#A855F7', backgroundColor: '#A855F720', fill: false, tension: 0.4 }
+                ]);
 
             } catch (e) { console.error('LoadData error:', e); }
         }
