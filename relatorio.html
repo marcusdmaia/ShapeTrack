@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.4">
+    <link rel="stylesheet" href="style.css?v=3.5">
     <style>
         .comp-row { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--glass-border); }
         .comp-label { font-size: 0.75rem; font-weight: 800; color: var(--text-secondary); width: 120px; }
@@ -27,26 +27,25 @@
 
     <div id="error-overlay">
         <i class="ph-light ph-warning-circle" style="font-size: 4rem; color: var(--accent); margin-bottom: 24px;"></i>
-        <h2 style="margin-bottom: 12px;">DADOS NÃO LOCALIZADOS</h2>
-        <p style="color: var(--text-secondary); margin-bottom: 32px;">O identificador deste aluno não existe ou você não tem permissão para acessá-lo.</p>
+        <h2 style="margin-bottom: 12px;">ALUNO NÃO LOCALIZADO</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 32px;">O ID informado não existe ou expirou. Por favor, acesse via lista de alunos.</p>
         <button class="btn btn-primary" onclick="location.href='alunos.html'">VOLTAR PARA LISTA</button>
     </div>
 
     <nav class="navbar reveal"></nav>
 
     <div class="bento-grid">
-        <!-- Profile Header -->
+        <!-- Header -->
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <div>
-                        <span class="eyebrow">DADOS DO ATIVO</span>
+                        <span class="eyebrow">RELATÓRIO INTELIGENTE</span>
                         <h1 id="prof-name">CARREGANDO...</h1>
                         <p id="prof-contact" style="color: var(--text-secondary); margin-top: 4px; font-size: 0.8rem;">--</p>
                     </div>
                     <button class="btn btn-secondary" onclick="toggleProfileEdit()"><i class="ph-light ph-user-circle-plus"></i> EDITAR PERFIL</button>
                 </div>
-                
                 <div id="profile-edit-section" style="display: none; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--glass-border);">
                     <div class="profile-edit-grid">
                         <div class="form-group"><label>NOME COMPLETO</label><input type="text" id="edit-name"></div>
@@ -67,7 +66,7 @@
         <div id="meta-container" class="card-shell reveal" style="grid-column: span 12; display: none;">
             <div class="card-core" style="padding: 24px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <span class="eyebrow">MISSÃO EM ANDAMENTO</span>
+                    <span class="eyebrow" style="margin-bottom: 0;">MISSÃO EM ANDAMENTO</span>
                     <span id="meta-percentage" style="font-size: 1.5rem; font-weight: 800; color: var(--accent);">0%</span>
                 </div>
                 <div style="width: 100%; height: 12px; background: rgba(255,255,255,0.05); border-radius: 100px; overflow: hidden; border: 1px solid var(--glass-border);">
@@ -80,7 +79,7 @@
             </div>
         </div>
 
-        <!-- Avatar -->
+        <!-- Avatar & Comparison -->
         <div class="card-shell reveal" style="grid-column: span 5;">
             <div class="card-core" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
                 <span class="eyebrow" id="bmi-status">STATUS CORPORAL</span>
@@ -92,7 +91,6 @@
             </div>
         </div>
 
-        <!-- Comparison -->
         <div class="card-shell reveal" style="grid-column: span 7;">
             <div class="card-core">
                 <span class="eyebrow">COMPARATIVO DE EVOLUÇÃO</span>
@@ -116,7 +114,7 @@
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core" style="background: linear-gradient(135deg, rgba(217, 108, 43, 0.05), rgba(0, 0, 0, 0.2)); border: 1px solid rgba(217, 108, 43, 0.1);">
                 <span class="eyebrow" style="color: var(--accent);">INSIGHTS DE PERFORMANCE</span>
-                <div id="insight-text" style="font-size: 0.95rem; line-height: 1.6; color: #EEE; margin-top: 12px;">Processando inteligência...</div>
+                <div id="insight-text" style="font-size: 0.95rem; line-height: 1.6; color: #EEE; margin-top: 12px;">Analisando dados biométricos...</div>
             </div>
         </div>
 
@@ -152,7 +150,7 @@
         </div>
     </div>
 
-    <script src="js/config.js?v=3.4"></script>
+    <script src="js/config.js?v=3.5"></script>
     <script>
         let studentId = null;
         async function init() {
@@ -168,10 +166,7 @@
         async function loadData() {
             try {
                 const { data: prof, error: profErr } = await sb.from('profiles').select('*').eq('id', studentId).single();
-                if (profErr || !prof) {
-                    document.getElementById('error-overlay').style.display = 'flex';
-                    return;
-                }
+                if (profErr || !prof) { document.getElementById('error-overlay').style.display = 'flex'; return; }
 
                 document.getElementById('prof-name').textContent = (prof.full_name || 'USUÁRIO').toUpperCase();
                 document.getElementById('prof-contact').textContent = `${prof.email || '--'} • ${prof.whatsapp || prof.phone || '--'}`;
@@ -183,8 +178,7 @@
 
                 const { data: assessments } = await sb.from('assessments').select('*').eq('client_id', studentId).order('created_at', { ascending: true });
                 if (!assessments?.length) {
-                    document.getElementById('insight-text').textContent = "Aguardando dados de telemetria...";
-                    document.getElementById('multiChart').parentElement.innerHTML = '<div style="height: 100%; display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">Nenhuma avaliação registrada ainda.</div>';
+                    document.getElementById('insight-text').textContent = "Aguardando primeira medição...";
                     return;
                 }
 
@@ -192,17 +186,23 @@
                 const prev = assessments.length > 1 ? assessments[assessments.length - 2] : last;
                 const first = assessments[0];
 
-                const lastFat = last.body_fat || last.fat_percentage || 0;
-                const prevFat = prev.body_fat || prev.fat_percentage || 0;
-                const firstFat = first.body_fat || first.fat_percentage || 0;
-                const lastMuscle = last.muscle_percentage || 0;
-                const prevMuscle = prev.muscle_percentage || 0;
-                const firstMuscle = first.muscle_percentage || 0;
+                const getVal = (obj, keys) => {
+                    for(let k of keys) if(obj[k] !== undefined && obj[k] !== null) return parseFloat(obj[k]);
+                    return null;
+                };
+
+                const lastFat = getVal(last, ['body_fat', 'fat_percentage']);
+                const prevFat = getVal(prev, ['body_fat', 'fat_percentage']);
+                const firstFat = getVal(first, ['body_fat', 'fat_percentage']);
+                const lastMuscle = getVal(last, ['muscle_percentage']);
+                const prevMuscle = getVal(prev, ['muscle_percentage']);
+                const firstMuscle = getVal(first, ['muscle_percentage']);
 
                 const setDelta = (id, cur, comp, s='', r=false) => {
+                    if (cur === null || comp === null) { document.getElementById(id).textContent = '--'; return; }
                     const diff = cur - comp;
-                    const el = document.getElementById(id); if (!el) return;
-                    if (diff === 0) { el.textContent = `--`; el.className = 'value'; return; }
+                    const el = document.getElementById(id);
+                    if (Math.abs(diff) < 0.1) { el.textContent = `0.0${s}`; el.className = 'value val-neutral'; return; }
                     const isGood = r ? diff < 0 : diff > 0;
                     el.textContent = `${diff > 0 ? '+' : ''}${diff.toFixed(1)}${s}`;
                     el.className = `value ${isGood ? 'val-plus' : 'val-minus'}`;
@@ -243,21 +243,21 @@
                 }
 
                 let insights = [];
-                if (lastFat > 25) insights.push("🔥 <b>Foco Metabólico:</b> Nível de gordura pede treinos de intensidade.");
-                if (lastMuscle > 50) insights.push("💪 <b>Alta Densidade:</b> Massa muscular otimizando sua queima diária.");
-                if (last.visceral_fat > 9) insights.push("⚠️ <b>Aviso:</b> Gordura visceral requer atenção alimentar.");
-                document.getElementById('insight-text').innerHTML = insights.length ? insights.join('<br><br>') : "Mantenha o foco! Seus dados mostram estabilidade no processo.";
+                if (lastFat > 25) insights.push("🔥 <b>Foco Metabólico:</b> Nível de gordura sugere treinos de intensidade.");
+                if (lastMuscle > 50) insights.push("💪 <b>Alta Densidade:</b> Massa muscular otimizando sua queima basal.");
+                if (last.visceral_fat > 9) insights.push("⚠️ <b>Aviso:</b> Gordura visceral elevada detectada.");
+                document.getElementById('insight-text').innerHTML = insights.length ? insights.join('<br><br>') : "Evolução estável. Continue com o protocolo!";
 
                 document.getElementById('history-body').innerHTML = assessments.map(a => {
                     const m = a.measurements ? (typeof a.measurements === 'string' ? JSON.parse(a.measurements) : a.measurements) : {};
-                    const f = a.body_fat || a.fat_percentage || 0;
+                    const f = getVal(a, ['body_fat', 'fat_percentage']);
                     return `
                     <tr style="border-bottom: 1px solid var(--glass-border);">
                         <td style="padding:16px; font-size:0.8rem; color:var(--text-secondary);">${new Date(a.created_at).toLocaleDateString('pt-BR')}</td>
                         <td style="padding:16px; font-weight:800; color:#FFF;">${a.weight.toFixed(1)} kg</td>
                         <td style="padding:16px; color:var(--text-secondary);">${a.imc || '--'}</td>
-                        <td style="padding:16px; color:var(--text-secondary);">${f}%</td>
-                        <td style="padding:16px; color:var(--text-secondary);">${a.muscle_percentage || 0}%</td>
+                        <td style="padding:16px; color:var(--text-secondary);">${f !== null ? f+'%' : '--'}</td>
+                        <td style="padding:16px; color:var(--text-secondary);">${a.muscle_percentage !== null ? a.muscle_percentage+'%' : '--'}</td>
                         <td style="padding:16px; color:var(--text-secondary);">${m.waist || '--'} cm</td>
                         <td style="padding:16px;"><button class="btn" style="padding: 6px 12px; font-size: 0.6rem; background: rgba(255,255,255,0.05);" onclick="location.href='lancar_avaliacao.html?id=${a.id}'">EDITAR</button></td>
                     </tr>`;
@@ -269,18 +269,18 @@
                     data: {
                         labels: assessments.map(a => new Date(a.created_at).toLocaleDateString('pt-BR')),
                         datasets: [
-                            { label: 'Peso (kg)', data: assessments.map(a => a.weight), borderColor: '#D96C2B', yAxisID: 'y', spanGaps: true },
-                            { label: 'Gordura (%)', data: assessments.map(a => a.body_fat || a.fat_percentage || null), borderColor: '#EF4444', yAxisID: 'y1', spanGaps: true },
-                            { label: 'Músculo (%)', data: assessments.map(a => a.muscle_percentage || null), borderColor: '#10B981', yAxisID: 'y1', spanGaps: true },
-                            { label: 'IMC', data: assessments.map(a => a.imc || null), borderColor: '#3B82F6', yAxisID: 'y2', spanGaps: true }
+                            { label: 'Peso (kg)', data: assessments.map(a => a.weight), borderColor: '#D96C2B', yAxisID: 'y', spanGaps: true, tension: 0.3 },
+                            { label: 'Gordura (%)', data: assessments.map(a => getVal(a, ['body_fat', 'fat_percentage'])), borderColor: '#EF4444', yAxisID: 'y1', spanGaps: true, tension: 0.3 },
+                            { label: 'Músculo (%)', data: assessments.map(a => a.muscle_percentage), borderColor: '#10B981', yAxisID: 'y1', spanGaps: true, tension: 0.3 },
+                            { label: 'IMC', data: assessments.map(a => a.imc || (a.weight / Math.pow(h/100, 2))), borderColor: '#3B82F6', yAxisID: 'y2', spanGaps: true, tension: 0.3 }
                         ]
                     },
                     options: {
                         responsive: true, maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: '#FFF' } } },
+                        plugins: { legend: { labels: { color: '#FFF', font: { size: 10 } } } },
                         scales: {
-                            y: { type: 'linear', display: true, position: 'left', grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#D96C2B' } },
-                            y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#EF4444' } },
+                            y: { type: 'linear', display: true, position: 'left', grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#D96C2B' }, title: { display: true, text: 'kg', color: '#D96C2B' } },
+                            y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#EF4444' }, title: { display: true, text: '%', color: '#EF4444' } },
                             y2: { type: 'linear', display: false }
                         }
                     }
