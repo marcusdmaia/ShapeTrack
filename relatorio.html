@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="style.css?v=3.5">
+    <link rel="stylesheet" href="style.css?v=3.6">
     <style>
         .comp-row { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--glass-border); }
         .comp-label { font-size: 0.75rem; font-weight: 800; color: var(--text-secondary); width: 120px; }
@@ -21,6 +21,10 @@
         #bmi-avatar:hover { transform: scale(1.1) rotate(5deg); }
         .profile-edit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
         #error-overlay { display: none; position: fixed; inset: 0; background: var(--background); z-index: 10000; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; }
+        
+        .chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px; margin-top: 24px; }
+        @media (max-width: 768px) { .chart-grid { grid-template-columns: 1fr; } }
+        .chart-container { height: 250px; width: 100%; margin-top: 16px; }
     </style>
 </head>
 <body>
@@ -28,19 +32,19 @@
     <div id="error-overlay">
         <i class="ph-light ph-warning-circle" style="font-size: 4rem; color: var(--accent); margin-bottom: 24px;"></i>
         <h2 style="margin-bottom: 12px;">ALUNO NÃO LOCALIZADO</h2>
-        <p style="color: var(--text-secondary); margin-bottom: 32px;">O ID informado não existe ou expirou. Por favor, acesse via lista de alunos.</p>
+        <p style="color: var(--text-secondary); margin-bottom: 32px;">Acesse via lista de alunos para carregar um perfil válido.</p>
         <button class="btn btn-primary" onclick="location.href='alunos.html'">VOLTAR PARA LISTA</button>
     </div>
 
     <nav class="navbar reveal"></nav>
 
     <div class="bento-grid">
-        <!-- Header -->
+        <!-- Profile Header -->
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <div>
-                        <span class="eyebrow">RELATÓRIO INTELIGENTE</span>
+                        <span class="eyebrow">RELATÓRIO DE EVOLUÇÃO</span>
                         <h1 id="prof-name">CARREGANDO...</h1>
                         <p id="prof-contact" style="color: var(--text-secondary); margin-top: 4px; font-size: 0.8rem;">--</p>
                     </div>
@@ -62,23 +66,6 @@
             </div>
         </div>
 
-        <!-- Meta -->
-        <div id="meta-container" class="card-shell reveal" style="grid-column: span 12; display: none;">
-            <div class="card-core" style="padding: 24px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <span class="eyebrow" style="margin-bottom: 0;">MISSÃO EM ANDAMENTO</span>
-                    <span id="meta-percentage" style="font-size: 1.5rem; font-weight: 800; color: var(--accent);">0%</span>
-                </div>
-                <div style="width: 100%; height: 12px; background: rgba(255,255,255,0.05); border-radius: 100px; overflow: hidden; border: 1px solid var(--glass-border);">
-                    <div id="meta-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 1.5s var(--bezier);"></div>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.7rem; font-weight: 700; color: var(--text-secondary);">
-                    <span>INÍCIO: <span id="meta-start">-- kg</span></span>
-                    <span>META: <span id="meta-target">-- kg</span></span>
-                </div>
-            </div>
-        </div>
-
         <!-- Avatar & Comparison -->
         <div class="card-shell reveal" style="grid-column: span 5;">
             <div class="card-core" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
@@ -93,7 +80,7 @@
 
         <div class="card-shell reveal" style="grid-column: span 7;">
             <div class="card-core">
-                <span class="eyebrow">COMPARATIVO DE EVOLUÇÃO</span>
+                <span class="eyebrow">RESUMO DE PERDAS E GANHOS</span>
                 <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 16px;">
                     <div class="comp-row"><span class="comp-label">PESO</span><div class="comp-deltas"><div class="delta-box"><span class="label">vs ANTERIOR</span><span id="weight-prev" class="value">--</span></div><div class="delta-box"><span class="label">vs INICIAL</span><span id="weight-total" class="value">--</span></div></div></div>
                     <div class="comp-row"><span class="comp-label">% GORDURA</span><div class="comp-deltas"><div class="delta-box"><span class="label">vs ANTERIOR</span><span id="fat-prev" class="value">--</span></div><div class="delta-box"><span class="label">vs INICIAL</span><span id="fat-total" class="value">--</span></div></div></div>
@@ -102,27 +89,31 @@
             </div>
         </div>
 
-        <!-- Details -->
-        <div class="grid-stack" style="grid-column: span 12;">
-            <div class="card-shell reveal"><div class="card-core" style="text-align: center;"><span class="eyebrow">IDADE CORPORAL</span><div id="body-age" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div></div></div>
-            <div class="card-shell reveal"><div class="card-core" style="text-align: center;"><span class="eyebrow">GORDURA VISCERAL</span><div id="visceral-fat" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div></div></div>
-            <div class="card-shell reveal"><div class="card-core" style="text-align: center;"><span class="eyebrow">TAXA METABÓLICA</span><div id="basal-metabolic" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div></div></div>
-            <div class="card-shell reveal"><div class="card-core" style="text-align: center;"><span class="eyebrow">CINTURA</span><div id="current-waist" style="font-size: 1.8rem; font-weight: 800; color: var(--accent); margin-top: 12px;">-- cm</div></div></div>
-        </div>
-
-        <!-- Insights -->
-        <div class="card-shell reveal" style="grid-column: span 12;">
-            <div class="card-core" style="background: linear-gradient(135deg, rgba(217, 108, 43, 0.05), rgba(0, 0, 0, 0.2)); border: 1px solid rgba(217, 108, 43, 0.1);">
-                <span class="eyebrow" style="color: var(--accent);">INSIGHTS DE PERFORMANCE</span>
-                <div id="insight-text" style="font-size: 0.95rem; line-height: 1.6; color: #EEE; margin-top: 12px;">Analisando dados biométricos...</div>
+        <!-- Individual Charts -->
+        <div style="grid-column: span 12;" class="chart-grid">
+            <div class="card-shell reveal">
+                <div class="card-core">
+                    <span class="eyebrow"><i class="ph-light ph-scales" style="color: #D96C2B;"></i> VARIAÇÃO DE PESO</span>
+                    <div class="chart-container"><canvas id="chart-weight"></canvas></div>
+                </div>
             </div>
-        </div>
-
-        <!-- Chart -->
-        <div class="card-shell reveal" style="grid-column: span 12;">
-            <div class="card-core">
-                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-chart-line" style="color: var(--accent);"></i> PROJEÇÃO MULTIDIMENSIONAL</h3>
-                <div style="width: 100%; height: 400px;"><canvas id="multiChart"></canvas></div>
+            <div class="card-shell reveal">
+                <div class="card-core">
+                    <span class="eyebrow"><i class="ph-light ph-fire" style="color: #EF4444;"></i> PERCENTUAL DE GORDURA</span>
+                    <div class="chart-container"><canvas id="chart-fat"></canvas></div>
+                </div>
+            </div>
+            <div class="card-shell reveal">
+                <div class="card-core">
+                    <span class="eyebrow"><i class="ph-light ph-armchair" style="color: #10B981;"></i> MASSA MUSCULAR</span>
+                    <div class="chart-container"><canvas id="chart-muscle"></canvas></div>
+                </div>
+            </div>
+            <div class="card-shell reveal">
+                <div class="card-core">
+                    <span class="eyebrow"><i class="ph-light ph-activity" style="color: #3B82F6;"></i> EVOLUÇÃO DO IMC</span>
+                    <div class="chart-container"><canvas id="chart-bmi"></canvas></div>
+                </div>
             </div>
         </div>
 
@@ -136,10 +127,8 @@
                             <tr style="text-align: left; border-bottom: 1px solid var(--glass-border);">
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">DATA</th>
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">PESO</th>
-                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">IMC</th>
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">GORDURA %</th>
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">MÚSCULO %</th>
-                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">CINTURA</th>
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">AÇÃO</th>
                             </tr>
                         </thead>
@@ -150,7 +139,7 @@
         </div>
     </div>
 
-    <script src="js/config.js?v=3.5"></script>
+    <script src="js/config.js?v=3.6"></script>
     <script>
         let studentId = null;
         async function init() {
@@ -177,10 +166,7 @@
                 document.getElementById('edit-notes').value = prof.notes || '';
 
                 const { data: assessments } = await sb.from('assessments').select('*').eq('client_id', studentId).order('created_at', { ascending: true });
-                if (!assessments?.length) {
-                    document.getElementById('insight-text').textContent = "Aguardando primeira medição...";
-                    return;
-                }
+                if (!assessments?.length) return;
 
                 const last = assessments[assessments.length - 1];
                 const prev = assessments.length > 1 ? assessments[assessments.length - 2] : last;
@@ -202,7 +188,6 @@
                     if (cur === null || comp === null) { document.getElementById(id).textContent = '--'; return; }
                     const diff = cur - comp;
                     const el = document.getElementById(id);
-                    if (Math.abs(diff) < 0.1) { el.textContent = `0.0${s}`; el.className = 'value val-neutral'; return; }
                     const isGood = r ? diff < 0 : diff > 0;
                     el.textContent = `${diff > 0 ? '+' : ''}${diff.toFixed(1)}${s}`;
                     el.className = `value ${isGood ? 'val-plus' : 'val-minus'}`;
@@ -215,76 +200,55 @@
                 setDelta('muscle-total', lastMuscle, firstMuscle, '%');
 
                 const h = prof?.height || 175;
-                const bmi = last.imc || (last.weight / Math.pow(h/100, 2));
-                document.getElementById('current-bmi').textContent = bmi.toFixed(1);
+                const getBMI = (a) => a.imc || (a.weight / Math.pow(h/100, 2));
+                const currentBMI = getBMI(last);
+                document.getElementById('current-bmi').textContent = currentBMI.toFixed(1);
                 let img = 'bmi_normal.png'; let status = 'PESO IDEAL';
-                if (bmi < 18.5) { img = 'bmi_underweight.png'; status = 'ABAIXO DO PESO'; }
-                else if (bmi >= 25 && bmi < 30) { img = 'bmi_overweight.png'; status = 'SOBREPESO'; }
-                else if (bmi >= 30) { img = 'bmi_obese.png'; status = 'OBESIDADE'; }
+                if (currentBMI < 18.5) { img = 'bmi_underweight.png'; status = 'ABAIXO DO PESO'; }
+                else if (currentBMI >= 25 && currentBMI < 30) { img = 'bmi_overweight.png'; status = 'SOBREPESO'; }
+                else if (currentBMI >= 30) { img = 'bmi_obese.png'; status = 'OBESIDADE'; }
                 document.getElementById('bmi-avatar').src = img;
                 document.getElementById('bmi-status').textContent = status;
 
-                document.getElementById('body-age').textContent = last.body_age || '--';
-                document.getElementById('visceral-fat').textContent = last.visceral_fat || '--';
-                document.getElementById('basal-metabolic').textContent = last.basal_metabolic_rate || last.basal_metabolism || '--';
-                const lastMeas = last.measurements ? (typeof last.measurements === 'string' ? JSON.parse(last.measurements) : last.measurements) : {};
-                document.getElementById('current-waist').textContent = `${lastMeas.waist || '--'} cm`;
-
-                if (prof?.target_weight) {
-                    const initial = prof.initial_weight || first.weight;
-                    const target = prof.target_weight;
-                    let prog = target < initial ? ((initial - last.weight)/(initial - target))*100 : ((last.weight - initial)/(target - initial))*100;
-                    prog = Math.min(100, Math.max(0, prog));
-                    document.getElementById('meta-container').style.display = 'block';
-                    document.getElementById('meta-percentage').textContent = `${Math.round(prog)}%`;
-                    document.getElementById('meta-bar').style.width = `${prog}%`;
-                    document.getElementById('meta-start').textContent = `${initial.toFixed(1)} kg`;
-                    document.getElementById('meta-target').textContent = `${target.toFixed(1)} kg`;
-                }
-
-                let insights = [];
-                if (lastFat > 25) insights.push("🔥 <b>Foco Metabólico:</b> Nível de gordura sugere treinos de intensidade.");
-                if (lastMuscle > 50) insights.push("💪 <b>Alta Densidade:</b> Massa muscular otimizando sua queima basal.");
-                if (last.visceral_fat > 9) insights.push("⚠️ <b>Aviso:</b> Gordura visceral elevada detectada.");
-                document.getElementById('insight-text').innerHTML = insights.length ? insights.join('<br><br>') : "Evolução estável. Continue com o protocolo!";
-
+                // History Table
                 document.getElementById('history-body').innerHTML = assessments.map(a => {
-                    const m = a.measurements ? (typeof a.measurements === 'string' ? JSON.parse(a.measurements) : a.measurements) : {};
                     const f = getVal(a, ['body_fat', 'fat_percentage']);
                     return `
                     <tr style="border-bottom: 1px solid var(--glass-border);">
                         <td style="padding:16px; font-size:0.8rem; color:var(--text-secondary);">${new Date(a.created_at).toLocaleDateString('pt-BR')}</td>
                         <td style="padding:16px; font-weight:800; color:#FFF;">${a.weight.toFixed(1)} kg</td>
-                        <td style="padding:16px; color:var(--text-secondary);">${a.imc || '--'}</td>
                         <td style="padding:16px; color:var(--text-secondary);">${f !== null ? f+'%' : '--'}</td>
                         <td style="padding:16px; color:var(--text-secondary);">${a.muscle_percentage !== null ? a.muscle_percentage+'%' : '--'}</td>
-                        <td style="padding:16px; color:var(--text-secondary);">${m.waist || '--'} cm</td>
                         <td style="padding:16px;"><button class="btn" style="padding: 6px 12px; font-size: 0.6rem; background: rgba(255,255,255,0.05);" onclick="location.href='lancar_avaliacao.html?id=${a.id}'">EDITAR</button></td>
                     </tr>`;
                 }).reverse().join('');
 
-                const ctx = document.getElementById('multiChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: assessments.map(a => new Date(a.created_at).toLocaleDateString('pt-BR')),
-                        datasets: [
-                            { label: 'Peso (kg)', data: assessments.map(a => a.weight), borderColor: '#D96C2B', yAxisID: 'y', spanGaps: true, tension: 0.3 },
-                            { label: 'Gordura (%)', data: assessments.map(a => getVal(a, ['body_fat', 'fat_percentage'])), borderColor: '#EF4444', yAxisID: 'y1', spanGaps: true, tension: 0.3 },
-                            { label: 'Músculo (%)', data: assessments.map(a => a.muscle_percentage), borderColor: '#10B981', yAxisID: 'y1', spanGaps: true, tension: 0.3 },
-                            { label: 'IMC', data: assessments.map(a => a.imc || (a.weight / Math.pow(h/100, 2))), borderColor: '#3B82F6', yAxisID: 'y2', spanGaps: true, tension: 0.3 }
-                        ]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        plugins: { legend: { labels: { color: '#FFF', font: { size: 10 } } } },
-                        scales: {
-                            y: { type: 'linear', display: true, position: 'left', grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#D96C2B' }, title: { display: true, text: 'kg', color: '#D96C2B' } },
-                            y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#EF4444' }, title: { display: true, text: '%', color: '#EF4444' } },
-                            y2: { type: 'linear', display: false }
+                // Individual Charts
+                const labels = assessments.map(a => new Date(a.created_at).toLocaleDateString('pt-BR'));
+                const chartConfig = (id, label, data, color) => {
+                    const ctx = document.getElementById(id).getContext('2d');
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{ label: label, data: data, borderColor: color, backgroundColor: color + '20', fill: true, tension: 0.4, spanGaps: true }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 10 } } },
+                                x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 9 } } }
+                            }
                         }
-                    }
-                });
+                    });
+                };
+
+                chartConfig('chart-weight', 'Peso (kg)', assessments.map(a => a.weight), '#D96C2B');
+                chartConfig('chart-fat', 'Gordura (%)', assessments.map(a => getVal(a, ['body_fat', 'fat_percentage'])), '#EF4444');
+                chartConfig('chart-muscle', 'Músculo (%)', assessments.map(a => a.muscle_percentage), '#10B981');
+                chartConfig('chart-bmi', 'IMC', assessments.map(a => getBMI(a)), '#3B82F6');
+
             } catch (e) { console.error('LoadData error:', e); }
         }
 
