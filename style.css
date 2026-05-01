@@ -205,10 +205,9 @@ body::after {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     gap: 24px;
-    padding: 120px 24px 60px;
+    padding: 40px;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 1400px;
 }
 
 /* Typography & Hierarchy */

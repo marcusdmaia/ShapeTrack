@@ -50,61 +50,43 @@
             </div>
         </div>
 
-        </div>
-
-        <!-- Ranking and Retention -->
-        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.4s;">
-            <div class="card-core">
+        <!-- Ranking Elite (Span 4) -->
+        <div class="card-shell reveal" style="grid-column: span 4;">
+            <div class="card-core" style="min-height: 400px;">
+                <span class="eyebrow">TOP PERFORMANCE</span>
                 <h3><i class="ph-light ph-crown" style="color: #FFD700; margin-right: 8px;"></i> RANKING ELITE</h3>
-                <div id="ranking-list" style="display: flex; flex-direction: column; gap: 16px; margin-top: 20px;">
+                <div id="ranking-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
                     <!-- Top 5 via JS -->
                 </div>
             </div>
         </div>
 
-        <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.4s;">
-            <div class="card-core">
+        <!-- Alerta de Retenção (Span 8) -->
+        <div class="card-shell reveal" style="grid-column: span 8;">
+            <div class="card-core" style="min-height: 400px;">
+                <span class="eyebrow">FOCO EM RESGATE</span>
                 <h3><i class="ph-light ph-warning-octagon" style="color: #ef4444; margin-right: 8px;"></i> ALERTA DE RETENÇÃO</h3>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr><th>Cliente</th><th>Última Atividade</th><th>Status</th><th>Ação</th></tr>
-                        </thead>
-                        <tbody id="retention-list">
-                            <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-secondary);">PROCESSANDO DADOS...</td></tr>
-                        </tbody>
-                    </table>
+                <div id="retention-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
+                    <div style="text-align:center; padding: 40px; color: var(--text-secondary);">PROCESSANDO DADOS...</div>
                 </div>
             </div>
         </div>
 
-        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.5s;">
+        <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
+                <span class="eyebrow">CONTROLE DE CAIXA</span>
                 <h3><i class="ph-light ph-hand-coins" style="color: var(--accent); margin-right: 8px;"></i> PENDÊNCIAS FINANCEIRAS</h3>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr><th>Cliente</th><th>Valor em Aberto</th><th>Vencimento</th><th>Ação</th></tr>
-                        </thead>
-                        <tbody id="receivables-list">
-                            <tr><td colspan="4" style="text-align:center; padding: 40px; color: var(--text-secondary);">TUDO EM DIA.</td></tr>
-                        </tbody>
-                    </table>
+                <div id="receivables-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
+                    <div style="text-align:center; padding: 40px; color: var(--text-secondary);">TUDO EM DIA.</div>
                 </div>
             </div>
         </div>
-        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.6s;">
+        <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
-                <h3><i class="ph-light ph-shopping-cart" style="color: var(--accent); margin-right: 8px;"></i> ÚLTIMAS VENDAS (HISTÓRICO)</h3>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr><th>Cliente</th><th>Valor Total</th><th>Data</th><th>Status</th><th>Ação</th></tr>
-                        </thead>
-                        <tbody id="sales-history-list">
-                            <tr><td colspan="5" style="text-align:center; padding: 40px; color: var(--text-secondary);">PROCESSANDO...</td></tr>
-                        </tbody>
-                    </table>
+                <span class="eyebrow">HISTÓRICO</span>
+                <h3><i class="ph-light ph-shopping-cart" style="color: var(--accent); margin-right: 8px;"></i> ÚLTIMAS VENDAS</h3>
+                <div id="sales-history-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
+                    <div style="text-align:center; padding: 40px; color: var(--text-secondary);">PROCESSANDO...</div>
                 </div>
             </div>
         </div>
@@ -128,22 +110,25 @@
             document.getElementById('pending-revenue').textContent = totalDue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             document.getElementById('receivables-list').innerHTML = pendingSales.length ? pendingSales.map(s => `
-                <tr>
-                    <td style="font-weight:700; color:#FFF;">${s.profiles?.full_name || 'Desconhecido'}</td>
-                    <td style="color:#ef4444; font-weight:800;">R$ ${(s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                    <td>${s.due_date ? new Date(s.due_date).toLocaleDateString('pt-BR') : '--'}</td>
-                    <td>
-                        <div style="display: flex; gap: 8px;">
-                            <a href="https://wa.me/55${s.profiles?.whatsapp?.replace(/\D/g,'') || ''}?text=${encodeURIComponent('Olá ' + (s.profiles?.full_name || '') + '! Identificamos uma pendência no valor de R$ ' + (s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + ' referente ao seu protocolo. Como podemos facilitar para você?')}" 
-                               target="_blank" class="btn" style="padding: 8px 12px; font-size: 0.65rem; background: #25D366; color:#000;">
-                                <i class="ph-fill ph-whatsapp-logo"></i> COBRAR
-                            </a>
-                            <button class="btn" style="padding: 8px 12px; font-size: 0.65rem; background: rgba(255,75,75,0.1); border: 1px solid rgba(255,75,75,0.2); color:#ff4b4b;" onclick="deleteSale('${s.id}')">
-                                <i class="ph-light ph-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Sem pendências.</td></tr>';
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); gap: 16px;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${s.profiles?.full_name || 'Desconhecido'}</div>
+                        <div style="font-size: 0.7rem; color: #ef4444; font-weight: 700; margin-top: 4px;">Pendente: R$ ${(s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                    </div>
+                    <div style="text-align: right; margin-right: 16px;">
+                        <div style="font-size: 0.65rem; color: var(--text-secondary);">Vencimento</div>
+                        <div style="font-size: 0.75rem; font-weight: 600; color: #FFF;">${s.due_date ? new Date(s.due_date).toLocaleDateString('pt-BR') : '--'}</div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <a href="https://wa.me/55${s.profiles?.whatsapp?.replace(/\D/g,'') || ''}?text=${encodeURIComponent('Olá ' + (s.profiles?.full_name || '') + '! Identificamos uma pendência no valor de R$ ' + (s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + ' referente ao seu protocolo. Como podemos facilitar para você?')}" 
+                           target="_blank" class="btn" style="padding: 8px 16px; font-size: 0.65rem; background: #25D366; color:#000;">
+                            <i class="ph-fill ph-whatsapp-logo"></i> COBRAR
+                        </a>
+                        <button class="btn" style="padding: 8px 12px; font-size: 0.65rem; background: rgba(255,75,75,0.1); border: 1px solid rgba(255,75,75,0.2); color:#ff4b4b;" onclick="deleteSale('${s.id}')">
+                            <i class="ph-light ph-trash"></i>
+                        </button>
+                    </div>
+                </div>`).join('') : '<div style="text-align:center; padding: 20px; color: var(--text-secondary);">Sem pendências.</div>';
 
             const now = new Date();
             const inactiveClients = clients.map(c => {
@@ -155,12 +140,16 @@
 
             document.getElementById('churn-risk').textContent = inactiveClients.length;
             document.getElementById('retention-list').innerHTML = inactiveClients.length ? inactiveClients.sort((a,b) => b.days - a.days).map(c => `
-                <tr>
-                    <td style="font-weight:700; color:#FFF;">${c.full_name}</td>
-                    <td style="color:var(--text-secondary);">${c.lastDate}</td>
-                    <td><span class="badge ${c.days > 90 ? 'badge-danger' : 'badge-warning'}">${c.isNever ? 'INATIVO' : c.days + ' DIAS INATIVO'}</span></td>
-                    <td><a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="padding: 8px 16px; font-size: 0.7rem; background: #25D366; color:#000;"><i class="ph-fill ph-whatsapp-logo"></i> RESGATAR</a></td>
-                </tr>`).join('') : '<tr><td colspan="4" style="text-align:center; padding: 20px;">Base 100% ativa.</td></tr>';
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); gap: 16px;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${c.full_name}</div>
+                        <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 4px;">Última atividade: ${c.lastDate}</div>
+                    </div>
+                    <span class="badge ${c.days > 90 ? 'badge-danger' : 'badge-warning'}" style="font-size: 0.6rem;">${c.isNever ? 'INATIVO' : c.days + 'D'}</span>
+                    <a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="padding: 8px 16px; font-size: 0.65rem; background: #25D366; color:#000;">
+                        <i class="ph-fill ph-whatsapp-logo"></i> RESGATAR
+                    </a>
+                </div>`).join('') : '<div style="text-align:center; padding: 20px; color: var(--text-secondary);">Base 100% ativa.</div>';
 
             document.getElementById('birthdays').textContent = clients.filter(c => c.birthday && parseInt(c.birthday.split('-')[1]) === (now.getMonth() + 1)).length;
 
@@ -205,17 +194,19 @@
             }
 
             document.getElementById('sales-history-list').innerHTML = sales.length ? sales.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).map(s => `
-                <tr>
-                    <td style="font-weight:700; color:#FFF;">${s.profiles?.full_name || 'Desconhecido'}</td>
-                    <td style="color:#FFF; font-weight:800;">R$ ${s.total_price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                    <td style="font-size: 0.8rem; color: var(--text-secondary);">${new Date(s.created_at).toLocaleDateString('pt-BR')}</td>
-                    <td><span class="badge ${s.payment_status === 'Pago' ? 'badge-success' : 'badge-warning'}">${s.payment_status.toUpperCase()}</span></td>
-                    <td>
-                        <button class="btn" style="padding: 8px 12px; font-size: 0.65rem; background: rgba(255,75,75,0.1); border: 1px solid rgba(255,75,75,0.2); color:#ff4b4b;" onclick="deleteSale('${s.id}')">
-                            <i class="ph-light ph-trash"></i>
-                        </button>
-                    </td>
-                </tr>`).join('') : '<tr><td colspan="5" style="text-align:center; padding: 20px;">Nenhuma venda registrada.</td></tr>';
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); gap: 16px;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${s.profiles?.full_name || 'Desconhecido'}</div>
+                        <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 4px;">Data: ${new Date(s.created_at).toLocaleDateString('pt-BR')}</div>
+                    </div>
+                    <div style="text-align: right; margin-right: 16px;">
+                        <div style="font-size: 0.85rem; font-weight: 800; color: #FFF;">R$ ${s.total_price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                        <div style="margin-top: 4px;"><span class="badge ${s.payment_status === 'Pago' ? 'badge-success' : 'badge-warning'}" style="font-size: 0.55rem;">${s.payment_status.toUpperCase()}</span></div>
+                    </div>
+                    <button class="btn" style="padding: 8px 12px; font-size: 0.65rem; background: rgba(255,75,75,0.1); border: 1px solid rgba(255,75,75,0.2); color:#ff4b4b;" onclick="deleteSale('${s.id}')">
+                        <i class="ph-light ph-trash"></i>
+                    </button>
+                </div>`).join('') : '<div style="text-align:center; padding: 20px; color: var(--text-secondary);">Nenhuma venda registrada.</div>';
         }
 
         async function deleteSale(saleId) {
