@@ -456,16 +456,29 @@ html { scroll-behavior: smooth; }
     }
 
     /* Safety net for table overflow */
-    table {
+    table, .st-table {
         display: block;
         width: 100%;
+        max-width: 100vw;
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch;
     }
     
+    /* Prevent any inline flex from breaking layout */
+    .card-core > div[style*="display: flex"] {
+        flex-wrap: wrap !important;
+    }
+    
+    /* Ensure inputs don't push layout */
+    .form-group, .form-group input, .form-group select {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
     /* Force word wrap on long identifiers */
     h1, h2, h3, .stat-value, td, p, span {
         word-wrap: break-word;
         overflow-wrap: break-word;
+        max-width: 100%;
     }
 }

@@ -9,9 +9,9 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="style.css?v=3.8">
     <style>
-        .comp-row { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--glass-border); }
+        .comp-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--glass-border); gap: 12px; }
         .comp-label { font-size: 0.75rem; font-weight: 800; color: var(--text-secondary); width: 120px; }
-        .comp-deltas { display: flex; gap: 12px; flex: 1; justify-content: flex-end; }
+        .comp-deltas { display: flex; flex-wrap: wrap; gap: 12px; flex: 1; justify-content: flex-end; }
         .delta-box { text-align: right; }
         .delta-box .label { display: block; font-size: 0.55rem; color: var(--text-secondary); margin-bottom: 2px; }
         .delta-box .value { font-size: 1rem; font-weight: 800; }

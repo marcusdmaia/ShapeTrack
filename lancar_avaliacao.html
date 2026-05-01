@@ -89,7 +89,7 @@
 
         async function loadAssessmentForEdit() {
             try {
-                const { data: ass, error } = await sb.from('assessments').select('*, profiles(*)').eq('id', editId).single();
+                const { data: ass, error } = await sb.from('assessments').select('*').eq('id', editId).single();
                 if (error || !ass) {
                     showToast('Erro ao carregar avaliação', 'error');
                     return;
@@ -99,16 +99,20 @@
                 document.getElementById('weight').value = ass.weight || '';
                 
                 // Mapeamento flexível de gordura e músculo
-                document.getElementById('body_fat').value = ass.body_fat || ass.fat_percentage || '';
-                document.getElementById('muscle_mass').value = ass.muscle_percentage || ass.muscle_mass || '';
+                document.getElementById('body_fat').value = ass.body_fat ?? ass.fat_percentage ?? '';
+                document.getElementById('muscle_mass').value = ass.muscle_percentage ?? ass.muscle_mass ?? '';
                 
                 document.getElementById('visceral_fat').value = ass.visceral_fat || '';
                 document.getElementById('metabolic_age').value = ass.body_age || '';
-                document.getElementById('bmr').value = ass.basal_metabolic_rate || ass.basal_metabolism || '';
+                document.getElementById('bmr').value = ass.basal_metabolic_rate ?? ass.basal_metabolism ?? '';
                 
-                if (ass.profiles) {
-                    document.getElementById('target_weight').value = ass.profiles.target_weight || '';
-                    document.getElementById('next_assessment_date').value = ass.profiles.next_assessment_date || '';
+                // Fetch profile separately to avoid relation/RLS errors
+                if (activeStudentId) {
+                    const { data: prof } = await sb.from('profiles').select('target_weight, next_assessment_date').eq('id', activeStudentId).single();
+                    if (prof) {
+                        document.getElementById('target_weight').value = prof.target_weight || '';
+                        if (prof.next_assessment_date) document.getElementById('next_assessment_date').value = prof.next_assessment_date;
+                    }
                 }
 
                 const m = ass.measurements ? (typeof ass.measurements === 'string' ? JSON.parse(ass.measurements) : ass.measurements) : {};
