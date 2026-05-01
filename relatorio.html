@@ -107,7 +107,7 @@
         <div class="grid-stack" style="grid-column: span 12;">
             <div class="card-shell reveal" style="animation-delay: 0.3s;">
                 <div class="card-core" style="text-align: center;">
-                    <span class="eyebrow">IDADE METABÓLICA</span>
+                    <span class="eyebrow">IDADE CORPORAL</span>
                     <div id="metabolic-age" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div>
                     <div style="font-size: 0.6rem; color: var(--text-secondary); margin-top: 4px;">ANOS</div>
                 </div>
@@ -121,9 +121,9 @@
             </div>
             <div class="card-shell reveal" style="animation-delay: 0.5s;">
                 <div class="card-core" style="text-align: center;">
-                    <span class="eyebrow">ÁGUA CORPORAL</span>
-                    <div id="body-water" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">-- %</div>
-                    <div style="font-size: 0.6rem; color: var(--text-secondary); margin-top: 4px;">HIDRATAÇÃO</div>
+                    <span class="eyebrow">TAXA METABÓLICA</span>
+                    <div id="basal-metabolic" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div>
+                    <div style="font-size: 0.6rem; color: var(--text-secondary); margin-top: 4px;">KCAL/DIA</div>
                 </div>
             </div>
             <div class="card-shell reveal" style="animation-delay: 0.6s;">
@@ -148,9 +148,9 @@
         <!-- Chart -->
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
-                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-chart-line" style="color: var(--accent);"></i> PROJEÇÃO TEMPORAL</h3>
-                <div style="width: 100%; height: 320px;">
-                    <canvas id="weightChart"></canvas>
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-chart-line" style="color: var(--accent);"></i> PROJEÇÃO MULTIDIMENSIONAL</h3>
+                <div style="width: 100%; height: 400px;">
+                    <canvas id="multiChart"></canvas>
                 </div>
             </div>
         </div>
@@ -165,10 +165,10 @@
                             <tr style="text-align: left; border-bottom: 1px solid var(--glass-border);">
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">DATA</th>
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">PESO</th>
-                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">FAT %</th>
-                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">MUSCLE %</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">IMC</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">GORDURA %</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">MÚSCULO %</th>
                                 <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">CINTURA</th>
-                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">QUADRIL</th>
                             </tr>
                         </thead>
                         <tbody id="history-body">
@@ -227,7 +227,7 @@
             setDelta('muscle-total', last.muscle_percentage || 0, first.muscle_percentage || 0, '%');
 
             // BMI Logic and Avatar
-            const bmi = last.imc || (last.weight / Math.pow(1.75, 2)); // Fallback if imc missing
+            const bmi = last.imc || (last.weight / Math.pow(1.75, 2));
             document.getElementById('current-bmi').textContent = bmi.toFixed(1);
             
             let avatar = 'bmi_normal_avatar';
@@ -249,7 +249,7 @@
             // Details
             document.getElementById('metabolic-age').textContent = last.body_age || '--';
             document.getElementById('visceral-fat').textContent = last.visceral_fat || '--';
-            document.getElementById('body-water').textContent = (last.notes?.match(/Água: ([\d.]+)%/) || [])[1] || '--';
+            document.getElementById('basal-metabolic').textContent = last.basal_metabolic_rate || '--';
             
             const lastMeas = last.measurements ? (typeof last.measurements === 'string' ? JSON.parse(last.measurements) : last.measurements) : {};
             document.getElementById('current-waist').textContent = `${lastMeas.waist || '--'} cm`;
@@ -259,12 +259,10 @@
                 const initial = prof.initial_weight || first.weight;
                 const target = prof.target_weight;
                 const current = last.weight;
-                
                 let progress = 0;
-                if (target < initial) { progress = ((initial - current) / (initial - target)) * 100; }
-                else if (target > initial) { progress = ((current - initial) / (target - initial)) * 100; }
+                if (target < initial) progress = ((initial - current) / (initial - target)) * 100;
+                else if (target > initial) progress = ((current - initial) / (target - initial)) * 100;
                 progress = Math.min(100, Math.max(0, progress));
-                
                 document.getElementById('meta-container').style.display = 'block';
                 document.getElementById('meta-percentage').textContent = `${Math.round(progress)}%`;
                 document.getElementById('meta-bar').style.width = `${progress}%`;
@@ -276,9 +274,8 @@
             let insights = [];
             if (lastFat > 25) insights.push("🔥 <b>Foco Metabólico:</b> Seu percentual de gordura sugere foco em treinos de alta densidade para otimizar a queima lipídica.");
             if (last.visceral_fat > 9) insights.push("⚠️ <b>Gordura Visceral:</b> Atenção ao nível inflamatório. Priorize sono de qualidade e reduza ultraprocessados.");
-            if (parseFloat(document.getElementById('body-water').textContent) < 55) insights.push("💧 <b>Hidratação:</b> Seu nível de água está abaixo do ideal. Aumente a ingestão para melhorar a síntese proteica.");
+            if (last.basal_metabolic_rate < 1500) insights.push("⚡ <b>Metabolismo:</b> Sua taxa basal indica necessidade de aumento de massa magra para queima passiva.");
             if (last.muscle_percentage > prev.muscle_percentage) insights.push("💪 <b>Hipertrofia:</b> Evolução muscular positiva detectada! Seu metabolismo basal está aumentando.");
-            if (insights.length === 0) insights.push("✨ <b>Constância:</b> Seus indicadores estão estáveis. Mantenha a disciplina no protocolo atual.");
             document.getElementById('insight-text').innerHTML = insights.join('<br><br>');
 
             // History Table
@@ -289,48 +286,37 @@
                 <tr style="border-bottom: 1px solid var(--glass-border);">
                     <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${new Date(a.created_at).toLocaleDateString('pt-BR')}</td>
                     <td style="padding: 16px; font-size: 0.85rem; font-weight: 800; color: #FFF;">${a.weight.toFixed(1)} kg</td>
+                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.imc || '--'}</td>
                     <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.body_fat || a.fat_percentage || 0}%</td>
                     <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${a.muscle_percentage || 0}%</td>
                     <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${m.waist || '--'} cm</td>
-                    <td style="padding: 16px; font-size: 0.85rem; color: var(--text-secondary);">${m.hip || '--'} cm</td>
                 </tr>`;
             }).reverse().join('');
 
-            // Chart
-            const ctx = document.getElementById('weightChart').getContext('2d');
-            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, 'rgba(217, 108, 43, 0.2)');
-            gradient.addColorStop(1, 'rgba(217, 108, 43, 0)');
-
+            // Multi Chart
+            const ctx = document.getElementById('multiChart').getContext('2d');
             new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: assessments.map(a => new Date(a.created_at).toLocaleDateString('pt-BR')),
-                    datasets: [{
-                        label: 'Peso',
-                        data: assessments.map(a => a.weight),
-                        borderColor: '#D96C2B',
-                        backgroundColor: gradient,
-                        borderWidth: 3,
-                        pointBackgroundColor: '#D96C2B',
-                        pointBorderColor: 'rgba(255,255,255,0.1)',
-                        pointRadius: 4,
-                        fill: true,
-                        tension: 0.4
-                    }]
+                    datasets: [
+                        { label: 'Peso (kg)', data: assessments.map(a => a.weight), borderColor: '#D96C2B', tension: 0.4, borderWidth: 3 },
+                        { label: 'Gordura (%)', data: assessments.map(a => a.body_fat || a.fat_percentage), borderColor: '#EF4444', tension: 0.4 },
+                        { label: 'Músculo (%)', data: assessments.map(a => a.muscle_percentage), borderColor: '#10B981', tension: 0.4 },
+                        { label: 'IMC', data: assessments.map(a => a.imc), borderColor: '#3B82F6', tension: 0.4 }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
+                    plugins: { legend: { display: true, labels: { color: '#FFF', font: { size: 10 } } } },
                     scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } } },
-                        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } } }
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.4)' } },
+                        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.4)' } }
                     }
                 }
             });
         }
-
         init();
     </script>
 </body>

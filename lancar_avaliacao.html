@@ -27,7 +27,7 @@
             <div class="card-core">
                 <div class="form-group">
                     <label>IDENTIFICAÇÃO DO ALUNO</label>
-                    <select id="select-aluno" style="background: rgba(255,255,255,0.02);">
+                    <select id="select-aluno" onchange="onAlunoChange()" style="background: rgba(255,255,255,0.02);">
                         <option value="">SELECIONE UM ATIVO NA REDE...</option>
                     </select>
                 </div>
@@ -56,12 +56,12 @@
                         <input type="number" id="visceral_fat" step="1" placeholder="0">
                     </div>
                     <div class="form-group">
-                        <label>IDADE METAB.</label>
+                        <label>IDADE CORPORAL</label>
                         <input type="number" id="metabolic_age" step="1" placeholder="00">
                     </div>
                     <div class="form-group">
-                        <label>% ÁGUA</label>
-                        <input type="number" id="body_water" step="0.1" placeholder="00.0">
+                        <label>TAXA METABÓLICA (KCAL)</label>
+                        <input type="number" id="bmr" step="1" placeholder="0000">
                     </div>
                 </div>
                 <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--glass-border);">
@@ -69,7 +69,7 @@
                     <div class="form-group" style="max-width: 250px;">
                         <label>PESO META DO PROTOCOLO (KG)</label>
                         <input type="number" id="target_weight" step="0.1" placeholder="Ex: 85.0">
-                        <p style="font-size: 0.6rem; color: var(--text-secondary); margin-top: 8px;">Este valor define a barra de progresso do aluno.</p>
+                        <p style="font-size: 0.6rem; color: var(--text-secondary); margin-top: 8px;">Deixe em branco para manter a meta atual.</p>
                     </div>
                 </div>
             </div>
@@ -99,7 +99,7 @@
                 </div>
 
                 <button class="btn btn-primary" id="btn-save" style="width: 100%; margin-top: 24px;">
-                    SALVAR DADOS
+                    SALVAR AVALIAÇÃO
                     <div class="btn-icon"><i class="ph-light ph-check"></i></div>
                 </button>
             </div>
@@ -128,9 +128,15 @@
             const alunoId = urlParams.get('aluno');
             if (alunoId) {
                 select.value = alunoId;
-                const { data: prof } = await sb.from('profiles').select('target_weight').eq('id', alunoId).single();
-                if (prof?.target_weight) document.getElementById('target_weight').value = prof.target_weight;
+                onAlunoChange();
             }
+        }
+
+        async function onAlunoChange() {
+            const alunoId = document.getElementById('select-aluno').value;
+            if (!alunoId) return;
+            const { data: prof } = await sb.from('profiles').select('target_weight').eq('id', alunoId).single();
+            if (prof?.target_weight) document.getElementById('target_weight').value = prof.target_weight;
         }
 
         document.getElementById('btn-save').onclick = async () => {
@@ -140,7 +146,10 @@
 
             btn.disabled = true;
             const weight = parseFloat(document.getElementById('weight').value || 0);
-            const height = App.profile.height || 170; // Fallback or get from profile
+            
+            // Get height from profile to calc IMC
+            const { data: profData } = await sb.from('profiles').select('height, initial_weight').eq('id', alunoId).single();
+            const height = profData?.height || 175;
             const imc = weight / ((height/100) ** 2);
 
             const assessment = {
@@ -151,13 +160,13 @@
                 muscle_percentage: parseFloat(document.getElementById('muscle_mass').value || 0),
                 visceral_fat: parseFloat(document.getElementById('visceral_fat').value || 0),
                 body_age: parseFloat(document.getElementById('metabolic_age').value || 0),
+                basal_metabolic_rate: parseFloat(document.getElementById('bmr').value || 0),
                 imc: parseFloat(imc.toFixed(2)),
                 measurements: JSON.stringify({
                     waist: document.getElementById('waist').value,
                     abdomen: document.getElementById('abdomen').value,
                     hip: document.getElementById('hip').value
-                }),
-                notes: `Água: ${document.getElementById('body_water').value}%`
+                })
             };
 
             const nextDate = document.getElementById('next_assessment_date').value;
@@ -166,15 +175,11 @@
                 const { error } = await sb.from('assessments').insert([assessment]);
                 if (error) throw error;
                 
-                // Update profile with target weight and next date
                 const targetWeight = parseFloat(document.getElementById('target_weight').value);
                 const updates = {};
                 if (nextDate) updates.next_assessment_date = nextDate;
                 if (!isNaN(targetWeight)) updates.target_weight = targetWeight;
-                
-                // Set initial_weight if not already set
-                const { data: prof } = await sb.from('profiles').select('initial_weight').eq('id', alunoId).single();
-                if (!prof?.initial_weight) updates.initial_weight = weight;
+                if (!profData?.initial_weight) updates.initial_weight = weight;
 
                 if (Object.keys(updates).length > 0) {
                     await sb.from('profiles').update(updates).eq('id', alunoId);
