@@ -437,11 +437,12 @@ html { scroll-behavior: smooth; }
         border-radius: 1rem;
     }
 
-    .bottom-nav-link i { font-size: 1.2rem; }
+    .bottom-nav-link i { font-size: 1.4rem; }
+    .bottom-nav-link span { display: none; }
     .bottom-nav-link.active {
         color: var(--accent);
         background: rgba(217, 108, 43, 0.12);
-        transform: scale(1.05);
+        transform: scale(1.1);
     }
     .bottom-nav-link.active i { color: var(--accent); }
 
