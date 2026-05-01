@@ -26,16 +26,9 @@
         .val-plus { color: #10B981; }
         .val-minus { color: #EF4444; }
         .val-neutral { color: #FFF; }
-        
         #bmi-avatar { transition: transform 0.5s var(--bezier); }
         #bmi-avatar:hover { transform: scale(1.1) rotate(5deg); }
-        
-        .profile-edit-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-top: 20px;
-        }
+        .profile-edit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -59,22 +52,10 @@
                 
                 <div id="profile-edit-section" style="display: none; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--glass-border);">
                     <div class="profile-edit-grid">
-                        <div class="form-group">
-                            <label>NOME COMPLETO</label>
-                            <input type="text" id="edit-name">
-                        </div>
-                        <div class="form-group">
-                            <label>WHATSAPP</label>
-                            <input type="text" id="edit-phone">
-                        </div>
-                        <div class="form-group">
-                            <label>EMAIL</label>
-                            <input type="email" id="edit-email">
-                        </div>
-                        <div class="form-group">
-                            <label>NASCIMENTO</label>
-                            <input type="date" id="edit-birthday">
-                        </div>
+                        <div class="form-group"><label>NOME COMPLETO</label><input type="text" id="edit-name"></div>
+                        <div class="form-group"><label>WHATSAPP</label><input type="text" id="edit-phone"></div>
+                        <div class="form-group"><label>EMAIL</label><input type="email" id="edit-email"></div>
+                        <div class="form-group"><label>NASCIMENTO</label><input type="date" id="edit-birthday"></div>
                     </div>
                     <div class="form-group" style="margin-top: 16px;">
                         <label>OBSERVAÇÕES DO PROTOCOLO</label>
@@ -145,33 +126,13 @@
 
         <!-- Detail Grid -->
         <div class="grid-stack" style="grid-column: span 12;">
-            <div class="card-shell reveal">
-                <div class="card-core" style="text-align: center;">
-                    <span class="eyebrow">IDADE CORPORAL</span>
-                    <div id="body-age" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div>
-                </div>
-            </div>
-            <div class="card-shell reveal">
-                <div class="card-core" style="text-align: center;">
-                    <span class="eyebrow">GORDURA VISCERAL</span>
-                    <div id="visceral-fat" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div>
-                </div>
-            </div>
-            <div class="card-shell reveal">
-                <div class="card-core" style="text-align: center;">
-                    <span class="eyebrow">TAXA METABÓLICA</span>
-                    <div id="basal-metabolic" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div>
-                </div>
-            </div>
-            <div class="card-shell reveal">
-                <div class="card-core" style="text-align: center;">
-                    <span class="eyebrow">CINTURA</span>
-                    <div id="current-waist" style="font-size: 1.8rem; font-weight: 800; color: var(--accent); margin-top: 12px;">-- cm</div>
-                </div>
-            </div>
+            <div class="card-shell reveal"><div class="card-core" style="text-align: center;"><span class="eyebrow">IDADE CORPORAL</span><div id="body-age" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div></div></div>
+            <div class="card-shell reveal"><div class="card-core" style="text-align: center;"><span class="eyebrow">GORDURA VISCERAL</span><div id="visceral-fat" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div></div></div>
+            <div class="card-shell reveal"><div class="card-core" style="text-align: center;"><span class="eyebrow">TAXA METABÓLICA</span><div id="basal-metabolic" style="font-size: 1.8rem; font-weight: 800; color: #FFF; margin-top: 12px;">--</div></div></div>
+            <div class="card-shell reveal"><div class="card-core" style="text-align: center;"><span class="eyebrow">CINTURA</span><div id="current-waist" style="font-size: 1.8rem; font-weight: 800; color: var(--accent); margin-top: 12px;">-- cm</div></div></div>
         </div>
 
-        <!-- Performance Insights -->
+        <!-- Insights -->
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core" style="background: linear-gradient(135deg, rgba(217, 108, 43, 0.05), rgba(0, 0, 0, 0.2)); border: 1px solid rgba(217, 108, 43, 0.1);">
                 <span class="eyebrow" style="color: var(--accent);">INSIGHTS DE PERFORMANCE</span>
@@ -183,13 +144,11 @@
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
                 <h3 style="margin-bottom: 24px;"><i class="ph-light ph-chart-line" style="color: var(--accent);"></i> PROJEÇÃO MULTIDIMENSIONAL</h3>
-                <div style="width: 100%; height: 400px;">
-                    <canvas id="multiChart"></canvas>
-                </div>
+                <div style="width: 100%; height: 400px;"><canvas id="multiChart"></canvas></div>
             </div>
         </div>
 
-        <!-- History Table -->
+        <!-- History -->
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
                 <h3 style="margin-bottom: 24px;"><i class="ph-light ph-clock-counter-clockwise" style="color: var(--accent);"></i> LOG DE MEDIÇÕES</h3>
@@ -228,9 +187,7 @@
             const { data: prof } = await sb.from('profiles').select('*').eq('id', studentId).single();
             if (prof) {
                 document.getElementById('prof-name').textContent = prof.full_name.toUpperCase();
-                document.getElementById('prof-contact').textContent = `${prof.email} • ${prof.whatsapp || '--'}`;
-                
-                // Set edit fields
+                document.getElementById('prof-contact').textContent = `${prof.email} • ${prof.whatsapp || prof.phone || '--'}`;
                 document.getElementById('edit-name').value = prof.full_name;
                 document.getElementById('edit-phone').value = prof.whatsapp || prof.phone || '';
                 document.getElementById('edit-email').value = prof.email;
@@ -245,11 +202,16 @@
             const prev = assessments.length > 1 ? assessments[assessments.length - 2] : last;
             const first = assessments[0];
 
-            // Deltas
+            const lastFat = last.body_fat || last.fat_percentage || 0;
+            const prevFat = prev.body_fat || prev.fat_percentage || 0;
+            const firstFat = first.body_fat || first.fat_percentage || 0;
+            const lastMuscle = last.muscle_percentage || 0;
+            const prevMuscle = prev.muscle_percentage || 0;
+            const firstMuscle = first.muscle_percentage || 0;
+
             const setDelta = (id, cur, comp, s='', r=false) => {
                 const diff = cur - comp;
-                const el = document.getElementById(id);
-                if (!el) return;
+                const el = document.getElementById(id); if (!el) return;
                 if (diff === 0) { el.textContent = `--`; el.className = 'value'; return; }
                 const isGood = r ? diff < 0 : diff > 0;
                 el.textContent = `${diff > 0 ? '+' : ''}${diff.toFixed(1)}${s}`;
@@ -257,13 +219,12 @@
             };
             setDelta('weight-prev', last.weight, prev.weight, ' kg', true);
             setDelta('weight-total', last.weight, first.weight, ' kg', true);
-            setDelta('fat-prev', last.body_fat || 0, prev.body_fat || 0, '%', true);
-            setDelta('fat-total', last.body_fat || 0, first.body_fat || 0, '%', true);
-            setDelta('muscle-prev', last.muscle_percentage || 0, prev.muscle_percentage || 0, '%');
-            setDelta('muscle-total', last.muscle_percentage || 0, first.muscle_percentage || 0, '%');
+            setDelta('fat-prev', lastFat, prevFat, '%', true);
+            setDelta('fat-total', lastFat, firstFat, '%', true);
+            setDelta('muscle-prev', lastMuscle, prevMuscle, '%');
+            setDelta('muscle-total', lastMuscle, firstMuscle, '%');
 
-            // Avatar
-            const bmi = last.imc || (last.weight / 3.06); // fallback
+            const bmi = last.imc || (last.weight / 3.06);
             document.getElementById('current-bmi').textContent = bmi.toFixed(1);
             let img = 'bmi_normal.png'; let status = 'PESO IDEAL';
             if (bmi < 18.5) { img = 'bmi_underweight.png'; status = 'ABAIXO DO PESO'; }
@@ -272,14 +233,12 @@
             document.getElementById('bmi-avatar').src = img;
             document.getElementById('bmi-status').textContent = status;
 
-            // Cards
             document.getElementById('body-age').textContent = last.body_age || '--';
             document.getElementById('visceral-fat').textContent = last.visceral_fat || '--';
-            document.getElementById('basal-metabolic').textContent = last.basal_metabolic_rate || '--';
+            document.getElementById('basal-metabolic').textContent = last.basal_metabolic_rate || last.basal_metabolism || '--';
             const lastMeas = last.measurements ? (typeof last.measurements === 'string' ? JSON.parse(last.measurements) : last.measurements) : {};
             document.getElementById('current-waist').textContent = `${lastMeas.waist || '--'} cm`;
 
-            // Goal
             if (prof?.target_weight) {
                 const initial = prof.initial_weight || first.weight;
                 const target = prof.target_weight;
@@ -292,26 +251,32 @@
                 document.getElementById('meta-target').textContent = `${target.toFixed(1)} kg`;
             }
 
-            // History Table
+            // Insights Logic
+            let insights = [];
+            if (lastFat > 25) insights.push("🔥 <b>Foco Metabólico:</b> Seu percentual de gordura sugere foco em treinos de alta densidade.");
+            if (lastMuscle > 50) insights.push("💪 <b>Alta Densidade:</b> Sua massa muscular está em excelente nível, otimizando a queima basal.");
+            if (last.visceral_fat > 9) insights.push("⚠️ <b>Aviso:</b> Gordura visceral elevada detectada. Monitore a alimentação rigorosamente.");
+            document.getElementById('insight-text').innerHTML = insights.length ? insights.join('<br><br>') : "Continue com o protocolo! Seus dados mostram estabilidade.";
+
             document.getElementById('history-body').innerHTML = assessments.map(a => {
                 const m = a.measurements ? (typeof a.measurements === 'string' ? JSON.parse(a.measurements) : a.measurements) : {};
+                const f = a.body_fat || a.fat_percentage || 0;
                 return `
                 <tr style="border-bottom: 1px solid var(--glass-border);">
                     <td style="padding:16px; font-size:0.8rem; color:var(--text-secondary);">${new Date(a.created_at).toLocaleDateString('pt-BR')}</td>
                     <td style="padding:16px; font-weight:800; color:#FFF;">${a.weight.toFixed(1)} kg</td>
                     <td style="padding:16px; color:var(--text-secondary);">${a.imc || '--'}</td>
-                    <td style="padding:16px; color:var(--text-secondary);">${a.body_fat || 0}%</td>
+                    <td style="padding:16px; color:var(--text-secondary);">${f}%</td>
                     <td style="padding:16px; color:var(--text-secondary);">${a.muscle_percentage || 0}%</td>
                     <td style="padding:16px; color:var(--text-secondary);">${m.waist || '--'} cm</td>
                     <td style="padding:16px;">
                         <button class="btn" style="padding: 6px 12px; font-size: 0.6rem; background: rgba(255,255,255,0.05);" onclick="location.href='lancar_avaliacao.html?id=${a.id}'">
-                            <i class="ph-light ph-pencil-simple"></i> EDITAR
+                            EDITAR
                         </button>
                     </td>
                 </tr>`;
             }).reverse().join('');
 
-            // Multi Chart
             const ctx = document.getElementById('multiChart').getContext('2d');
             new Chart(ctx, {
                 type: 'line',
@@ -319,8 +284,8 @@
                     labels: assessments.map(a => new Date(a.created_at).toLocaleDateString('pt-BR')),
                     datasets: [
                         { label: 'Peso (kg)', data: assessments.map(a => a.weight), borderColor: '#D96C2B', yAxisID: 'y' },
-                        { label: 'Gordura (%)', data: assessments.map(a => a.body_fat), borderColor: '#EF4444', yAxisID: 'y1' },
-                        { label: 'Músculo (%)', data: assessments.map(a => a.muscle_percentage), borderColor: '#10B981', yAxisID: 'y1' },
+                        { label: 'Gordura (%)', data: assessments.map(a => a.body_fat || a.fat_percentage || 0), borderColor: '#EF4444', yAxisID: 'y1' },
+                        { label: 'Músculo (%)', data: assessments.map(a => a.muscle_percentage || 0), borderColor: '#10B981', yAxisID: 'y1' },
                         { label: 'IMC', data: assessments.map(a => a.imc), borderColor: '#3B82F6', yAxisID: 'y2' }
                     ]
                 },
@@ -336,24 +301,12 @@
             });
         }
 
-        function toggleProfileEdit() {
-            const sec = document.getElementById('profile-edit-section');
-            sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
-        }
-
+        function toggleProfileEdit() { const sec = document.getElementById('profile-edit-section'); sec.style.display = sec.style.display === 'none' ? 'block' : 'none'; }
         async function saveProfile() {
-            const updates = {
-                full_name: document.getElementById('edit-name').value,
-                whatsapp: document.getElementById('edit-phone').value,
-                email: document.getElementById('edit-email').value,
-                birthday: document.getElementById('edit-birthday').value,
-                notes: document.getElementById('edit-notes').value
-            };
+            const updates = { full_name: document.getElementById('edit-name').value, whatsapp: document.getElementById('edit-phone').value, email: document.getElementById('edit-email').value, birthday: document.getElementById('edit-birthday').value, notes: document.getElementById('edit-notes').value };
             const { error } = await sb.from('profiles').update(updates).eq('id', studentId);
-            if (error) showToast(error.message, 'error');
-            else { showToast('Perfil atualizado!'); loadData(); toggleProfileEdit(); }
+            if (error) showToast(error.message, 'error'); else { showToast('Perfil atualizado!'); loadData(); toggleProfileEdit(); }
         }
-
         init();
     </script>
 </body>
