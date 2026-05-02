@@ -183,6 +183,12 @@
             if(!res) return;
             await loadData();
             populateProductSelect();
+
+            // Handle deep link actions
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('action') === 'loan') {
+                openLoanModal();
+            }
         }
 
         async function loadData() {

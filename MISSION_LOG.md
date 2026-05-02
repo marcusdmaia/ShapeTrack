@@ -23,13 +23,13 @@
 - **Design Ethereal:** Implementação do sistema de cards de vídeo com overlays de play e profundidade.
 - **Responsividade:** Migração para a classe `.st-grid`, garantindo visualização perfeita em iPhone/Android.
 
-### 🗺️ Navegação & UX (Ajuste Final)
-- **Menu Mobile:** Transformado em barra horizontal rolável (scrollable) para acomodar todos os módulos sem cortes.
-- **Consistência Visual:** Atualizado ícone de Parcerias para `ph-planet`, alinhando o menu com o cabeçalho da página.
-- **Sync Global:** Garantido que todas as páginas herdem a navegação centralizada via `js/config.js`.
+### ⚡ Atalhos & Gestão Manual (Dashboard)
+- **Atalhos Rápidos:** Implementados botões para Nova Venda, Nova Avaliação, Novo Empréstimo (deep-link) e Cópia do Link do Funil.
+- **Cadastro Manual:** Adicionado modal para registro direto de alunos (Nome, WhatsApp, Niver, Altura, E-mail).
+- **Vínculo por E-mail:** Atualizada a lógica de inicialização para reconhecer e vincular cadastros manuais assim que o aluno faz o primeiro acesso com o mesmo e-mail.
 
-## 🚀 PRÓXIMOS PASSOS
-1. **Fim da Missão:** Entrega final e encerramento do ciclo de estabilização.
+## ✅ ESTADO ATUAL: 100% FUNCIONAL & PREMIUM
+O sistema agora permite o fluxo completo: desde a captação automática via funil até o cadastro manual direto pelo mentor, com transição fluida entre módulos através de atalhos no dashboard.
 
 ---
 *Assinado: Antigravity AI Console*

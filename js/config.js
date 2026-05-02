@@ -17,13 +17,22 @@ const App = {
         // Try to get cached profile
         let profile = JSON.parse(sessionStorage.getItem('st_profile'));
         if (!profile || profile.id !== session.user.id) {
-            const { data, error } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
-            if (error) {
-                console.error('Profile fetch error:', error);
-                return null;
+            let { data, error } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+            
+            // If not found by ID, try to find by email (manual registration fallback)
+            if (error || !data) {
+                const { data: emailData, error: emailError } = await sb.from('profiles').select('*').eq('email', session.user.email).is('id', null).single();
+                if (emailData) {
+                    // Update the manual entry with the new session ID
+                    const { data: updatedData } = await sb.from('profiles').update({ id: session.user.id }).eq('email', session.user.email).select().single();
+                    data = updatedData;
+                } else if (error && error.code !== 'PGRST116') {
+                    console.error('Profile fetch error:', error);
+                    return null;
+                }
             }
             profile = data;
-            sessionStorage.setItem('st_profile', JSON.stringify(profile));
+            if (profile) sessionStorage.setItem('st_profile', JSON.stringify(profile));
         }
 
         this.profile = profile;

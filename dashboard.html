@@ -51,39 +51,130 @@
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="card-shell reveal span-8" style="animation-delay: 0.4s;">
+        <!-- Quick Actions & Manual Registration -->
+        <div class="card-shell reveal span-12" style="animation-delay: 0.4s;">
             <div class="card-core">
-                <h3>ATALHOS DO SISTEMA</h3>
-                <div class="grid-stack">
-                    <a href="vendas.html" class="btn">
-                        <i class="ph-light ph-bolt"></i>
-                        GESTÃO DE VENDAS
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h3>ATALHOS RÁPIDOS</h3>
+                    <button class="btn btn-primary" onclick="openModal('modal-aluno')" style="padding: 10px 20px; font-size: 0.8rem;">
+                        NOVO ALUNO (MANUAL)
+                        <div class="btn-icon"><i class="ph-light ph-user-plus"></i></div>
+                    </button>
+                </div>
+                
+                <div class="grid-stack" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <a href="vendas.html" class="btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">
+                        <i class="ph-light ph-shopping-cart-simple" style="color: var(--accent);"></i>
+                        NOVA VENDA
                     </a>
-                    <a href="alunos.html" class="btn">
-                        <i class="ph-light ph-user-focus"></i>
-                        PERFIL DOS ALUNOS
+                    <a href="lancar_avaliacao.html" class="btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">
+                        <i class="ph-light ph-chart-line-up" style="color: var(--accent);"></i>
+                        NOVA AVALIAÇÃO
                     </a>
+                    <a href="estoque.html?action=loan" class="btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">
+                        <i class="ph-light ph-package" style="color: var(--accent);"></i>
+                        NOVO EMPRÉSTIMO
+                    </a>
+                    <button class="btn" onclick="copyFunnelLink()" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">
+                        <i class="ph-light ph-funnel" style="color: var(--accent);"></i>
+                        LINK DO FUNIL
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="card-shell reveal span-4" style="animation-delay: 0.5s;">
-            <div class="card-core security-box">
-                <i class="ph-light ph-shield-check"></i>
-                <p>SISTEMA PROTEGIDO POR PROTOCOLO SHAPETRACK</p>
+        <!-- Manual Student Modal -->
+        <div id="modal-aluno" class="modal">
+            <div class="card-shell modal-card">
+                <div class="card-core">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h3>CADASTRO MANUAL</h3>
+                        <button onclick="closeModal('modal-aluno')" style="background: none; border: none; color: #FFF; cursor: pointer; font-size: 1.5rem;"><i class="ph-light ph-x"></i></button>
+                    </div>
+                    
+                    <form id="form-manual-aluno">
+                        <div class="form-group">
+                            <label>NOME COMPLETO</label>
+                            <input type="text" id="m_name" placeholder="Ex: João Silva" required>
+                        </div>
+                        <div class="profile-edit-grid">
+                            <div class="form-group">
+                                <label>WHATSAPP</label>
+                                <input type="tel" id="m_phone" placeholder="(00) 00000-0000" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ANIVERSÁRIO</label>
+                                <input type="date" id="m_birth" required>
+                            </div>
+                        </div>
+                        <div class="profile-edit-grid">
+                            <div class="form-group">
+                                <label>ALTURA (CM)</label>
+                                <input type="number" id="m_height" placeholder="175" required>
+                            </div>
+                            <div class="form-group">
+                                <label>E-MAIL</label>
+                                <input type="email" id="m_email" placeholder="aluno@email.com" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">
+                            FINALIZAR CADASTRO
+                            <div class="btn-icon"><i class="ph-fill ph-check-circle"></i></div>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="js/config.js?v=3.9"></script>
     <script>
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function copyFunnelLink() {
+            const link = window.location.origin + '/index.html';
+            navigator.clipboard.writeText(link).then(() => {
+                showToast('Link do Funil copiado!');
+            });
+        }
+
         async function init() {
             const context = await App.init('dashboard.html');
             if (!context) return;
             
             document.getElementById('profile_name').innerText = context.profile.full_name.toUpperCase();
-            loadStats(context.session.user.id);
+            loadStats(context.profile.id);
+
+            document.getElementById('form-manual-aluno').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button[type="submit"]');
+                btn.disabled = true;
+
+                const payload = {
+                    full_name: document.getElementById('m_name').value,
+                    phone: document.getElementById('m_phone').value,
+                    birthday: document.getElementById('m_birth').value,
+                    height: parseInt(document.getElementById('m_height').value),
+                    email: document.getElementById('m_email').value,
+                    role: 'client',
+                    mentor_id: context.profile.id,
+                    is_active: true
+                };
+
+                const { error } = await sb.from('profiles').insert(payload);
+
+                if (error) {
+                    showToast(error.message, 'error');
+                } else {
+                    showToast('Aluno cadastrado com sucesso!');
+                    closeModal('modal-aluno');
+                    loadStats(context.profile.id);
+                    e.target.reset();
+                }
+                btn.disabled = false;
+            });
         }
 
         async function loadStats(userId) {
