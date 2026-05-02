@@ -68,21 +68,64 @@
 
     <!-- CRM Modal -->
     <div id="crmModal" class="modal" onclick="if(event.target === this) closeModal()">
-        <div class="card-shell modal-card reveal">
+        <div class="card-shell modal-card reveal" style="width: 95%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
             <div class="card-core">
-                <h2 style="margin-bottom: 12px;">AJUSTE DE PERFIL</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h2 style="font-size: 1.2rem;">AJUSTE DE <span class="text-gradient">PERFIL</span></h2>
+                    <button class="btn-close" onclick="closeModal()"><i class="ph-bold ph-x"></i></button>
+                </div>
+                
                 <input type="hidden" id="crm-aluno-id">
-                <div class="form-group">
-                    <label>DATA DE ANIVERSÁRIO</label>
-                    <input type="date" id="crm-birthday">
+                
+                <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group span-2" style="grid-column: span 2;">
+                        <label>NOME COMPLETO</label>
+                        <input type="text" id="crm-name" placeholder="NOME DO ALUNO">
+                    </div>
+                    <div class="form-group">
+                        <label>WHATSAPP</label>
+                        <input type="text" id="crm-whatsapp" placeholder="11999999999">
+                    </div>
+                    <div class="form-group">
+                        <label>E-MAIL</label>
+                        <input type="email" id="crm-email" placeholder="email@exemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>NASCIMENTO</label>
+                        <input type="date" id="crm-birthday">
+                    </div>
+                    <div class="form-group">
+                        <label>ALTURA (CM)</label>
+                        <input type="number" id="crm-height" placeholder="175">
+                    </div>
+                    <div class="form-group">
+                        <label>GÊNERO</label>
+                        <select id="crm-gender">
+                            <option value="masculino">MASCULINO</option>
+                            <option value="feminino">FEMININO</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>OBJETIVO</label>
+                        <select id="crm-goal">
+                            <option value="perda">PERDA DE PESO</option>
+                            <option value="ganho">GANHO DE MASSA</option>
+                            <option value="manutencao">MANUTENÇÃO</option>
+                        </select>
+                    </div>
+                    <div class="form-group span-2" style="grid-column: span 2;">
+                        <label>OBSERVAÇÕES DO PROTOCOLO</label>
+                        <textarea id="crm-notes" placeholder="HISTÓRICO..." style="width: 100%; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 12px; color: #FFF; padding: 12px;"></textarea>
+                    </div>
+                    <div class="form-group span-2" style="grid-column: span 2; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border);">
+                        <input type="checkbox" id="crm-business" style="width: 20px; height: 20px;">
+                        <label style="margin-bottom: 0;">NEGÓCIO APRESENTADO?</label>
+                    </div>
                 </div>
-                <div class="form-group" style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border);">
-                    <input type="checkbox" id="crm-business" style="width: 20px; height: 20px;">
-                    <label style="margin-bottom: 0;">NEGÓCIO APRESENTADO?</label>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px;">
                     <button class="btn" onclick="closeModal()" style="background: rgba(255,255,255,0.05); color: #FFF;">CANCELAR</button>
-                    <button class="btn btn-primary" onclick="saveCRM()">SALVAR</button>
+                    <button class="btn btn-primary" onclick="saveCRM()">SALVAR ALTERAÇÕES</button>
                 </div>
             </div>
         </div>
@@ -149,18 +192,34 @@
         function openCRM(alunoId) {
             const aluno = allAlunos.find(a => a.id === alunoId);
             document.getElementById('crm-aluno-id').value = alunoId;
+            document.getElementById('crm-name').value = aluno.full_name || '';
+            document.getElementById('crm-whatsapp').value = aluno.whatsapp || aluno.phone || '';
+            document.getElementById('crm-email').value = aluno.email || '';
             document.getElementById('crm-birthday').value = aluno.birthday || '';
+            document.getElementById('crm-height').value = aluno.height || '';
+            document.getElementById('crm-gender').value = aluno.gender || 'masculino';
+            document.getElementById('crm-goal').value = aluno.goal || 'perda';
+            document.getElementById('crm-notes').value = aluno.notes || '';
             document.getElementById('crm-business').checked = aluno.business_presented || false;
             document.getElementById('crmModal').style.display = 'flex';
         }
 
         async function saveCRM() {
             const id = document.getElementById('crm-aluno-id').value;
-            const bday = document.getElementById('crm-birthday').value;
-            const business = document.getElementById('crm-business').checked;
-            const { error } = await sb.from('profiles').update({ birthday: bday, business_presented: business }).eq('id', id);
+            const updates = {
+                full_name: document.getElementById('crm-name').value,
+                whatsapp: document.getElementById('crm-whatsapp').value,
+                email: document.getElementById('crm-email').value,
+                birthday: document.getElementById('crm-birthday').value,
+                height: parseFloat(document.getElementById('crm-height').value),
+                gender: document.getElementById('crm-gender').value,
+                goal: document.getElementById('crm-goal').value,
+                notes: document.getElementById('crm-notes').value,
+                business_presented: document.getElementById('crm-business').checked
+            };
+            const { error } = await sb.from('profiles').update(updates).eq('id', id);
             if (error) return showToast(error.message, 'error');
-            showToast('Dados salvos!');
+            showToast('Perfil atualizado!');
             closeModal();
             loadAlunos(App.profile.id);
         }

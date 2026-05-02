@@ -89,42 +89,70 @@
                 <div class="card-core">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                         <h3>CADASTRO MANUAL</h3>
-                        <button onclick="closeModal('modal-aluno')" style="background: none; border: none; color: #FFF; cursor: pointer; font-size: 1.5rem;"><i class="ph-light ph-x"></i></button>
-                    </div>
-                    
-                    <form id="form-manual-aluno">
-                        <div class="form-group">
-                            <label>NOME COMPLETO</label>
-                            <input type="text" id="m_name" placeholder="Ex: João Silva" required>
-                        </div>
-                        <div class="profile-edit-grid">
-                            <div class="form-group">
-                                <label>WHATSAPP</label>
-                                <input type="tel" id="m_phone" placeholder="(00) 00000-0000" required>
-                            </div>
-                            <div class="form-group">
-                                <label>ANIVERSÁRIO</label>
-                                <input type="date" id="m_birth" required>
-                            </div>
-                        </div>
-                        <div class="profile-edit-grid">
-                            <div class="form-group">
-                                <label>ALTURA (CM)</label>
-                                <input type="number" id="m_height" placeholder="175" required>
-                            </div>
-                            <div class="form-group">
-                                <label>E-MAIL</label>
-                                <input type="email" id="m_email" placeholder="aluno@email.com" required>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">
-                            FINALIZAR CADASTRO
-                            <div class="btn-icon"><i class="ph-fill ph-check-circle"></i></div>
-                        </button>
-                    </form>
+    <!-- Manual Student Modal -->
+    <div id="modal-aluno" class="modal">
+        <div class="card-shell" style="width: 95%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
+            <div class="card-core">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h2 style="font-size: 1.2rem;">NOVO ALUNO <span class="text-gradient">MANUAL</span></h2>
+                    <button class="btn-close" onclick="closeModal('modal-aluno')"><i class="ph-bold ph-x"></i></button>
                 </div>
+                
+                <form id="form-manual-aluno">
+                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div class="form-group span-2" style="grid-column: span 2;">
+                            <label>NOME COMPLETO</label>
+                            <input type="text" id="m_name" placeholder="EX: JOÃO DA SILVA" required>
+                        </div>
+                        <div class="form-group">
+                            <label>WHATSAPP</label>
+                            <input type="text" id="m_whatsapp" placeholder="11999999999" required>
+                        </div>
+                        <div class="form-group">
+                            <label>E-MAIL</label>
+                            <input type="email" id="m_email" placeholder="email@exemplo.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>NASCIMENTO</label>
+                            <input type="date" id="m_birth">
+                        </div>
+                        <div class="form-group">
+                            <label>ALTURA (CM)</label>
+                            <input type="number" id="m_height" placeholder="175">
+                        </div>
+                        <div class="form-group">
+                            <label>GÊNERO</label>
+                            <select id="m_gender">
+                                <option value="masculino">MASCULINO</option>
+                                <option value="feminino">FEMININO</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>OBJETIVO</label>
+                            <select id="m_goal">
+                                <option value="perda">PERDA DE PESO</option>
+                                <option value="ganho">GANHO DE MASSA</option>
+                                <option value="manutencao">MANUTENÇÃO</option>
+                            </select>
+                        </div>
+                        <div class="form-group span-2" style="grid-column: span 2;">
+                            <label>OBSERVAÇÕES DO PROTOCOLO</label>
+                            <textarea id="m_notes" placeholder="HISTÓRICO, RESTRIÇÕES, ETC..." style="width: 100%; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 12px; color: #FFF; padding: 12px;"></textarea>
+                        </div>
+                        <div class="form-group span-2" style="grid-column: span 2; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border);">
+                            <input type="checkbox" id="m_business" style="width: 20px; height: 20px;">
+                            <label style="margin-bottom: 0;">NEGÓCIO APRESENTADO?</label>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px;">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-aluno')">CANCELAR</button>
+                        <button type="submit" class="btn btn-primary">CADASTRAR ATIVO</button>
+                    </div>
+                </form>
             </div>
+        </div>
+    </div>
         </div>
     </div>
 
@@ -154,10 +182,14 @@
 
                 const payload = {
                     full_name: document.getElementById('m_name').value,
-                    phone: document.getElementById('m_phone').value,
+                    whatsapp: document.getElementById('m_whatsapp').value,
+                    email: document.getElementById('m_email').value,
                     birthday: document.getElementById('m_birth').value,
                     height: parseInt(document.getElementById('m_height').value),
-                    email: document.getElementById('m_email').value,
+                    gender: document.getElementById('m_gender').value,
+                    goal: document.getElementById('m_goal').value,
+                    notes: document.getElementById('m_notes').value,
+                    business_presented: document.getElementById('m_business').checked,
                     role: 'client',
                     mentor_id: context.profile.id,
                     is_active: true

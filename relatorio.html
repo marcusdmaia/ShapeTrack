@@ -33,17 +33,52 @@
                     <button class="btn btn-secondary" onclick="toggleProfileEdit()" style="width: auto;"><i class="ph-light ph-user-circle-plus"></i> EDITAR PERFIL</button>
                 </div>
                 <div id="profile-edit-section" style="display: none; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--glass-border);">
-                    <div class="profile-edit-grid">
-                        <div class="form-group"><label>NOME COMPLETO</label><input type="text" id="edit-name"></div>
-                        <div class="form-group"><label>WHATSAPP</label><input type="text" id="edit-phone"></div>
-                        <div class="form-group"><label>EMAIL</label><input type="email" id="edit-email"></div>
-                        <div class="form-group"><label>ALTURA (CM)</label><input type="number" id="edit-height"></div>
+                    <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div class="form-group span-2" style="grid-column: span 2;">
+                            <label>NOME COMPLETO</label>
+                            <input type="text" id="edit-name">
+                        </div>
+                        <div class="form-group">
+                            <label>WHATSAPP</label>
+                            <input type="text" id="edit-phone">
+                        </div>
+                        <div class="form-group">
+                            <label>E-MAIL</label>
+                            <input type="email" id="edit-email">
+                        </div>
+                        <div class="form-group">
+                            <label>NASCIMENTO</label>
+                            <input type="date" id="edit-birthday">
+                        </div>
+                        <div class="form-group">
+                            <label>ALTURA (CM)</label>
+                            <input type="number" id="edit-height">
+                        </div>
+                        <div class="form-group">
+                            <label>GÊNERO</label>
+                            <select id="edit-gender">
+                                <option value="masculino">MASCULINO</option>
+                                <option value="feminino">FEMININO</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>OBJETIVO</label>
+                            <select id="edit-goal">
+                                <option value="perda">PERDA DE PESO</option>
+                                <option value="ganho">GANHO DE MASSA</option>
+                                <option value="manutencao">MANUTENÇÃO</option>
+                            </select>
+                        </div>
+                        <div class="form-group span-2" style="grid-column: span 2;">
+                            <label>OBSERVAÇÕES DO PROTOCOLO</label>
+                            <textarea id="edit-notes" style="width: 100%; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 12px; color: #FFF; padding: 12px;"></textarea>
+                        </div>
+                        <div class="form-group span-2" style="grid-column: span 2; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border);">
+                            <input type="checkbox" id="edit-business" style="width: 20px; height: 20px;">
+                            <label style="margin-bottom: 0;">NEGÓCIO APRESENTADO?</label>
+                        </div>
                     </div>
-                    <div class="form-group" style="margin-top: 16px;">
-                        <label>OBSERVAÇÕES DO PROTOCOLO</label>
-                        <textarea id="edit-notes" style="width: 100%; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 12px; color: #FFF; padding: 12px;"></textarea>
-                    </div>
-                    <button class="btn btn-primary" onclick="saveProfile()" style="margin-top: 16px;">SALVAR ALTERAÇÕES</button>
+                    <button class="btn btn-primary" onclick="saveProfile()" style="margin-top: 24px; width: 100%;">SALVAR ALTERAÇÕES</button>
                 </div>
             </div>
         </div>
@@ -133,8 +168,12 @@
                 document.getElementById('edit-name').value = prof.full_name || '';
                 document.getElementById('edit-phone').value = prof.whatsapp || prof.phone || '';
                 document.getElementById('edit-email').value = prof.email || '';
+                document.getElementById('edit-birthday').value = prof.birthday || '';
                 document.getElementById('edit-height').value = prof.height || '';
+                document.getElementById('edit-gender').value = prof.gender || 'masculino';
+                document.getElementById('edit-goal').value = prof.goal || 'perda';
                 document.getElementById('edit-notes').value = prof.notes || '';
+                document.getElementById('edit-business').checked = prof.business_presented || false;
 
                 const { data: assessments } = await sb.from('assessments').select('*').eq('client_id', studentId).order('created_at', { ascending: true });
                 if (!assessments?.length) return;
@@ -224,7 +263,17 @@
         function toggleProfileEdit() { const sec = document.getElementById('profile-edit-section'); sec.style.display = sec.style.display === 'none' ? 'block' : 'none'; }
         async function saveProfile() {
             try {
-                const updates = { full_name: document.getElementById('edit-name').value, whatsapp: document.getElementById('edit-phone').value, email: document.getElementById('edit-email').value, height: parseFloat(document.getElementById('edit-height').value), notes: document.getElementById('edit-notes').value };
+                const updates = { 
+                    full_name: document.getElementById('edit-name').value, 
+                    whatsapp: document.getElementById('edit-phone').value, 
+                    email: document.getElementById('edit-email').value, 
+                    birthday: document.getElementById('edit-birthday').value,
+                    height: parseFloat(document.getElementById('edit-height').value),
+                    gender: document.getElementById('edit-gender').value,
+                    goal: document.getElementById('edit-goal').value,
+                    notes: document.getElementById('edit-notes').value,
+                    business_presented: document.getElementById('edit-business').checked
+                };
                 const { error } = await sb.from('profiles').update(updates).eq('id', studentId);
                 if (error) showToast(error.message, 'error'); else { showToast('Perfil atualizado!'); loadData(); toggleProfileEdit(); }
             } catch (e) { console.error('SaveProfile error:', e); }

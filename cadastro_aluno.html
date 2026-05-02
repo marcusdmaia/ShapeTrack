@@ -26,21 +26,50 @@
 
             <div class="form-group">
                 <label>NOME COMPLETO</label>
-                <input type="text" id="name" placeholder="EX: JOÃO SILVA">
+                <input type="text" id="name" placeholder="EX: JOÃO SILVA" required>
             </div>
 
-            <div class="form-group">
-                <label>E-MAIL DE ACESSO</label>
-                <input type="email" id="email" placeholder="seu@email.com">
+            <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: left;">
+                <div class="form-group">
+                    <label>E-MAIL</label>
+                    <input type="email" id="email" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>WHATSAPP</label>
+                    <input type="text" id="whatsapp" placeholder="11999999999" required>
+                </div>
+                <div class="form-group">
+                    <label>NASCIMENTO</label>
+                    <input type="date" id="birthday" required>
+                </div>
+                <div class="form-group">
+                    <label>ALTURA (CM)</label>
+                    <input type="number" id="height" placeholder="175" required>
+                </div>
+                <div class="form-group">
+                    <label>GÊNERO</label>
+                    <select id="gender">
+                        <option value="masculino">MASCULINO</option>
+                        <option value="feminino">FEMININO</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>OBJETIVO</label>
+                    <select id="goal">
+                        <option value="perda">PERDA DE PESO</option>
+                        <option value="ganho">GANHO DE MASSA</option>
+                        <option value="manutencao">MANUTENÇÃO</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-top: 12px;">
                 <label>CHAVE DE ACESSO (SENHA)</label>
-                <input type="password" id="password" placeholder="MÍNIMO 6 CARACTERES">
+                <input type="password" id="password" placeholder="MÍNIMO 6 CARACTERES" required>
             </div>
 
-            <button class="btn btn-primary" id="signupBtn" style="width: 100%; margin-top: 12px;">
-                CRIAR MINHA CONTA
+            <button class="btn btn-primary" id="signupBtn" style="width: 100%; margin-top: 24px;">
+                INICIAR MEU PROTOCOLO
                 <div class="btn-icon"><i class="ph-light ph-user-plus"></i></div>
             </button>
 
@@ -90,13 +119,26 @@
             }
 
             if (data.user) {
-                const { error: profileError } = await sb.from('profiles').insert([{ 
-                    id: data.user.id, full_name: name, role: 'client', mentor_id: mentorId 
-                }]);
+                const profileData = { 
+                    id: data.user.id, 
+                    full_name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    whatsapp: document.getElementById('whatsapp').value,
+                    birthday: document.getElementById('birthday').value,
+                    height: parseFloat(document.getElementById('height').value),
+                    gender: document.getElementById('gender').value,
+                    goal: document.getElementById('goal').value,
+                    role: 'client', 
+                    mentor_id: mentorId,
+                    is_active: true
+                };
+
+                const { error: profileError } = await sb.from('profiles').insert([profileData]);
 
                 if (profileError) {
                     msg.style.color = '#ef4444';
-                    msg.textContent = 'ERRO AO VINCULAR PERFIL.';
+                    msg.textContent = 'ERRO AO VINCULAR PERFIL: ' + profileError.message;
+                    btn.disabled = false;
                 } else {
                     msg.style.color = '#2ecc71';
                     msg.textContent = 'CONTA CRIADA! REDIRECIONANDO...';

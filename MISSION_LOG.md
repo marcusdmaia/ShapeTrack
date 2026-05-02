@@ -23,13 +23,17 @@
 - **Design Ethereal:** Implementação do sistema de cards de vídeo com overlays de play e profundidade.
 - **Responsividade:** Migração para a classe `.st-grid`, garantindo visualização perfeita em iPhone/Android.
 
-### ⚡ Atalhos & Gestão Manual (Dashboard)
-- **Atalhos Rápidos:** Implementados botões para Nova Venda, Nova Avaliação, Novo Empréstimo (deep-link) e Cópia do Link do Funil.
-- **Cadastro Manual:** Adicionado modal para registro direto de alunos (Nome, WhatsApp, Niver, Altura, E-mail).
-- **Vínculo por E-mail:** Atualizada a lógica de inicialização para reconhecer e vincular cadastros manuais assim que o aluno faz o primeiro acesso com o mesmo e-mail.
+### 👤 Padronização Human Data (Perfil Completo)
+- **Campos Padronizados:** Nome, E-mail, WhatsApp, Nascimento, Altura, Gênero, Objetivo, Observações e Status de Negócio.
+- **Paridade de Módulos:**
+    - `dashboard.html`: Cadastro manual com campos completos.
+    - `alunos.html`: Ajuste de perfil (CRM) expandido para refletir todos os dados.
+    - `relatorio.html`: Edição de perfil unificada com o CRM.
+    - `cadastro_aluno.html`: Registro inicial do aluno agora capta o perfil completo.
+- **Sincronismo:** Todas as alterações refletem instantaneamente no Supabase e em todas as visões (Mentor e Aluno).
 
-## ✅ ESTADO ATUAL: 100% FUNCIONAL & PREMIUM
-O sistema agora permite o fluxo completo: desde a captação automática via funil até o cadastro manual direto pelo mentor, com transição fluida entre módulos através de atalhos no dashboard.
+## ✅ ESTADO ATUAL: 100% FUNCIONAL & PADRONIZADO
+O sistema agora possui uma "Única Fonte de Verdade" para dados do usuário, eliminando inconsistências entre páginas.
 
 ---
 *Assinado: Antigravity AI Console*
