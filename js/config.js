@@ -68,7 +68,7 @@ function setupNav(profile, activePage) {
         { name: 'ALUNOS', url: 'alunos.html', icon: 'ph-student' },
         { name: 'ESTOQUE', url: 'estoque.html', icon: 'ph-package' },
         { name: 'VÍDEOS', url: 'videos.html', icon: 'ph-video-camera' },
-        { name: 'PARCERIAS', url: 'parcerias.html', icon: 'ph-handshake' },
+        { name: 'PARCERIAS', url: 'parcerias.html', icon: 'ph-planet' },
         { name: 'LEADS', url: 'leads_admin.html', icon: 'ph-users-four' },
         { name: 'CONFIGURAÇÕES', url: 'configuracoes.html', icon: 'ph-gear' }
     ];

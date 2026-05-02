@@ -23,8 +23,10 @@
 - **Design Ethereal:** Implementação do sistema de cards de vídeo com overlays de play e profundidade.
 - **Responsividade:** Migração para a classe `.st-grid`, garantindo visualização perfeita em iPhone/Android.
 
-## ✅ ESTADO ATUAL: 100% PREMIUM & ESTABILIZADO
-O ShapeTrack atingiu o nível máximo de excelência visual e técnica. Todas as páginas críticas foram migradas para o sistema *Ethereal Glass*, o banco de dados está sincronizado e a performance foi otimizada.
+### 🗺️ Navegação & UX (Ajuste Final)
+- **Menu Mobile:** Transformado em barra horizontal rolável (scrollable) para acomodar todos os módulos sem cortes.
+- **Consistência Visual:** Atualizado ícone de Parcerias para `ph-planet`, alinhando o menu com o cabeçalho da página.
+- **Sync Global:** Garantido que todas as páginas herdem a navegação centralizada via `js/config.js`.
 
 ## 🚀 PRÓXIMOS PASSOS
 1. **Fim da Missão:** Entrega final e encerramento do ciclo de estabilização.
