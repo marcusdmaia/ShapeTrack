@@ -180,10 +180,10 @@
                 const h = prof?.height || 175;
                 const bmi = last.imc || (last.weight / Math.pow(h/100, 2));
                 document.getElementById('current-bmi').textContent = bmi.toFixed(1);
-                let img = 'bmi_normal.png'; let status = 'PESO IDEAL';
-                if (bmi < 18.5) { img = 'bmi_underweight.png'; status = 'ABAIXO DO PESO'; }
-                else if (bmi >= 25 && bmi < 30) { img = 'bmi_overweight.png'; status = 'SOBREPESO'; }
-                else if (bmi >= 30) { img = 'bmi_obese.png'; status = 'OBESIDADE'; }
+                let img = 'bmi_normal.webp'; let status = 'PESO IDEAL';
+                if (bmi < 18.5) { img = 'bmi_underweight.webp'; status = 'ABAIXO DO PESO'; }
+                else if (bmi >= 25 && bmi < 30) { img = 'bmi_overweight.webp'; status = 'SOBREPESO'; }
+                else if (bmi >= 30) { img = 'bmi_obese.webp'; status = 'OBESIDADE'; }
                 document.getElementById('bmi-avatar').src = img;
                 document.getElementById('bmi-status').textContent = status;
 

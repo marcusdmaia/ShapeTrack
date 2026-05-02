@@ -25,9 +25,9 @@
         </div>
 
         <!-- Marketplace Grid -->
-        <div class="card-shell reveal span-12" style="background: transparent; border: none; padding: 0;">
-            <h3 style="margin-bottom: 24px;"><i class="ph-light ph-planet" style="color: var(--accent);"></i> ATIVOS DISPONÍVEIS NA REDE</h3>
-            <div id="marketplace-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+        <div class="span-12">
+            <h3 style="margin-bottom: 8px;"><i class="ph-light ph-planet" style="color: var(--accent);"></i> ATIVOS DISPONÍVEIS NA REDE</h3>
+            <div id="marketplace-grid" class="st-grid">
                 <!-- Vídeos Colab -->
             </div>
         </div>
@@ -56,13 +56,17 @@
                 card.className = 'card-shell reveal';
                 card.innerHTML = `
                     <div class="card-core" style="padding: 12px;">
-                        <div style="width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-inner); background: url('https://img.youtube.com/vi/${ytId}/mqdefault.jpg') center/cover; border: 1px solid var(--glass-border);"></div>
+                        <div class="video-thumb" style="background: url('https://img.youtube.com/vi/${ytId}/maxresdefault.jpg') center/cover;">
+                            <div class="play-overlay" style="opacity: 1; background: rgba(0,0,0,0.2);">
+                                <i class="ph-fill ph-play-circle" style="font-size: 3rem; color: #FFF; filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));"></i>
+                            </div>
+                        </div>
                         <div style="padding: 16px 8px;">
-                            <h4 style="font-size: 0.9rem; font-weight: 800; color: #FFF; margin-bottom: 8px;">${v.title.toUpperCase()}</h4>
-                            <div style="font-size: 0.65rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 16px; display: flex; align-items: center; gap: 6px;">
+                            <h4 style="font-size: 0.9rem; font-weight: 800; color: #FFF; margin-bottom: 4px; line-height: 1.4;">${v.title.toUpperCase()}</h4>
+                            <div style="font-size: 0.65rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 16px; display: flex; align-items: center; gap: 6px; opacity: 0.7;">
                                 <i class="ph-light ph-user-focus"></i> MENTOR: ${v.profiles?.full_name?.toUpperCase() || 'AUTOR EXTERNO'}
                             </div>
-                            <button class="btn ${isRequested ? '' : 'btn-primary'}" style="width: 100%; font-size: 0.7rem; padding: 12px; ${isRequested ? 'background: rgba(255,255,255,0.05); color: #FFF; opacity: 0.5;' : ''}" onclick="${isRequested ? '' : `requestColab('${v.id}')`}" ${isRequested ? 'disabled' : ''}>
+                            <button class="btn ${isRequested ? '' : 'btn-primary'}" style="width: 100%; font-size: 0.7rem; padding: 12px; ${isRequested ? 'background: rgba(255,255,255,0.05); color: var(--text-secondary); cursor: default;' : ''}" onclick="${isRequested ? '' : `requestColab('${v.id}')`}" ${isRequested ? 'disabled' : ''}>
                                 <i class="ph-light ${isRequested ? 'ph-check-circle' : 'ph-plus'}"></i> 
                                 ${isRequested ? 'NA SUA BIBLIOTECA' : 'SOLICITAR PARCERIA'}
                             </button>

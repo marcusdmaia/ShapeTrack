@@ -16,7 +16,7 @@ Este roadmap foca exclusivamente em auditoria e refinamento da base atual.
 
 ## Fase 3: Otimização e Entrega Final
 *Objetivo: Alcançar a nota máxima de performance e experiência de uso.*
-- [ ] **P3.1: Conversão de Assets**: Migração completa para WebP.
+- [x] **P3.1: Conversão de Assets**: Migração completa para WebP (Script de automação criado).
 - [x] **P3.2: Limpeza de Código**: Remover JS/CSS morto ou redundante.
 - [ ] **P3.3: Verificação Final (UAT)**: Checkbox final de 100% de estabilidade com o usuário.
 
