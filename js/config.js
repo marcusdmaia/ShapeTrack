@@ -49,8 +49,13 @@ const App = {
         }
 
         if (!profile) {
-            console.error('Critical: Profile not found after recovery attempts.');
-            return { session, profile: { role: 'aluno', full_name: 'USUÁRIO' } }; // Fail-safe default
+            console.error('Critical: Profile not found after recovery attempts. Forcing logout to break loop.');
+            sessionStorage.removeItem('st_profile');
+            await sb.auth.signOut();
+            if (!window.location.pathname.endsWith('index.html')) {
+                window.location.href = 'index.html';
+            }
+            return null;
         }
 
         this.profile = profile;
