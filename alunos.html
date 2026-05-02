@@ -14,22 +14,24 @@
 
     <div class="bento-grid">
         <!-- Header -->
-        <div class="card-shell reveal" style="grid-column: span 12;">
+        <div class="card-shell reveal span-12">
             <div class="card-core">
                 <div class="header-content">
                     <span class="eyebrow">Monitoramento de Ativos</span>
                     <h1>HUMAN DATA</h1>
                     <p class="text-secondary">Gestão de performance e retenção individualizada.</p>
                 </div>
-                <button class="btn btn-primary" onclick="showInviteModal()">
-                    GERAR CONVITE
-                    <div class="btn-icon"><i class="ph-light ph-user-plus"></i></div>
-                </button>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="showInviteModal()">
+                        GERAR CONVITE
+                        <div class="btn-icon"><i class="ph-light ph-user-plus"></i></div>
+                    </button>
+                </div>
             </div>
         </div>
 
         <!-- Search -->
-        <div class="card-shell reveal" style="grid-column: span 12;">
+        <div class="card-shell reveal span-12">
             <div class="card-core">
                 <div class="search-bar">
                     <i class="ph-light ph-magnifying-glass"></i>
@@ -39,7 +41,7 @@
         </div>
 
         <!-- Alunos Grid -->
-        <div id="alunos-grid" style="grid-column: span 12; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
+        <div id="alunos-grid" class="span-12" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
             <!-- Alunos -->
         </div>
     </div>

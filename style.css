@@ -185,6 +185,16 @@ body::after {
     .header-actions .btn { flex: 1; }
 }
 
+/* Grid Utilities */
+.span-12 { grid-column: span 12; }
+.span-8 { grid-column: span 8; }
+.span-6 { grid-column: span 6; }
+.span-4 { grid-column: span 4; }
+
+@media (max-width: 1024px) {
+    .span-8, .span-6, .span-4 { grid-column: span 12; }
+}
+
 /* Double-Bezel Architecture (Cards) */
 .card-shell {
     background: var(--glass);
@@ -505,39 +515,33 @@ select option {
     /* Standardized List Items (Mobile Refined) */
     .st-item {
         flex-wrap: wrap;
-        padding: 20px 0;
+        padding: 16px 0;
+        gap: 8px;
     }
 
-    .st-item-info {
-        flex: 0 0 60%;
-    }
-
-    .st-item-meta {
-        flex: 0 0 40%;
-        text-align: right;
-    }
-
-    .st-item-actions {
-        flex: 0 0 100%;
-        margin-top: 12px;
-        justify-content: stretch;
-    }
-
-    .st-item-actions > .btn {
-        flex: 1;
-        padding: 10px !important;
-        font-size: 0.7rem !important;
+    .st-item-info { flex: 0 0 100%; }
+    .st-item-meta { flex: 0 0 100%; text-align: left; }
+    
+    .grid-stack {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
     }
 
     .btn {
-        padding: 12px 20px !important;
-        font-size: 0.8rem !important;
-        border-radius: 14px !important;
+        padding: 10px 16px !important;
+        font-size: 0.75rem !important;
+        border-radius: 12px !important;
     }
 
     table, .st-table {
         display: block;
+        width: 100%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
     }
+
+    /* Prevent any horizontal overflow at the source */
+    * { max-width: 100% !important; }
+    html, body { overflow-x: hidden !important; width: 100vw !important; }
 }

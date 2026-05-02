@@ -14,16 +14,24 @@
 
     <div class="bento-grid">
         <!-- Header -->
-        <div class="card-shell reveal" style="grid-column: span 12;">
+        <div class="card-shell reveal span-12">
             <div class="card-core">
-                <span class="eyebrow">Monitoramento Ativo</span>
-                <h1 style="margin: 4px 0;">GESTÃO 360º</h1>
-                <p style="color: var(--text-secondary); font-size: 0.85rem;">Visão completa da retenção e saúde do ecossistema.</p>
+                <div class="header-content">
+                    <span class="eyebrow">Monitoramento Ativo</span>
+                    <h1>GESTÃO 360º</h1>
+                    <p class="text-secondary">Visão completa da retenção e saúde do ecossistema.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="window.location.href='vendas.html'">
+                        NOVA VENDA
+                        <div class="btn-icon"><i class="ph-light ph-shopping-cart-simple"></i></div>
+                    </button>
+                </div>
             </div>
         </div>
 
         <!-- Summary Stats -->
-        <div class="grid-stack" style="grid-column: span 12;">
+        <div class="grid-stack span-12">
             <div class="card-shell reveal" style="animation-delay: 0.1s;">
                 <div class="card-core">
                     <span class="eyebrow">CONTAS A RECEBER</span>
@@ -50,20 +58,9 @@
             </div>
         </div>
 
-        <!-- Ranking Elite (Span 4) -->
-        <div class="card-shell reveal" style="grid-column: span 4;">
-            <div class="card-core" style="min-height: 400px;">
-                <span class="eyebrow">TOP PERFORMANCE</span>
-                <h3><i class="ph-light ph-crown" style="color: #FFD700; margin-right: 8px;"></i> RANKING ELITE</h3>
-                <div id="ranking-list" class="st-list" style="margin-top: 24px;">
-                    <!-- Top 5 via JS -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Alerta de Retenção (Span 8) -->
-        <div class="card-shell reveal" style="grid-column: span 8;">
-            <div class="card-core" style="min-height: 400px;">
+        <!-- Alertas e Ranking -->
+        <div class="card-shell reveal span-8">
+            <div class="card-core">
                 <span class="eyebrow">FOCO EM RESGATE</span>
                 <h3><i class="ph-light ph-warning-octagon" style="color: #ef4444; margin-right: 8px;"></i> ALERTA DE RETENÇÃO</h3>
                 <div id="retention-list" class="st-list" style="margin-top: 24px;">
@@ -72,7 +69,18 @@
             </div>
         </div>
 
-        <div class="card-shell reveal" style="grid-column: span 12;">
+        <div class="card-shell reveal span-4">
+            <div class="card-core">
+                <span class="eyebrow">TOP PERFORMANCE</span>
+                <h3><i class="ph-light ph-crown" style="color: #FFD700; margin-right: 8px;"></i> RANKING ELITE</h3>
+                <div id="ranking-list" class="st-list" style="margin-top: 24px;">
+                    <!-- Top 5 via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Financeiro e Histórico -->
+        <div class="card-shell reveal span-12">
             <div class="card-core">
                 <span class="eyebrow">CONTROLE DE CAIXA</span>
                 <h3><i class="ph-light ph-hand-coins" style="color: var(--accent); margin-right: 8px;"></i> PENDÊNCIAS FINANCEIRAS</h3>
@@ -81,7 +89,8 @@
                 </div>
             </div>
         </div>
-        <div class="card-shell reveal" style="grid-column: span 12;">
+
+        <div class="card-shell reveal span-12">
             <div class="card-core">
                 <span class="eyebrow">HISTÓRICO</span>
                 <h3><i class="ph-light ph-shopping-cart" style="color: var(--accent); margin-right: 8px;"></i> ÚLTIMAS VENDAS</h3>
@@ -90,14 +99,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="bottom-nav">
-        <a href="dashboard.html" class="bottom-nav-link"><i class="ph-light ph-house"></i></a>
-        <a href="crm_dashboard.html" class="bottom-nav-link active"><i class="ph-fill ph-users-three"></i></a>
-        <a href="vendas.html" class="bottom-nav-link"><i class="ph-light ph-shopping-cart"></i></a>
-        <a href="alunos.html" class="bottom-nav-link"><i class="ph-light ph-student"></i></a>
-        <a href="relatorio.html" class="bottom-nav-link"><i class="ph-light ph-chart-line"></i></a>
     </div>
 
     <script src="js/config.js?v=3.9"></script>
@@ -118,7 +119,6 @@
             document.getElementById('pending-revenue').textContent = totalDue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             document.getElementById('receivables-list').innerHTML = pendingSales.length ? pendingSales.map(s => `
-                <div class="st-list-item">
                 <div class="st-item">
                     <div class="st-item-info">
                         <div class="st-item-title">${s.profiles?.full_name || 'Desconhecido'}</div>
@@ -149,15 +149,19 @@
 
             document.getElementById('churn-risk').textContent = inactiveClients.length;
             document.getElementById('retention-list').innerHTML = inactiveClients.length ? inactiveClients.sort((a,b) => b.days - a.days).map(c => `
-                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); gap: 16px;">
-                    <div style="flex: 1;">
-                        <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${c.full_name}</div>
-                        <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 4px;">Última atividade: ${c.lastDate}</div>
+                <div class="st-item">
+                    <div class="st-item-info">
+                        <div class="st-item-title">${c.full_name}</div>
+                        <div class="st-item-subtitle">Inativo há ${c.isNever ? 'muito tempo' : c.days + ' dias'}</div>
                     </div>
-                    <span class="badge ${c.days > 90 ? 'badge-danger' : 'badge-warning'}" style="font-size: 0.6rem;">${c.isNever ? 'INATIVO' : c.days + 'D'}</span>
-                    <a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="padding: 8px 16px; font-size: 0.65rem; background: #25D366; color:#000;">
-                        <i class="ph-fill ph-whatsapp-logo"></i> RESGATAR
-                    </a>
+                    <div class="st-item-meta">
+                        <span class="badge ${c.days > 90 ? 'badge-danger' : 'badge-warning'}">${c.isNever ? 'CRÍTICO' : 'ALERTA'}</span>
+                    </div>
+                    <div class="st-item-actions">
+                        <a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn btn-whatsapp">
+                            <i class="ph-fill ph-whatsapp-logo"></i> RESGATAR
+                        </a>
+                    </div>
                 </div>`).join('') : '<div style="text-align:center; padding: 20px; color: var(--text-secondary);">Base 100% ativa.</div>';
 
             document.getElementById('birthdays').textContent = clients.filter(c => c.birthday && parseInt(c.birthday.split('-')[1]) === (now.getMonth() + 1)).length;
@@ -189,32 +193,35 @@
                 }).filter(r => r !== null).sort((a,b) => b.progress - a.progress).slice(0, 5);
 
                 document.getElementById('ranking-list').innerHTML = ranking.length ? ranking.map((r, i) => `
-                    <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border);">
-                        <div style="width: 24px; height: 24px; background: ${i === 0 ? '#FFD700' : (i === 1 ? '#C0C0C0' : (i === 2 ? '#CD7F32' : 'rgba(255,255,255,0.05)'))}; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; color: #000;">${i+1}</div>
-                        <div style="flex: 1;">
-                            <div style="font-size: 0.75rem; font-weight: 700; color: #FFF;">${r.name.toUpperCase()}</div>
-                            <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 6px; overflow: hidden;">
+                    <div class="st-item">
+                        <div class="st-item-info">
+                            <div class="st-item-title">${r.name.toUpperCase()}</div>
+                            <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-top: 8px; overflow: hidden;">
                                 <div style="width: ${r.progress}%; height: 100%; background: var(--accent);"></div>
                             </div>
                         </div>
-                        <div style="font-size: 0.85rem; font-weight: 800; color: var(--accent);">${Math.round(r.progress)}%</div>
+                        <div class="st-item-meta">
+                            <div class="st-item-value">${Math.round(r.progress)}%</div>
+                        </div>
                     </div>
                 `).join('') : '<div style="text-align: center; color: var(--text-secondary); font-size: 0.7rem; padding: 20px;">DADOS INSUFICIENTES PARA O RANKING</div>';
             }
 
             document.getElementById('sales-history-list').innerHTML = sales.length ? sales.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).map(s => `
-                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); gap: 16px;">
-                    <div style="flex: 1;">
-                        <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${s.profiles?.full_name || 'Desconhecido'}</div>
-                        <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 4px;">Data: ${new Date(s.created_at).toLocaleDateString('pt-BR')}</div>
+                <div class="st-item">
+                    <div class="st-item-info">
+                        <div class="st-item-title">${s.profiles?.full_name || 'Desconhecido'}</div>
+                        <div class="st-item-subtitle">${new Date(s.created_at).toLocaleDateString('pt-BR')}</div>
                     </div>
-                    <div style="text-align: right; margin-right: 16px;">
-                        <div style="font-size: 0.85rem; font-weight: 800; color: #FFF;">R$ ${s.total_price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
-                        <div style="margin-top: 4px;"><span class="badge ${s.payment_status === 'Pago' ? 'badge-success' : 'badge-warning'}" style="font-size: 0.55rem;">${s.payment_status.toUpperCase()}</span></div>
+                    <div class="st-item-meta">
+                        <div class="st-item-value">R$ ${s.total_price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                        <span class="badge ${s.payment_status === 'Pago' ? 'badge-success' : 'badge-warning'}">${s.payment_status.toUpperCase()}</span>
                     </div>
-                    <button class="btn" style="padding: 8px 12px; font-size: 0.65rem; background: rgba(255,75,75,0.1); border: 1px solid rgba(255,75,75,0.2); color:#ff4b4b;" onclick="deleteSale('${s.id}')">
-                        <i class="ph-light ph-trash"></i>
-                    </button>
+                    <div class="st-item-actions">
+                        <button class="btn btn-danger" onclick="deleteSale('${s.id}')">
+                            <i class="ph-light ph-trash"></i>
+                        </button>
+                    </div>
                 </div>`).join('') : '<div style="text-align:center; padding: 20px; color: var(--text-secondary);">Nenhuma venda registrada.</div>';
         }
 
