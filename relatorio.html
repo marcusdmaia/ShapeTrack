@@ -42,13 +42,13 @@
         <!-- Header -->
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
-                <div class="st-flex-between" style="align-items: flex-start;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                     <div>
                         <span class="eyebrow">RELATÓRIO DE EVOLUÇÃO</span>
                         <h1 id="prof-name">CARREGANDO...</h1>
                         <p id="prof-contact" style="color: var(--text-secondary); margin-top: 4px; font-size: 0.8rem;">--</p>
                     </div>
-                    <button class="btn btn-secondary" onclick="toggleProfileEdit()"><i class="ph-light ph-user-circle-plus"></i> <span class="desktop-only">EDITAR PERFIL</span></button>
+                    <button class="btn btn-secondary" onclick="toggleProfileEdit()"><i class="ph-light ph-user-circle-plus"></i> EDITAR PERFIL</button>
                 </div>
                 <div id="profile-edit-section" style="display: none; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--glass-border);">
                     <div class="profile-edit-grid">
@@ -61,19 +61,19 @@
                         <label>OBSERVAÇÕES DO PROTOCOLO</label>
                         <textarea id="edit-notes" style="width: 100%; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 12px; color: #FFF; padding: 12px;"></textarea>
                     </div>
-                    <button class="btn btn-primary" onclick="saveProfile()" style="margin-top: 16px; width: 100%;">SALVAR ALTERAÇÕES</button>
+                    <button class="btn btn-primary" onclick="saveProfile()" style="margin-top: 16px;">SALVAR ALTERAÇÕES</button>
                 </div>
             </div>
         </div>
 
         <!-- Avatar -->
         <div class="card-shell reveal" style="grid-column: span 5;">
-            <div class="card-core" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 320px;">
+            <div class="card-core" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
                 <span class="eyebrow" id="bmi-status">STATUS CORPORAL</span>
-                <div id="avatar-container" style="width: 160px; height: 160px; margin: 24px 0;">
+                <div id="avatar-container" style="width: 200px; height: 200px; margin: 20px 0;">
                     <img id="bmi-avatar" src="bmi_normal.png" style="filter: drop-shadow(0 0 20px var(--accent-glow));">
                 </div>
-                <div style="font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">IMC Atual</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary);">IMC ATUAL</div>
                 <div id="current-bmi" style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-top: 4px;">--</div>
             </div>
         </div>
@@ -81,29 +81,11 @@
         <!-- Summary Deltas -->
         <div class="card-shell reveal" style="grid-column: span 7;">
             <div class="card-core">
-                <span class="eyebrow">RESUMO DE PERFORMANCE</span>
-                <div class="st-list" style="margin-top: 24px;">
-                    <div class="st-list-item">
-                        <span class="comp-label">PESO</span>
-                        <div class="st-flex-stack">
-                            <div class="delta-box"><span class="label">vs ANTERIOR</span><span id="weight-prev" class="value">--</span></div>
-                            <div class="delta-box"><span class="label">vs INICIAL</span><span id="weight-total" class="value">--</span></div>
-                        </div>
-                    </div>
-                    <div class="st-list-item">
-                        <span class="comp-label">CINTURA (CM)</span>
-                        <div class="st-flex-stack">
-                            <div class="delta-box"><span class="label">vs ANTERIOR</span><span id="waist-prev" class="value">--</span></div>
-                            <div class="delta-box"><span class="label">vs INICIAL</span><span id="waist-total" class="value">--</span></div>
-                        </div>
-                    </div>
-                    <div class="st-list-item">
-                        <span class="comp-label">% GORDURA</span>
-                        <div class="st-flex-stack">
-                            <div class="delta-box"><span class="label">vs ANTERIOR</span><span id="fat-prev" class="value">--</span></div>
-                            <div class="delta-box"><span class="label">vs INICIAL</span><span id="fat-total" class="value">--</span></div>
-                        </div>
-                    </div>
+                <span class="eyebrow">RESUMO DE PERDAS E GANHOS</span>
+                <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 16px;">
+                    <div class="comp-row"><span class="comp-label">PESO</span><div class="comp-deltas"><div class="delta-box"><span class="label">vs ANTERIOR</span><span id="weight-prev" class="value">--</span></div><div class="delta-box"><span class="label">vs INICIAL</span><span id="weight-total" class="value">--</span></div></div></div>
+                    <div class="comp-row"><span class="comp-label">CINTURA (CM)</span><div class="comp-deltas"><div class="delta-box"><span class="label">vs ANTERIOR</span><span id="waist-prev" class="value">--</span></div><div class="delta-box"><span class="label">vs INICIAL</span><span id="waist-total" class="value">--</span></div></div></div>
+                    <div class="comp-row"><span class="comp-label">% GORDURA</span><div class="comp-deltas"><div class="delta-box"><span class="label">vs ANTERIOR</span><span id="fat-prev" class="value">--</span></div><div class="delta-box"><span class="label">vs INICIAL</span><span id="fat-total" class="value">--</span></div></div></div>
                 </div>
             </div>
         </div>
@@ -120,30 +102,22 @@
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
                 <h3 style="margin-bottom: 24px;"><i class="ph-light ph-clock-counter-clockwise" style="color: var(--accent);"></i> LOG DE MEDIÇÕES</h3>
-                <div id="history-list" class="st-list">
-                    <!-- Dynamic List via JS -->
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="text-align: left; border-bottom: 1px solid var(--glass-border);">
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">DATA</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">PESO</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">CINTURA</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">GORDURA %</th>
+                                <th style="padding: 16px; font-size: 0.7rem; color: var(--text-secondary);">AÇÃO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-body"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="st-bottom-nav">
-        <a href="dashboard.html" class="st-nav-item">
-            <i class="ph-light ph-house"></i>
-            <span>Painel</span>
-        </a>
-        <a href="crm_dashboard.html" class="st-nav-item">
-            <i class="ph-light ph-chart-line-up"></i>
-            <span>CRM</span>
-        </a>
-        <a href="vendas.html" class="st-nav-item">
-            <i class="ph-light ph-shopping-cart"></i>
-            <span>Vendas</span>
-        </a>
-        <a href="alunos.html" class="st-nav-item active">
-            <i class="ph-fill ph-users"></i>
-            <span>Alunos</span>
-        </a>
     </div>
 
     <script src="js/config.js?v=3.9"></script>
@@ -173,10 +147,7 @@
                 document.getElementById('edit-notes').value = prof.notes || '';
 
                 const { data: assessments } = await sb.from('assessments').select('*').eq('client_id', studentId).order('created_at', { ascending: true });
-                if (!assessments?.length) {
-                    document.getElementById('history-list').innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-secondary);">Nenhuma medição encontrada.</div>';
-                    return;
-                }
+                if (!assessments?.length) return;
 
                 const last = assessments[assessments.length - 1];
                 const prev = assessments.length > 1 ? assessments[assessments.length - 2] : last;
@@ -195,6 +166,9 @@
                 const lastFat = getVal(last, ['body_fat', 'fat_percentage']);
                 const prevFat = getVal(prev, ['body_fat', 'fat_percentage']);
                 const firstFat = getVal(first, ['body_fat', 'fat_percentage']);
+                const lastMuscle = getVal(last, ['muscle_percentage']);
+                const prevMuscle = getVal(prev, ['muscle_percentage']);
+                const firstMuscle = getVal(first, ['muscle_percentage']);
 
                 const setDelta = (id, cur, comp, s='', r=false) => {
                     const el = document.getElementById(id); if(!el) return;
@@ -204,11 +178,12 @@
                     el.textContent = `${diff > 0 ? '+' : ''}${diff.toFixed(1)}${s}`;
                     el.className = `value ${isGood ? 'val-plus' : 'val-minus'}`;
                 };
-                
                 setDelta('weight-prev', last.weight, prev.weight, ' kg', true);
                 setDelta('weight-total', last.weight, first.weight, ' kg', true);
                 setDelta('fat-prev', lastFat, prevFat, '%', true);
                 setDelta('fat-total', lastFat, firstFat, '%', true);
+                setDelta('muscle-prev', lastMuscle, prevMuscle, '%');
+                setDelta('muscle-total', lastMuscle, firstMuscle, '%');
                 setDelta('waist-prev', parseFloat(lastM.waist), parseFloat(prevM.waist), ' cm', true);
                 setDelta('waist-total', parseFloat(lastM.waist), parseFloat(firstM.waist), ' cm', true);
 
@@ -222,37 +197,24 @@
                 document.getElementById('bmi-avatar').src = img;
                 document.getElementById('bmi-status').textContent = status;
 
-                document.getElementById('history-list').innerHTML = assessments.map(a => {
+                document.getElementById('history-body').innerHTML = assessments.map(a => {
                     const f = getVal(a, ['body_fat', 'fat_percentage']);
                     const m = parseMeas(a);
-                    return `
-                        <div class="st-list-item">
-                            <div style="flex: 1;">
-                                <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${new Date(a.created_at).toLocaleDateString('pt-BR')}</div>
-                                <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 4px;">Cintura: ${m.waist || '--'} cm | Gordura: ${f !== null ? f+'%' : '--'}</div>
-                            </div>
-                            <div class="st-flex-stack">
-                                <div style="font-weight: 800; color: var(--accent); font-size: 1.1rem;">${a.weight.toFixed(1)} kg</div>
-                                <button class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.7rem;" onclick="location.href='lancar_avaliacao.html?id=${a.id}'">EDITAR</button>
-                            </div>
-                        </div>
-                    `;
+                    return `<tr style="border-bottom: 1px solid var(--glass-border);"><td style="padding:16px; font-size:0.8rem; color:var(--text-secondary);">${new Date(a.created_at).toLocaleDateString('pt-BR')}</td><td style="padding:16px; font-weight:800; color:#FFF;">${a.weight.toFixed(1)} kg</td><td style="padding:16px; color:var(--text-secondary);">${m.waist || '--'} cm</td><td style="padding:16px; color:var(--text-secondary);">${f !== null ? f+'%' : '--'}</td><td style="padding:16px;"><button class="btn" style="padding: 6px 12px; font-size: 0.6rem; background: rgba(255,255,255,0.05);" onclick="location.href='lancar_avaliacao.html?id=${a.id}'">EDITAR</button></td></tr>`;
                 }).reverse().join('');
 
                 const labels = assessments.map(a => new Date(a.created_at).toLocaleDateString('pt-BR'));
                 const renderChart = (id, datasets) => {
-                    const canvas = document.getElementById(id);
-                    if (!canvas) return;
-                    const ctx = canvas.getContext('2d');
+                    const ctx = document.getElementById(id).getContext('2d');
                     new Chart(ctx, {
                         type: 'line',
                         data: { labels: labels, datasets: datasets },
                         options: {
                             responsive: true, maintainAspectRatio: false,
-                            plugins: { legend: { display: datasets.length > 1, labels: { color: '#FFF', font: { size: 10, weight: '600' } } } },
+                            plugins: { legend: { display: datasets.length > 1, labels: { color: '#FFF', font: { size: 9 } } } },
                             scales: {
                                 y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 10 } } },
-                                x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 10 } } }
+                                x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 9 } } }
                             }
                         }
                     });
