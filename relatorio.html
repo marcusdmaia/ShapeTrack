@@ -15,7 +15,7 @@
         <i class="ph-light ph-warning-circle" style="font-size: 4rem; color: var(--accent); margin-bottom: 24px;"></i>
         <h2 style="margin-bottom: 12px;">DADOS NÃO LOCALIZADOS</h2>
         <p style="color: var(--text-secondary); margin-bottom: 32px;">O identificador do aluno é inválido ou expirou.</p>
-        <button class="btn btn-primary" onclick="location.href='alunos.html'">VOLTAR PARA LISTA</button>
+        <button class="btn btn-primary" onclick="location.href='index.html'">VOLTAR PARA LOGIN</button>
     </div>
 
     <nav class="navbar reveal"></nav>
@@ -145,7 +145,7 @@
                 const context = await App.init('relatorio.html');
                 if (!context) return;
                 const urlParams = new URLSearchParams(window.location.search);
-                studentId = urlParams.get('aluno') || context.session.user.id;
+                studentId = urlParams.get('aluno') || urlParams.get('id') || context.session.user.id;
                 loadData();
             } catch (e) { console.error('Init error:', e); }
         }

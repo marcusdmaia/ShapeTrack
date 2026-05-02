@@ -120,7 +120,7 @@
             document.getElementById('email_display').value = context.session.user.email;
 
             // Lógica por papel (Role)
-            if (context.profile.role === 'client') {
+            if (context.profile.role === 'aluno') {
                 document.getElementById('header-eyebrow').textContent = 'Meu Perfil Premium';
                 document.getElementById('header-title').textContent = 'MEUS DADOS';
                 document.getElementById('header-desc').textContent = 'Mantenha seus dados atualizados para melhores resultados no protocolo.';
@@ -147,7 +147,7 @@
             };
 
             // Adicionar campos extras se for aluno
-            if (App.profile.role === 'client') {
+            if (App.profile.role === 'aluno') {
                 profileData.birthday = document.getElementById('birthday').value;
                 profileData.height = parseFloat(document.getElementById('height').value);
                 profileData.gender = document.getElementById('gender').value;

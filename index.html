@@ -124,13 +124,16 @@
                         </div>
                         
                         <button type="submit" id="login-btn" class="btn btn-primary" style="width: 100%; margin-top: 12px; height: 58px; font-size: 0.85rem;">
-                            AUTENTICAR ACESSO
+                            AUTENTICAR MENTOR
                             <div class="btn-icon"><i class="ph-fill ph-shield-check"></i></div>
                         </button>
                     </form>
                     
-                    <div style="margin-top: 32px; text-align: center;">
-                        <a href="recuperar_senha.html" style="color: var(--text-secondary); font-size: 0.7rem; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">Esqueceu sua chave de acesso?</a>
+                    <div style="margin-top: 24px; text-align: center; display: flex; flex-direction: column; gap: 12px;">
+                        <a href="recuperar_senha.html" style="color: var(--text-secondary); font-size: 0.65rem; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">Esqueceu sua chave de acesso?</a>
+                        <div id="register-link-container">
+                            <a href="cadastro_mentor.html" id="register-link" style="color: var(--accent); font-size: 0.75rem; text-decoration: none; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Quero ser um Mentor</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -149,15 +152,20 @@
             const title = document.getElementById('login-title');
             const desc = document.getElementById('login-desc');
             const btn = document.getElementById('login-btn');
+            const regLink = document.getElementById('register-link');
 
             if (selectedRole === 'mentor') {
                 title.textContent = 'ACESSO MENTOR';
                 desc.textContent = 'Área restrita para gestão de protocolos e alunos.';
                 btn.innerHTML = 'AUTENTICAR MENTOR <div class="btn-icon"><i class="ph-fill ph-shield-check"></i></div>';
+                regLink.textContent = 'Quero ser um Mentor';
+                regLink.href = 'cadastro_mentor.html';
             } else {
                 title.textContent = 'ACESSO ALUNO';
                 desc.textContent = 'Acompanhe seu progresso, treinos e evoluções.';
                 btn.innerHTML = 'ENTRAR NO MEU PERFIL <div class="btn-icon"><i class="ph-fill ph-user-focus"></i></div>';
+                regLink.textContent = 'Não tem conta? Cadastre-se';
+                regLink.href = 'cadastro_aluno.html';
             }
         }
 
@@ -183,7 +191,7 @@
                 const { profile } = await App.init();
                 
                 setTimeout(() => {
-                    if (profile && profile.role === 'client') {
+                    if (profile && profile.role === 'aluno') {
                         window.location.href = 'relatorio.html';
                     } else {
                         window.location.href = 'dashboard.html';
@@ -197,7 +205,7 @@
             const { data: { session } } = await sb.auth.getSession();
             if (session) {
                 const { profile } = await App.init();
-                if (profile && profile.role === 'client') {
+                if (profile && profile.role === 'aluno') {
                     window.location.href = 'relatorio.html';
                 } else {
                     window.location.href = 'dashboard.html';

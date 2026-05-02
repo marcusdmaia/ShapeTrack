@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Mentor // ShapeTrack Premium</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=3.9">
+    <style>
+        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+        .onboarding-card { width: 100%; max-width: 440px; }
+    </style>
+</head>
+<body>
+
+    <div class="card-shell onboarding-card reveal">
+        <div class="card-core" style="text-align: center;">
+            <div class="nav-logo" style="margin-bottom: 24px; font-size: 2rem;">SHAPE<span>TRACK</span></div>
+            
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(217, 108, 43, 0.1); padding: 8px 16px; border-radius: 50px; font-size: 0.75rem; border: 1px solid var(--accent); margin-bottom: 32px; color: var(--accent); font-weight: 700;">
+                <i class="ph-fill ph-crown"></i> CADASTRO DE MENTOR
+            </div>
+
+            <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin-bottom: 32px;">Seja bem-vindo ao time de especialistas. Crie sua conta para começar a gerenciar seus alunos e protocolos.</p>
+
+            <div class="form-group">
+                <label>NOME COMPLETO</label>
+                <input type="text" id="name" placeholder="EX: DR. MARCUS MAIA" required>
+            </div>
+
+            <div class="form-group">
+                <label>E-MAIL PROFISSIONAL</label>
+                <input type="email" id="email" placeholder="seu@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>CHAVE DE ACESSO (SENHA)</label>
+                <input type="password" id="password" placeholder="MÍNIMO 6 CARACTERES" required>
+            </div>
+
+            <button class="btn btn-primary" id="signupBtn" style="width: 100%; margin-top: 24px;">
+                CRIAR MINHA CONTA DE MENTOR
+                <div class="btn-icon"><i class="ph-light ph-shield-check"></i></div>
+            </button>
+
+            <div style="margin-top: 24px; text-align: center;">
+                <a href="index.html" style="color: var(--text-secondary); font-size: 0.7rem; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">Já tenho uma conta</a>
+            </div>
+
+            <div id="message" style="margin-top: 24px; font-size: 0.8rem; font-weight: 700;"></div>
+        </div>
+    </div>
+
+    <script>
+        const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
+
+        document.getElementById('signupBtn').addEventListener('click', async () => {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const msg = document.getElementById('message');
+            const btn = document.getElementById('signupBtn');
+
+            if (!name || !email || !password) {
+                msg.style.color = '#ef4444';
+                msg.textContent = 'PREENCHA TODOS OS CAMPOS.';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = 'CRIANDO CONTA... <div class="btn-icon"><i class="ph-light ph-spinner ph-spin"></i></div>';
+
+            const { data, error } = await sb.auth.signUp({ 
+                email, 
+                password,
+                options: { data: { full_name: name } }
+            });
+
+            if (error) {
+                msg.style.color = '#ef4444';
+                msg.textContent = `ERRO: ${error.message.toUpperCase()}`;
+                btn.disabled = false;
+                btn.innerHTML = 'CRIAR MINHA CONTA DE MENTOR <div class="btn-icon"><i class="ph-light ph-shield-check"></i></div>';
+                return;
+            }
+
+            if (data.user) {
+                const { error: profileError } = await sb.from('profiles').upsert({ 
+                    id: data.user.id,
+                    full_name: name,
+                    email: email,
+                    role: 'mentor',
+                    is_active: true
+                });
+
+                if (profileError) console.error(profileError);
+                
+                msg.style.color = '#2ecc71';
+                msg.textContent = 'CONTA CRIADA! REDIRECIONANDO PARA O DASHBOARD...';
+                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>

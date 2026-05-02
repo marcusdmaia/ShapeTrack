@@ -31,7 +31,7 @@ const App = {
             // Fallback 2: Auto-create basic profile if trigger failed
             if (!data) {
                 const { data: newData, error: createError } = await sb.from('profiles').insert([
-                    { id: session.user.id, email: session.user.email, full_name: session.user.user_metadata?.full_name || 'Novo Usuário', role: 'client' }
+                    { id: session.user.id, email: session.user.email, full_name: session.user.user_metadata?.full_name || 'Novo Usuário', role: 'aluno' }
                 ]).select().single();
                 if (!createError) data = newData;
             }
@@ -42,7 +42,7 @@ const App = {
 
         if (!profile) {
             console.error('Critical: Profile not found after recovery attempts.');
-            return { session, profile: { role: 'client', full_name: 'USUÁRIO' } }; // Fail-safe default
+            return { session, profile: { role: 'aluno', full_name: 'USUÁRIO' } }; // Fail-safe default
         }
 
         this.profile = profile;
@@ -75,14 +75,14 @@ function setupNav(profile, activePage) {
     // 1. Define links based on role
     let links = [];
     
-    if (profile.role === 'client') {
+    if (profile.role === 'aluno') {
         links = [
             { name: 'MEU PROGRESSO', url: 'relatorio.html', icon: 'ph-chart-line' },
             { name: 'LOJA PREMIUM', url: 'loja.html', icon: 'ph-shopping-bag' },
             { name: 'CONTEÚDO', url: 'videos.html', icon: 'ph-play-circle' },
             { name: 'PERFIL', url: 'configuracoes.html', icon: 'ph-user-gear' }
         ];
-    } else {
+    } else if (profile.role === 'mentor') {
         links = [
             { name: 'INÍCIO', url: 'dashboard.html', icon: 'ph-house' },
             { name: 'GESTÃO 360', url: 'crm_dashboard.html', icon: 'ph-users-three' },
@@ -105,7 +105,7 @@ function setupNav(profile, activePage) {
     }
 
     navbar.innerHTML = `
-        <a href="${profile.role === 'client' ? 'relatorio.html' : 'dashboard.html'}" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <a href="${profile.role === 'aluno' ? 'relatorio.html' : 'dashboard.html'}" class="nav-logo">SHAPE<span>TRACK</span></a>
         <div class="nav-links">
             ${links.map(link => `
                 <a href="${link.url}" class="nav-link ${activePage === link.url ? 'active' : ''}">

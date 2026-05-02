@@ -18,8 +18,10 @@
         <div class="card-core" style="text-align: center;">
             <div class="nav-logo" style="margin-bottom: 24px; font-size: 2rem;">SHAPE<span>TRACK</span></div>
             
-            <div id="mentor-info" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.02); padding: 8px 16px; border-radius: 50px; font-size: 0.75rem; border: 1px solid var(--glass-border); margin-bottom: 32px; color: var(--text-secondary); font-weight: 700;">
-                <i class="ph-light ph-spinner ph-spin"></i> VALIDANDO ACESSO...
+            <div id="mentor-selection-area" style="margin-bottom: 32px;">
+                <div id="mentor-info" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.02); padding: 8px 16px; border-radius: 50px; font-size: 0.75rem; border: 1px solid var(--glass-border); color: var(--text-secondary); font-weight: 700; width: 100%; justify-content: center;">
+                    <i class="ph-light ph-spinner ph-spin"></i> VALIDANDO ACESSO...
+                </div>
             </div>
 
             <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6; margin-bottom: 32px;">Seja bem-vindo ao ecossistema ShapeTrack. Complete sua identificação para iniciar o protocolo.</p>
@@ -80,16 +82,38 @@
     <script>
         const sb = supabase.createClient('https://xsgjttyrxhwmtxlvbdoa.supabase.co', 'sb_publishable_9XOfZAQbRbU8_Yn46tueoA_g9fqESrU');
         const urlParams = new URLSearchParams(window.location.search);
-        const mentorId = urlParams.get('mentor'); // Updated to match alunos.html link generation
+        let mentorId = urlParams.get('mentor');
 
-        async function checkMentor() {
-            if (!mentorId) {
-                document.body.innerHTML = '<div class="card-shell reveal" style="max-width: 400px;"><div class="card-core" style="text-align:center;"><h1>CONVITE INVÁLIDO</h1><p style="color:var(--text-secondary); margin-top:16px;">SOLICITE UM NOVO LINK AO SEU MENTOR.</p></div></div>';
-                return;
+        async function init() {
+            if (mentorId) {
+                const { data: mentor } = await sb.from('profiles').select('full_name').eq('id', mentorId).single();
+                if (mentor) {
+                    document.getElementById('mentor-info').innerHTML = `<i class="ph-fill ph-user-check" style="color: var(--accent);"></i> MENTOR: ${mentor.full_name.toUpperCase()}`;
+                } else {
+                    loadMentors();
+                }
+            } else {
+                loadMentors();
             }
-            const { data: mentor } = await sb.from('profiles').select('full_name').eq('id', mentorId).single();
-            if (mentor) {
-                document.getElementById('mentor-info').innerHTML = `<i class="ph-fill ph-user-check" style="color: var(--accent);"></i> MENTOR: ${mentor.full_name.toUpperCase()}`;
+        }
+
+        async function loadMentors() {
+            const { data: mentors, error } = await sb.from('profiles').select('id, full_name').eq('role', 'mentor').order('full_name');
+            const area = document.getElementById('mentor-selection-area');
+            
+            if (mentors && mentors.length > 0) {
+                let options = mentors.map(m => `<option value="${m.id}">${m.full_name.toUpperCase()}</option>`).join('');
+                area.innerHTML = `
+                    <div class="form-group" style="text-align: left;">
+                        <label>QUEM É SEU MENTOR?</label>
+                        <select id="mentor_id_select" style="background: rgba(217, 108, 43, 0.05); border-color: var(--accent);">
+                            <option value="">ESCOLHA SEU MENTOR NA LISTA</option>
+                            ${options}
+                        </select>
+                    </div>
+                `;
+            } else {
+                area.innerHTML = '<p style="color: #ef4444; font-size: 0.8rem; font-weight: 700;">NENHUM MENTOR DISPONÍVEL NO MOMENTO.</p>';
             }
         }
 
@@ -100,9 +124,13 @@
             const msg = document.getElementById('message');
             const btn = document.getElementById('signupBtn');
 
-            if (!name || !email || !password) {
+            // Get mentor ID from select if not in URL
+            const selectMentor = document.getElementById('mentor_id_select');
+            const finalMentorId = mentorId || (selectMentor ? selectMentor.value : null);
+
+            if (!name || !email || !password || !finalMentorId) {
                 msg.style.color = '#ef4444';
-                msg.textContent = 'PREENCHA TODOS OS CAMPOS.';
+                msg.textContent = !finalMentorId ? 'POR FAVOR, SELECIONE UM MENTOR.' : 'PREENCHA TODOS OS CAMPOS.';
                 return;
             }
 
@@ -129,8 +157,6 @@
             }
 
             if (data.user) {
-                // Perfil será criado via Trigger no Supabase ou via fallback no config.js.
-                // Mas garantimos aqui os campos extras do cadastro.
                 const profileData = { 
                     full_name: name,
                     email: email,
@@ -139,8 +165,8 @@
                     height: parseFloat(document.getElementById('height').value),
                     gender: document.getElementById('gender').value,
                     goal: document.getElementById('goal').value,
-                    role: 'client', 
-                    mentor_id: mentorId,
+                    role: 'aluno', 
+                    mentor_id: finalMentorId,
                     is_active: true
                 };
 
@@ -156,7 +182,7 @@
             }
         });
 
-        checkMentor();
+        init();
     </script>
 </body>
 </html>
