@@ -187,10 +187,14 @@
             } else {
                 showToast('Acesso Autorizado. Carregando seu perfil...', 'success');
                 
+                sessionStorage.setItem('logging_in', 'true');
+                
                 // Fetch profile to decide where to go
-                const { profile } = await App.init();
+                const context = await App.init();
+                const profile = context ? context.profile : null;
                 
                 setTimeout(() => {
+                    sessionStorage.removeItem('logging_in');
                     if (profile && profile.role === 'aluno') {
                         window.location.href = 'relatorio.html';
                     } else {
@@ -202,13 +206,18 @@
 
         // Check session and auto-redirect
         async function checkSession() {
+            // Se já estivermos processando um login, não faça nada
+            if (sessionStorage.getItem('logging_in')) return;
+
             const { data: { session } } = await sb.auth.getSession();
             if (session) {
-                const { profile } = await App.init();
-                if (profile && profile.role === 'aluno') {
-                    window.location.href = 'relatorio.html';
-                } else {
-                    window.location.href = 'dashboard.html';
+                const context = await App.init();
+                if (context && context.profile) {
+                    const destination = context.profile.role === 'aluno' ? 'relatorio.html' : 'dashboard.html';
+                    // Só redireciona se não estivermos já na página de destino
+                    if (!window.location.pathname.endsWith(destination)) {
+                        window.location.href = destination;
+                    }
                 }
             }
         }

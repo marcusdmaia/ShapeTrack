@@ -8,7 +8,11 @@ const App = {
     async init(pageId) {
         const { data: { session } } = await sb.auth.getSession();
         if (!session) {
-            if (!window.location.pathname.endsWith('index.html') && !window.location.pathname.endsWith('recuperar_senha.html')) {
+            const isLoginPage = window.location.pathname === '/' || 
+                               window.location.pathname.endsWith('index.html') || 
+                               window.location.pathname.endsWith('recuperar_senha.html');
+            
+            if (!isLoginPage) {
                 window.location.href = 'index.html';
             }
             return null;
@@ -16,7 +20,11 @@ const App = {
 
         // Try to get cached profile
         let profile = JSON.parse(sessionStorage.getItem('st_profile'));
-        if (!profile || profile.id !== session.user.id) {
+        
+        // Force refresh if profile is old (client/admin) or missing
+        const isLegacyRole = profile && (profile.role === 'client' || profile.role === 'admin');
+        
+        if (!profile || profile.id !== session.user.id || isLegacyRole) {
             let { data, error } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
             
             // Fallback 1: Find by email (manual registration)
