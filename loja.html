@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Premium // ShapeTrack</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=3.9">
+    <style>
+        .shop-hero { height: 200px; border-radius: 24px; background: url('shapetrack_shop_hero_1777738131128.png') center/cover; margin-bottom: 32px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; border: 1px solid var(--glass-border); }
+        .shop-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)); }
+        .shop-hero h1 { position: relative; z-index: 1; font-size: 1.5rem; letter-spacing: 2px; }
+
+        .category-tab { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 24px; scrollbar-width: none; }
+        .category-tab::-webkit-scrollbar { display: none; }
+        .tab-item { padding: 10px 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 50px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; cursor: pointer; transition: 0.3s; }
+        .tab-item.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .product-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 24px; padding: 20px; transition: 0.3s; display: flex; flex-direction: column; }
+        .product-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.04); }
+        .product-info h4 { font-size: 1rem; margin-bottom: 8px; color: var(--accent); }
+        .product-info p { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 16px; }
+        .product-price { margin-top: auto; padding-top: 16px; border-top: 1px dashed var(--glass-border); }
+        .price-de { font-size: 0.7rem; text-decoration: line-through; opacity: 0.5; }
+        .price-por { font-size: 1.2rem; font-weight: 800; color: #FFF; }
+
+        .cart-badge { position: fixed; bottom: 100px; right: 24px; width: 60px; height: 60px; background: var(--accent); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; box-shadow: 0 10px 30px rgba(255,107,0,0.3); z-index: 100; transition: 0.3s; }
+        .cart-count { position: absolute; top: -5px; right: -5px; background: #FFF; color: #000; width: 24px; height: 24px; border-radius: 50%; font-size: 0.75rem; font-weight: 900; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent); }
+
+        #cart-sidebar { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background: #0A0C0B; border-left: 1px solid var(--glass-border); z-index: 1000; transition: 0.5s var(--bezier); padding: 32px; display: flex; flex-direction: column; }
+        #cart-sidebar.active { right: 0; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar reveal"></nav>
+
+    <div class="bento-grid">
+        <div class="card-shell reveal span-12">
+            <div class="card-core">
+                <div class="shop-hero">
+                    <h1>CATÁLOGO <span class="text-gradient">EXCLUSIVO</span></h1>
+                </div>
+
+                <div class="category-tab" id="category-tabs">
+                    <div class="tab-item active" onclick="filterCategory('all')">TODOS</div>
+                    <div class="tab-item" onclick="filterCategory('emagrecimento')">EMAGRECIMENTO</div>
+                    <div class="tab-item" onclick="filterCategory('energia')">ENERGIA</div>
+                    <div class="tab-item" onclick="filterCategory('saude')">SAÚDE & BELEZA</div>
+                    <div class="tab-item" onclick="filterCategory('performance')">PERFORMANCE</div>
+                </div>
+
+                <div class="product-grid" id="product-list">
+                    <!-- Products injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cart-badge" onclick="toggleCart()">
+        <i class="ph-fill ph-shopping-cart"></i>
+        <div class="cart-count" id="cart-count">0</div>
+    </div>
+
+    <div id="cart-sidebar">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+            <h3>MEU PEDIDO</h3>
+            <button class="btn-close" onclick="toggleCart()"><i class="ph-bold ph-x"></i></button>
+        </div>
+        <div id="cart-items" style="flex: 1; overflow-y: auto;">
+            <!-- Cart items -->
+        </div>
+        <div style="padding-top: 24px; border-top: 1px solid var(--glass-border);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 24px;">
+                <span style="font-weight: 700;">TOTAL ESTIMADO</span>
+                <span id="cart-total" style="font-size: 1.5rem; font-weight: 800; color: var(--accent);">R$ 0,00</span>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="sendToWhatsApp()">
+                FINALIZAR VIA WHATSAPP
+                <div class="btn-icon"><i class="ph-fill ph-whatsapp-logo"></i></div>
+            </button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="bottom-nav-link"><i class="ph-light ph-house"></i></a>
+        <a href="loja.html" class="bottom-nav-link active"><i class="ph-fill ph-shopping-bag"></i></a>
+        <a href="videos.html" class="bottom-nav-link"><i class="ph-light ph-play-circle"></i></a>
+        <a href="relatorio.html" class="bottom-nav-link"><i class="ph-light ph-chart-line"></i></a>
+    </div>
+
+    <script src="js/config.js?v=3.9"></script>
+    <script>
+        const allProducts = [
+            { id: 1, category: 'emagrecimento', name: 'Shake (Fórmula 1 - 550g)', desc: 'Refeição inteligente, 19g proteína, 23 vitaminas.', flavors: 'Banana, Baunilha, Chocolate, Cookies, Coco, Doce de Leite, Morango, Limão, Pistache', price: 246.00, pv: 25.75 },
+            { id: 2, category: 'emagrecimento', name: 'NutreV (672g)', desc: 'A alternativa perfeita ao leite. Bebida vegetal rica em fibras.', flavors: 'Original / Lácteo', price: 79.00, pv: 7.40 },
+            { id: 3, category: 'emagrecimento', name: 'Nutri Soup (416g)', desc: 'Conforto de uma sopa com ciência de refeição completa.', flavors: 'Frango com Legumes, Creme Verde', price: 246.00, pv: 25.75 },
+            { id: 4, category: 'energia', name: 'Herbal Concentrate (51g)', desc: 'Acelerador botânico termogênico. Blend de chás.', flavors: 'Limão, Original', price: 222.00, pv: 21.45 },
+            { id: 5, category: 'energia', name: 'Herbal Concentrate (102g)', desc: 'Versão econômica do seu acelerador diário. +60 porções.', flavors: 'Laranja, Canela, Original', price: 364.00, pv: 37.60 },
+            { id: 6, category: 'energia', name: 'N-R-G Pó (60g)', desc: 'Energia e foco inabaláveis. Cafeína extraída do guaraná.', flavors: 'Original', price: 159.00, pv: 15.85 },
+            { id: 7, category: 'energia', name: 'Shape Control (30 caps)', desc: 'Laranja Moro e Cromo para redução de medidas abdominais.', flavors: 'Cápsulas', price: 338.00, pv: 35.35 },
+            { id: 8, category: 'saude', name: 'Fiber Concentrate (450ml)', desc: 'Faxina interna refrescante. 3g fibras por porção.', flavors: 'Uva, Manga, Limão Immune', price: 206.00, pv: 20.30 },
+            { id: 9, category: 'saude', name: 'Beauty Booster Colágeno', desc: 'Estética e firmeza com Colágeno Verisol.', flavors: 'Frutas Vermelhas', price: 301.00, pv: 27.80 },
+            { id: 10, category: 'performance', name: 'Whey Protein 3W (510g)', desc: 'Combustível de reconstrução muscular. 25g proteína.', flavors: 'Chocolate, Baunilha', price: 256.00, pv: 24.55 },
+            { id: 11, category: 'performance', name: 'Creatina Premium (150g)', desc: 'Rendimento atlético e preservação de força.', flavors: 'Neutro', price: 181.00, pv: 18.45 }
+        ];
+
+        let cart = [];
+        let userDiscount = 0;
+        let mentorWhatsApp = '';
+
+        async function init() {
+            const context = await App.init('loja.html');
+            if (!context) return;
+            userDiscount = context.profile.discount_level || 0;
+            
+            // Get mentor whatsapp
+            if (context.profile.mentor_id) {
+                const { data: mentor } = await sb.from('profiles').select('whatsapp').eq('id', context.profile.mentor_id).single();
+                mentorWhatsApp = mentor?.whatsapp || '';
+            }
+
+            renderProducts('all');
+        }
+
+        function renderProducts(cat) {
+            const container = document.getElementById('product-list');
+            const filtered = cat === 'all' ? allProducts : allProducts.filter(p => p.category === cat);
+            
+            container.innerHTML = filtered.map(p => {
+                const finalPrice = p.price * (1 - (userDiscount / 100));
+                return `
+                    <div class="product-card reveal">
+                        <div class="product-info">
+                            <h4>${p.name.toUpperCase()}</h4>
+                            <p>${p.desc}</p>
+                            <div style="font-size: 0.65rem; color: var(--accent); font-weight: 700; margin-bottom: 12px;">
+                                <i class="ph-fill ph-tag"></i> ${p.flavors.toUpperCase()}
+                            </div>
+                        </div>
+                        <div class="product-price">
+                            <div class="price-de">DE R$ ${p.price.toFixed(2)}</div>
+                            <div class="price-por">R$ ${finalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                            <button class="btn btn-secondary" style="width: 100%; margin-top: 16px; font-size: 0.7rem;" onclick="addToCart(${p.id})">
+                                ADICIONAR AO CARRINHO
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterCategory(cat) {
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            renderProducts(cat);
+        }
+
+        function addToCart(id) {
+            const p = allProducts.find(x => x.id === id);
+            const exists = cart.find(x => x.id === id);
+            if (exists) exists.qty++; else cart.push({ ...p, qty: 1 });
+            updateCart();
+            showToast('Item adicionado!');
+        }
+
+        function updateCart() {
+            const count = cart.reduce((s, i) => s + i.qty, 0);
+            document.getElementById('cart-count').textContent = count;
+            
+            const container = document.getElementById('cart-items');
+            let total = 0;
+            container.innerHTML = cart.map(i => {
+                const p = i.price * (1 - (userDiscount / 100)) * i.qty;
+                total += p;
+                return `
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 12px; margin-bottom: 8px;">
+                        <div style="font-size: 0.8rem;">
+                            <div style="font-weight: 700;">${i.qty}x ${i.name}</div>
+                            <div style="color: var(--text-secondary); font-size: 0.7rem;">R$ ${p.toFixed(2)}</div>
+                        </div>
+                        <button class="btn-close" style="font-size: 0.8rem;" onclick="removeFromCart(${i.id})"><i class="ph-bold ph-trash"></i></button>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('cart-total').textContent = `R$ ${total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCart();
+        }
+
+        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
+
+        function sendToWhatsApp() {
+            if (cart.length === 0) return;
+            let msg = `Olá! Gostaria de fazer um pedido ShapeTrack:\n\n`;
+            let total = 0;
+            cart.forEach(i => {
+                const p = i.price * (1 - (userDiscount / 100)) * i.qty;
+                total += p;
+                msg += `✅ ${i.qty}x ${i.name} - R$ ${p.toFixed(2)}\n`;
+            });
+            msg += `\n💰 *TOTAL ESTIMADO: R$ ${total.toFixed(2)}*\n`;
+            msg += `\n_Enviado via ShapeTrack App_`;
+            
+            const url = `https://wa.me/${mentorWhatsApp}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        }
+
+        init();
+    </script>
+</body>
+</html>

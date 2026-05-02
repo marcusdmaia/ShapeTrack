@@ -194,7 +194,7 @@
         }
 
         async function loadClients(mentorId) {
-            const { data: clients } = await sb.from('profiles').select('id, full_name').eq('mentor_id', mentorId).eq('role', 'client');
+            const { data: clients } = await sb.from('profiles').select('id, full_name, discount_level').eq('mentor_id', mentorId).eq('role', 'client');
             allClients = clients || [];
             const select = document.getElementById('select-client');
             allClients.forEach(c => {
@@ -202,6 +202,17 @@
                 opt.value = c.id;
                 opt.textContent = c.full_name.toUpperCase();
                 select.appendChild(opt);
+            });
+
+            select.addEventListener('change', () => {
+                const client = allClients.find(c => c.id === select.value);
+                if (client) {
+                    const level = client.discount_level || 0;
+                    // Mapear número de desconto para o ID do select no vendas.html
+                    const map = { 0: 'consumer', 14: 'c14', 25: 'c25', 35: 'c35', 42: 'c42', 50: 'c50' };
+                    document.getElementById('select-discount').value = map[level] || 'consumer';
+                    renderCart();
+                }
             });
         }
 

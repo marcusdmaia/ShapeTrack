@@ -29,13 +29,19 @@
 - **Garantia de Paridade:** O script assegura que novos campos (Gênero, Objetivo, Notes, etc.) existam no banco para evitar erros de inserção.
 - **Segurança (RLS):** Revisadas as políticas para garantir que Mentores gerenciem seus dados e Alunos acessem apenas seu próprio progresso.
 
-### ⚡ UX & Atalhos (Dashboard v3.9.10)
-- **Cabeçalho Ativo:** Todos os botões de ação (Novo Aluno, Venda, Avaliação, Empréstimo e Link do Funil) foram movidos para o topo da página, ao lado do nome do mentor.
-- **Limpeza Visual:** Removido o card de atalhos redundante, deixando a interface mais limpa e focada nas estatísticas de performance.
-- **Responsividade:** Botões de cabeçalho agora usam `flex-wrap` para se ajustarem perfeitamente em telas menores (iPhone/Android).
+### ⚡ UX & Atalhos (Dashboard v3.9.11)
+- **Cabeçalho Ativo:** Todos os botões de ação (Novo Aluno, Venda, Avaliação, Empréstimo e Link do Funil) foram movidos para o topo da página, ao lado do nome do mentor e padronizados com a cor Laranja (Primary).
+- **Limpeza Visual:** Removido o card de atalhos redundante.
+- **Responsividade:** Botões de cabeçalho usam `flex-wrap`.
+
+### 🛒 E-commerce & Sistema de Descontos Automáticos (v3.10.0)
+- **Regras de Desconto:** Cadastro manual de alunos e edição via CRM agora suportam definição do Nível de Desconto (0% a 50%).
+- **Venda Automática:** O Painel de Vendas (`vendas.html`) identifica automaticamente o cliente selecionado e aplica seu respectivo nível de desconto na calculadora do carrinho.
+- **Loja do Aluno:** Lançamento da página de Catálogo (`loja.html`) no painel do aluno. Oferece visualização de suplementos segmentados, aplicação automática do desconto no preço de tabela ("DE/POR") e um gerador de pedidos direto para o WhatsApp do mentor com os valores corretos calculados.
+- **Roteamento Híbrido:** O painel principal (`dashboard.html`) redireciona alunos instantaneamente para a sua interface de acompanhamento, separando de vez a experiência do mentor da do cliente final.
 
 ## ✅ ESTADO ATUAL: 100% SINCRONIZADO (DB & UI)
-O ecossistema ShapeTrack agora possui uma documentação de banco de dados sólida e paridade total entre as interfaces e o armazenamento.
+O ecossistema ShapeTrack agora possui uma loja premium ativa, regras de negócio robustas de descontos e paridade total entre as interfaces e o armazenamento.
 
 ---
 *Assinado: Antigravity AI Console*

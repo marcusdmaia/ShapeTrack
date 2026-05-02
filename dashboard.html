@@ -114,6 +114,17 @@
                                 <option value="manutencao">MANUTENÇÃO</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label>DESCONTO (%)</label>
+                            <select id="m_discount">
+                                <option value="0">0% (Varejo)</option>
+                                <option value="14">14% (Cliente Premium)</option>
+                                <option value="25">25% (Bronze)</option>
+                                <option value="35">35% (Prata)</option>
+                                <option value="42">42% (Ouro)</option>
+                                <option value="50">50% (Supervisor)</option>
+                            </select>
+                        </div>
                         <div class="form-group span-2" style="grid-column: span 2;">
                             <label>OBSERVAÇÕES DO PROTOCOLO</label>
                             <textarea id="m_notes" placeholder="HISTÓRICO, RESTRIÇÕES, ETC..." style="width: 100%; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 12px; color: #FFF; padding: 12px;"></textarea>
@@ -151,6 +162,12 @@
             const context = await App.init('dashboard.html');
             if (!context) return;
             
+            // Redirect students to reports/shop
+            if (context.profile.role === 'client') {
+                window.location.href = 'relatorio.html';
+                return;
+            }
+
             document.getElementById('profile_name').innerText = context.profile.full_name.toUpperCase();
             loadStats(context.profile.id);
 
@@ -167,6 +184,7 @@
                     height: parseInt(document.getElementById('m_height').value),
                     gender: document.getElementById('m_gender').value,
                     goal: document.getElementById('m_goal').value,
+                    discount_level: parseInt(document.getElementById('m_discount').value),
                     notes: document.getElementById('m_notes').value,
                     business_presented: document.getElementById('m_business').checked,
                     role: 'client',
