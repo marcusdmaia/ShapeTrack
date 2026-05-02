@@ -9,7 +9,11 @@ def install_pillow():
         print("Pillow is already installed.")
     except ImportError:
         print("Pillow not found. Installing...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "Pillow"])
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "--user", "Pillow"])
+        except subprocess.CalledProcessError:
+            print("Failed to install with --user. Trying standard install...")
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "Pillow"])
 
 def convert_to_webp():
     from PIL import Image

@@ -15,6 +15,10 @@
 - **IA Background:** Gerada imagem cinematográfica (`login_bg_performance`) via IA para ambientação de alta performance.
 - **UX:** Campos de formulário e botões refinados com micro-interações e ícones expressivos.
 
+### ⚡ Automação de Performance (Hotfix)
+- **Fix:** Adicionada flag `--user` no script de instalação de dependências para contornar erros de permissão do Windows.
+- **Robustez:** Atualizado `optimize.bat` para garantir execução no diretório correto.
+
 ### 📄 parcerias.html (Collab Market)
 - **Design Ethereal:** Implementação do sistema de cards de vídeo com overlays de play e profundidade.
 - **Responsividade:** Migração para a classe `.st-grid`, garantindo visualização perfeita em iPhone/Android.
