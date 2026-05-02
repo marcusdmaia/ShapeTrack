@@ -69,7 +69,7 @@ function setupNav(profile, activePage) {
         { name: 'ESTOQUE', url: 'estoque.html', icon: 'ph-package' },
         { name: 'VÍDEOS', url: 'videos.html', icon: 'ph-video-camera' },
         { name: 'PARCERIAS', url: 'parcerias.html', icon: 'ph-handshake' },
-        { name: 'CALCULADORA', url: 'calculadora.html', icon: 'ph-calculator' },
+        { name: 'LEADS', url: 'leads_admin.html', icon: 'ph-users-four' },
         { name: 'CONFIGURAÇÕES', url: 'configuracoes.html', icon: 'ph-gear' }
     ];
 

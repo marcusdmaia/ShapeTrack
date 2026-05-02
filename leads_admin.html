@@ -14,32 +14,38 @@
 
     <div class="bento-grid">
         <!-- Header -->
-        <div class="card-shell reveal" style="grid-column: span 12;">
-            <div class="card-core" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-                <div>
+        <div class="card-shell reveal span-12">
+            <div class="card-core">
+                <div class="header-content">
                     <span class="eyebrow">Inteligência de Captura</span>
                     <h1>LEAD RADAR</h1>
-                    <p style="color: var(--text-secondary); margin-top: 8px;">Monitoramento de prospecção e conversão em tempo real.</p>
+                    <p class="text-secondary">Monitoramento de prospecção e conversão em tempo real.</p>
                 </div>
-                <button class="btn btn-primary" onclick="copyFunnelLink()">
-                    LINK DO FUNIL
-                    <div class="btn-icon"><i class="ph-light ph-link"></i></div>
-                </button>
+                <div class="header-actions">
+                    <button class="btn" style="background: rgba(255,255,255,0.05); color: #FFF;" onclick="window.open('calculadora.html', '_blank')">
+                        ABRIR CALCULADORA
+                        <div class="btn-icon"><i class="ph-light ph-calculator"></i></div>
+                    </button>
+                    <button class="btn btn-primary" onclick="copyFunnelLink()">
+                        LINK DO FUNIL
+                        <div class="btn-icon"><i class="ph-light ph-link"></i></div>
+                    </button>
+                </div>
             </div>
         </div>
 
         <!-- Search Bar -->
-        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.1s;">
-            <div class="card-core" style="padding: 16px 24px;">
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <i class="ph-light ph-magnifying-glass" style="color: var(--accent); font-size: 1.2rem;"></i>
-                    <input type="text" id="search-leads" placeholder="FILTRAR POR NOME OU WHATSAPP..." oninput="filterLeads()" style="background: transparent; border: none; padding: 12px 0; font-size: 0.85rem;">
+        <div class="card-shell reveal span-12" style="animation-delay: 0.1s;">
+            <div class="card-core">
+                <div class="search-bar">
+                    <i class="ph-light ph-magnifying-glass"></i>
+                    <input type="text" id="search-leads" placeholder="FILTRAR POR NOME OU WHATSAPP..." oninput="filterLeads()">
                 </div>
             </div>
         </div>
 
         <!-- Leads Grid -->
-        <div id="leads-list" style="grid-column: span 12; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
+        <div id="leads-list" class="span-12" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px;">
             <!-- Leads -->
         </div>
     </div>
