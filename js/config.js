@@ -66,7 +66,6 @@ function setupNav(profile, activePage) {
         { name: 'GESTÃO 360', url: 'crm_dashboard.html', icon: 'ph-users-three' },
         { name: 'VENDAS', url: 'vendas.html', icon: 'ph-shopping-cart' },
         { name: 'ALUNOS', url: 'alunos.html', icon: 'ph-student' },
-        { name: 'EVOLUÇÃO', url: 'relatorio.html', icon: 'ph-chart-line' },
         { name: 'ESTOQUE', url: 'estoque.html', icon: 'ph-package' },
         { name: 'VÍDEOS', url: 'videos.html', icon: 'ph-video-camera' },
         { name: 'PARCERIAS', url: 'parcerias.html', icon: 'ph-handshake' },
