@@ -29,6 +29,11 @@
 - **Garantia de Paridade:** O script assegura que novos campos (Gênero, Objetivo, Notes, etc.) existam no banco para evitar erros de inserção.
 - **Segurança (RLS):** Revisadas as políticas para garantir que Mentores gerenciem seus dados e Alunos acessem apenas seu próprio progresso.
 
+### ⚡ UX & Atalhos (Dashboard v3.9.10)
+- **Cabeçalho Ativo:** Todos os botões de ação (Novo Aluno, Venda, Avaliação, Empréstimo e Link do Funil) foram movidos para o topo da página, ao lado do nome do mentor.
+- **Limpeza Visual:** Removido o card de atalhos redundante, deixando a interface mais limpa e focada nas estatísticas de performance.
+- **Responsividade:** Botões de cabeçalho agora usam `flex-wrap` para se ajustarem perfeitamente em telas menores (iPhone/Android).
+
 ## ✅ ESTADO ATUAL: 100% SINCRONIZADO (DB & UI)
 O ecossistema ShapeTrack agora possui uma documentação de banco de dados sólida e paridade total entre as interfaces e o armazenamento.
 

@@ -20,10 +20,21 @@
                     <span class="eyebrow">Acesso Verificado</span>
                     <h1 id="profile_name">CARREGANDO...</h1>
                 </div>
-                <div class="header-actions">
-                    <button class="btn btn-primary" onclick="window.location.href='lancar_avaliacao.html'">
-                        AVALIAÇÃO
-                        <div class="btn-icon"><i class="ph-light ph-plus"></i></div>
+                <div class="header-actions" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;">
+                    <button class="btn btn-primary" onclick="openModal('modal-aluno')" style="padding: 10px 16px; font-size: 0.75rem;">
+                        <i class="ph-light ph-user-plus"></i> ALUNO
+                    </button>
+                    <a href="vendas.html" class="btn btn-secondary" style="padding: 10px 16px; font-size: 0.75rem;">
+                        <i class="ph-light ph-shopping-cart-simple"></i> VENDA
+                    </a>
+                    <button class="btn btn-secondary" onclick="window.location.href='lancar_avaliacao.html'" style="padding: 10px 16px; font-size: 0.75rem;">
+                        <i class="ph-light ph-chart-line-up"></i> AVALIAÇÃO
+                    </button>
+                    <a href="estoque.html?action=loan" class="btn btn-secondary" style="padding: 10px 16px; font-size: 0.75rem;">
+                        <i class="ph-light ph-package"></i> EMPRÉSTIMO
+                    </a>
+                    <button class="btn btn-secondary" onclick="copyFunnelLink()" style="padding: 10px 16px; font-size: 0.75rem;">
+                        <i class="ph-light ph-funnel"></i> LINK
                     </button>
                 </div>
             </div>
@@ -47,38 +58,6 @@
                 <div class="card-core">
                     <span class="eyebrow">RECEITA BRUTA</span>
                     <div id="total-revenue" class="stat-value" style="color: var(--accent);">R$ 0,00</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Actions & Manual Registration -->
-        <div class="card-shell reveal span-12" style="animation-delay: 0.4s;">
-            <div class="card-core">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                    <h3>ATALHOS RÁPIDOS</h3>
-                    <button class="btn btn-primary" onclick="openModal('modal-aluno')" style="padding: 10px 20px; font-size: 0.8rem;">
-                        NOVO ALUNO (MANUAL)
-                        <div class="btn-icon"><i class="ph-light ph-user-plus"></i></div>
-                    </button>
-                </div>
-                
-                <div class="grid-stack" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-                    <a href="vendas.html" class="btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">
-                        <i class="ph-light ph-shopping-cart-simple" style="color: var(--accent);"></i>
-                        NOVA VENDA
-                    </a>
-                    <a href="lancar_avaliacao.html" class="btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">
-                        <i class="ph-light ph-chart-line-up" style="color: var(--accent);"></i>
-                        NOVA AVALIAÇÃO
-                    </a>
-                    <a href="estoque.html?action=loan" class="btn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">
-                        <i class="ph-light ph-package" style="color: var(--accent);"></i>
-                        NOVO EMPRÉSTIMO
-                    </a>
-                    <button class="btn" onclick="copyFunnelLink()" style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);">
-                        <i class="ph-light ph-funnel" style="color: var(--accent);"></i>
-                        LINK DO FUNIL
-                    </button>
                 </div>
             </div>
         </div>
