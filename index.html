@@ -8,63 +8,65 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="style.css?v=3.9">
     <style>
-        .login-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            min-height: 100dvh;
-        }
-        
-        .login-visual {
-            background: linear-gradient(135deg, #050807 0%, #2F5948 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 80px;
-            position: relative;
+        body {
+            background: #050807;
             overflow: hidden;
         }
-
-        .login-visual::after {
+        .login-page {
+            display: flex;
+            min-height: 100dvh;
+            background: url('login_bg_performance_1777734357298.png') center/cover no-repeat;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .login-page::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-            opacity: 0.1;
+            background: radial-gradient(circle at center, rgba(5, 8, 7, 0.4) 0%, rgba(5, 8, 7, 0.95) 100%);
+            backdrop-filter: blur(10px);
         }
-
-        .login-form-side {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            background: var(--bg-dark);
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+            z-index: 10;
+            margin: 24px;
         }
-
-        @media (max-width: 900px) {
-            .login-container { grid-template-columns: 1fr; }
-            .login-visual { display: none; }
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .login-header h1 {
+            font-size: 3.5rem;
+            letter-spacing: -2px;
+            line-height: 0.9;
+            color: #FFF;
+        }
+        .login-header span {
+            color: var(--accent);
+            display: block;
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            margin-top: 8px;
+            font-weight: 300;
         }
     </style>
 </head>
 <body>
 
-    <div class="login-container">
-        <!-- Visual Side -->
-        <div class="login-visual reveal">
-            <span class="eyebrow" style="color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1);">Protocolo Ativo</span>
-            <h1 style="font-size: 5rem; color: #FFF; margin-bottom: 24px;">SHAPE<br><span style="color: var(--accent);">TRACK</span></h1>
-            <p style="color: rgba(255,255,255,0.6); font-size: 1.1rem; max-width: 400px; line-height: 1.6;">
-                A plataforma definitiva para mentoria de alta performance. 
-                Spatial rhythm, fluid motion, and human-centric data.
-            </p>
-        </div>
+    <div class="login-page">
+        <div class="login-card">
+            <div class="login-header reveal">
+                <h1>SHAPETRACK</h1>
+                <span>PREMIUM MENTORSHIP</span>
+            </div>
 
-        <!-- Form Side -->
-        <div class="login-form-side">
-            <div class="card-shell reveal" style="width: 100%; max-width: 440px; animation-delay: 0.2s;">
+            <div class="card-shell reveal" style="animation-delay: 0.2s;">
                 <div class="card-core">
-                    <h2 style="margin-bottom: 8px;">BEM-VINDO</h2>
-                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 32px;">Insira suas credenciais de acesso premium.</p>
+                    <h2 style="margin-bottom: 8px; font-size: 1.2rem;">AUTENTICAÇÃO</h2>
+                    <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 32px;">Insira suas credenciais para acessar o ecossistema.</p>
                     
                     <form id="login-form">
                         <div class="form-group">
@@ -76,14 +78,14 @@
                             <input type="password" id="password" placeholder="••••••••" required>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">
-                            AUTENTICAR SISTEMA
-                            <div class="btn-icon"><i class="ph-light ph-fingerprint"></i></div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px; height: 54px; font-size: 0.85rem;">
+                            ENTRAR NO SISTEMA
+                            <div class="btn-icon"><i class="ph-fill ph-shield-check"></i></div>
                         </button>
                     </form>
                     
                     <div style="margin-top: 32px; text-align: center;">
-                        <a href="recuperar_senha.html" style="color: var(--text-secondary); font-size: 0.75rem; text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">ESQUECEU SUA CHAVE?</a>
+                        <a href="recuperar_senha.html" style="color: var(--text-secondary); font-size: 0.7rem; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">Esqueceu sua chave de acesso?</a>
                     </div>
                 </div>
             </div>
