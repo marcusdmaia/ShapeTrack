@@ -217,15 +217,13 @@
                     const price = p[discount] || p.consumer;
                     const isDiscounted = price < p.consumer;
                     return `
-                        <div style="padding: 12px 16px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.2s;" 
-                             onmouseover="this.style.background='rgba(255,255,255,0.02)'" 
-                             onmouseout="this.style.background='transparent'"
-                             onclick="addToCart('${p.sku}')">
-                            <div style="font-size: 0.8rem; font-weight: 700; color: #FFF;">${p.name}</div>
-                            <div style="font-size: 0.7rem; color: var(--accent); font-weight: 800; margin-top: 4px;">
-                                R$ ${price.toFixed(2)} 
-                                ${isDiscounted ? `<span style="text-decoration: line-through; opacity: 0.5; margin-left: 8px; color: #FFF;">R$ ${p.consumer.toFixed(2)}</span>` : ''}
-                                <span style="color: var(--text-secondary); margin-left: 12px;">| ${p.pv} PV</span>
+                        <div class="st-item" style="padding: 12px 16px; cursor: pointer;" onclick="addToCart('${p.sku}')">
+                            <div class="st-item-info">
+                                <div class="st-item-title">${p.name}</div>
+                                <div class="st-item-subtitle">${p.sku} | ${p.pv} PV</div>
+                            </div>
+                            <div class="st-item-meta">
+                                <div class="st-item-value">R$ ${price.toFixed(2)}</div>
                             </div>
                         </div>
                     `;
@@ -260,13 +258,20 @@
                 window.currentSaleTotal = totalPrice; // Store for submission
                 window.currentSalePV = totalPV;
                 return `
-                    <div class="st-list-item">
-                        <div style="flex: 1; font-weight: 700; font-size: 0.85rem; color: #FFF;">${item.name}</div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 800; color: var(--accent); font-size: 0.9rem;">R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
-                            ${isDiscounted ? `<div style="font-size: 0.65rem; text-decoration: line-through; opacity: 0.4;">R$ ${item.consumer.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>` : ''}
+                    <div class="st-item">
+                        <div class="st-item-info">
+                            <div class="st-item-title">${item.name}</div>
+                            <div class="st-item-subtitle">${item.qty} UNIDADE(S) | ${item.pv * item.qty} PV</div>
                         </div>
-                        <div style="color: #ef4444; cursor: pointer; padding: 8px;" onclick="removeFromCart('${item.sku}')"><i class="ph-light ph-trash"></i></div>
+                        <div class="st-item-meta">
+                            <div class="st-item-value">R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                            ${isDiscounted ? `<div class="st-item-detail" style="text-decoration: line-through; opacity: 0.4;">R$ ${item.consumer.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>` : ''}
+                        </div>
+                        <div class="st-item-actions">
+                            <button class="btn btn-danger" onclick="removeFromCart('${item.sku}')">
+                                <i class="ph-light ph-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 `;
             }).join('');

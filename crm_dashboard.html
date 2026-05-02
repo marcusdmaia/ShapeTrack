@@ -119,20 +119,21 @@
 
             document.getElementById('receivables-list').innerHTML = pendingSales.length ? pendingSales.map(s => `
                 <div class="st-list-item">
-                    <div style="flex: 1;">
-                        <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${s.profiles?.full_name || 'Desconhecido'}</div>
-                        <div style="font-size: 0.7rem; color: #ef4444; font-weight: 700; margin-top: 4px;">Pendente: R$ ${(s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                <div class="st-item">
+                    <div class="st-item-info">
+                        <div class="st-item-title">${s.profiles?.full_name || 'Desconhecido'}</div>
+                        <div class="st-item-subtitle" style="color: #ef4444;">Pendente: R$ ${(s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
                     </div>
-                    <div class="st-flex-stack" style="text-align: right; margin-right: 16px;">
-                        <div style="font-size: 0.65rem; color: var(--text-secondary);">Vencimento</div>
-                        <div style="font-size: 0.75rem; font-weight: 600; color: #FFF;">${s.due_date ? new Date(s.due_date).toLocaleDateString('pt-BR') : '--'}</div>
+                    <div class="st-item-meta">
+                        <div class="st-item-subtitle">Vencimento</div>
+                        <div class="st-item-value">${s.due_date ? new Date(s.due_date).toLocaleDateString('pt-BR') : '--'}</div>
                     </div>
-                    <div style="display: flex; gap: 8px;">
+                    <div class="st-item-actions">
                         <a href="https://wa.me/55${s.profiles?.whatsapp?.replace(/\D/g,'') || ''}?text=${encodeURIComponent('Olá ' + (s.profiles?.full_name || '') + '! Identificamos uma pendência no valor de R$ ' + (s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + ' referente ao seu protocolo. Como podemos facilitar para você?')}" 
-                           target="_blank" class="btn btn-whatsapp" style="padding: 8px 16px; font-size: 0.65rem; background: #25D366; color:#000;">
-                            <i class="ph-fill ph-whatsapp-logo"></i> COBRAR
+                           target="_blank" class="btn btn-whatsapp">
+                            <i class="ph-fill ph-whatsapp-logo"></i>
                         </a>
-                        <button class="btn btn-danger" style="padding: 8px 12px; font-size: 0.65rem; background: rgba(255,75,75,0.1); border: 1px solid rgba(255,75,75,0.2); color:#ff4b4b;" onclick="deleteSale('${s.id}')">
+                        <button class="btn btn-danger" onclick="deleteSale('${s.id}')">
                             <i class="ph-light ph-trash"></i>
                         </button>
                     </div>

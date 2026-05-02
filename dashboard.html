@@ -15,12 +15,12 @@
     <div class="bento-grid">
         <!-- Header Section -->
         <div class="card-shell reveal" style="grid-column: span 12;">
-            <div class="card-core" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-                <div>
+            <div class="card-core">
+                <div class="header-content">
                     <span class="eyebrow">Acesso Verificado</span>
-                    <h1 id="profile_name" style="margin: 4px 0;">CARREGANDO...</h1>
+                    <h1 id="profile_name">CARREGANDO...</h1>
                 </div>
-                <div>
+                <div class="header-actions">
                     <button class="btn btn-primary" onclick="window.location.href='lancar_avaliacao.html'">
                         AVALIAÇÃO
                         <div class="btn-icon"><i class="ph-light ph-plus"></i></div>
@@ -34,19 +34,19 @@
             <div class="card-shell reveal" style="animation-delay: 0.1s;">
                 <div class="card-core">
                     <span class="eyebrow">CLIENTES ATIVOS</span>
-                    <div id="total-clients" class="stat-value" style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-top: 12px;">0</div>
+                    <div id="total-clients" class="stat-value">0</div>
                 </div>
             </div>
             <div class="card-shell reveal" style="animation-delay: 0.2s;">
                 <div class="card-core">
                     <span class="eyebrow">EVOLUÇÃO MÉDIA</span>
-                    <div class="stat-value" style="font-size: 2.5rem; font-weight: 800; color: #FFF; margin-top: 12px;">+12%</div>
+                    <div class="stat-value">+12%</div>
                 </div>
             </div>
             <div class="card-shell reveal" style="animation-delay: 0.3s;">
                 <div class="card-core">
                     <span class="eyebrow">RECEITA BRUTA</span>
-                    <div id="total-revenue" class="stat-value" style="font-size: 2.5rem; font-weight: 800; color: var(--accent); margin-top: 12px;">R$ 0,00</div>
+                    <div id="total-revenue" class="stat-value" style="color: var(--accent);">R$ 0,00</div>
                 </div>
             </div>
         </div>
@@ -54,13 +54,13 @@
         <!-- Quick Actions -->
         <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.4s;">
             <div class="card-core">
-                <h3 style="margin-bottom: 24px;">ATALHOS DO SISTEMA</h3>
+                <h3>ATALHOS DO SISTEMA</h3>
                 <div class="grid-stack" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-                    <a href="vendas.html" class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;">
+                    <a href="vendas.html" class="btn">
                         <i class="ph-light ph-bolt"></i>
                         GESTÃO DE VENDAS
                     </a>
-                    <a href="alunos.html" class="btn" style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #FFF; justify-content: flex-start;">
+                    <a href="alunos.html" class="btn">
                         <i class="ph-light ph-user-focus"></i>
                         PERFIL DOS ALUNOS
                     </a>
@@ -69,11 +69,13 @@
         </div>
 
         <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.5s;">
-            <div class="card-core" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-                <i class="ph-light ph-shield-check" style="font-size: 3rem; color: var(--accent); opacity: 0.5;"></i>
-                <p style="margin-top: 16px; color: var(--text-secondary); font-size: 0.8rem;">SISTEMA PROTEGIDO POR PROTOCOLO SHAPETRACK</p>
+            <div class="card-core security-box">
+                <i class="ph-light ph-shield-check"></i>
+                <p>SISTEMA PROTEGIDO POR PROTOCOLO SHAPETRACK</p>
             </div>
         </div>
+    </div>
+
     <script src="js/config.js?v=3.9"></script>
     <script>
         async function init() {

@@ -134,15 +134,56 @@ body::after {
     color: var(--accent);
 }
 
+/* Bento Grid & Layout System */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.grid-stack {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
 /* Layout Adjustments for Sidebar */
 .container, .bento-grid {
-    margin-left: 260px !important;
-    width: calc(100% - 260px) !important;
-    max-width: 1400px !important;
-    padding: 40px 40px 120px !important;
+    margin-left: 260px;
+    width: calc(100% - 260px);
 }
 
 .bottom-nav { display: none; }
+
+/* Dashboard Utilities */
+.header-content { flex: 1; }
+.header-actions { display: flex; gap: 12px; }
+
+.security-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+}
+
+.security-box i { font-size: 3rem; color: var(--accent); opacity: 0.5; }
+.security-box p { color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; }
+
+@media (max-width: 768px) {
+    .card-core:has(.header-content) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+    }
+    .header-actions { width: 100%; }
+    .header-actions .btn { flex: 1; }
+}
 
 /* Double-Bezel Architecture (Cards) */
 .card-shell {
@@ -189,6 +230,9 @@ body::after {
     box-shadow: 0 12px 32px var(--accent-glow);
 }
 
+.btn-whatsapp { background: #25D366; color: #000; }
+.btn-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+
 .btn-icon {
     width: 32px;
     height: 32px;
@@ -198,24 +242,6 @@ body::after {
     align-items: center;
     justify-content: center;
     font-size: 0.8rem;
-}
-
-/* Bento Grid Layout */
-.bento-grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 24px;
-    padding: 40px;
-    width: 100%;
-    max-width: 1400px;
-}
-
-/* Typography & Hierarchy */
-h1, h2, h3 {
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    line-height: 1.1;
-    margin-bottom: 0.5em;
 }
 
 .eyebrow {
@@ -354,26 +380,35 @@ select option {
     .desktop-only { display: none !important; }
 }
 
-/* Global Transitions */
-html { scroll-behavior: smooth; }
-::selection { background: var(--accent); color: #FFF; }
-
-/* Responsive Utility System */
-.st-list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-.st-list-item { 
+/* Standardized Component System (High-End SaaS) */
+.st-list { 
     display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    background: rgba(255,255,255,0.02); 
-    padding: 16px; 
-    border-radius: 16px; 
-    border: 1px solid var(--glass-border); 
+    flex-direction: column; 
+    gap: 0; 
+    width: 100%; 
+}
+
+.st-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     gap: 16px;
     transition: 0.3s var(--bezier);
 }
 
-.st-flex-stack { display: flex; flex-direction: column; gap: 4px; }
-.st-flex-between { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.st-item:last-child { border-bottom: none; }
+
+.st-item-info { flex: 1; min-width: 0; }
+.st-item-title { font-size: 0.9rem; font-weight: 700; color: #FFF; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.02em; }
+.st-item-subtitle { font-size: 0.7rem; color: var(--text-secondary); font-weight: 500; }
+
+.st-item-meta { text-align: right; }
+.st-item-value { font-size: 0.95rem; font-weight: 800; color: #FFF; }
+.st-item-detail { font-size: 0.65rem; color: var(--text-secondary); margin-top: 2px; }
+
+.st-item-actions { display: flex; gap: 8px; }
 
 /* Mobile & Responsiveness Audit */
 @media (max-width: 1024px) {
@@ -383,32 +418,33 @@ html { scroll-behavior: smooth; }
 @media (max-width: 768px) {
     :root {
         --radius-outer: 1.5rem;
-        --radius-inner: 1rem;
+        --radius-inner: 1.2rem;
     }
 
-    h1 { font-size: clamp(1.5rem, 8vw, 2.2rem) !important; line-height: 1.1 !important; letter-spacing: -0.04em !important; }
-    h2 { font-size: clamp(1.2rem, 6vw, 1.5rem) !important; }
-    h3 { font-size: 1.1rem !important; }
+    h1 { font-size: clamp(1.6rem, 9vw, 2.4rem) !important; line-height: 1.05 !important; letter-spacing: -0.05em !important; }
+    h2 { font-size: 1.3rem !important; }
+    h3 { font-size: 1rem !important; text-transform: uppercase; letter-spacing: 0.05em; }
     
     .bento-grid {
         grid-template-columns: 1fr !important;
         gap: 16px !important;
         padding: 16px !important;
-        margin-bottom: 100px !important;
+        margin-bottom: 110px !important;
     }
 
     .card-shell {
         grid-column: span 1 !important;
-        width: 100% !important;
+        padding: 6px !important;
     }
 
     .card-core {
-        padding: 24px 20px !important;
+        padding: 20px !important;
         min-height: auto !important;
     }
 
     .stat-value {
-        font-size: 2.5rem !important;
+        font-size: 2.2rem !important;
+        letter-spacing: -0.02em !important;
     }
 
     .navbar { display: none !important; }
@@ -416,98 +452,92 @@ html { scroll-behavior: smooth; }
     .container, .bento-grid {
         margin-left: 0 !important;
         width: 100% !important;
-        padding: 20px 16px 120px !important;
+        padding: 20px 12px 140px !important;
     }
 
-    /* Standardized Bottom Navigation for High Density */
+    /* Standardized Bottom Navigation (Native-Feel) */
     .bottom-nav {
         display: flex !important;
         position: fixed;
-        bottom: 12px;
-        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        bottom: 16px;
+        bottom: calc(16px + env(safe-area-inset-bottom, 0px));
         left: 50%;
         transform: translateX(-50%);
-        width: calc(100% - 24px);
-        max-width: 540px;
-        background: rgba(10, 12, 11, 0.8);
-        backdrop-filter: blur(24px) saturate(180%);
-        -webkit-backdrop-filter: blur(24px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 2rem;
-        padding: 4px;
+        width: calc(100% - 32px);
+        max-width: 600px;
+        background: rgba(10, 12, 11, 0.85);
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 2.5rem;
+        padding: 6px;
         z-index: 10000;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+        box-shadow: 0 25px 60px rgba(0,0,0,0.8);
         justify-content: flex-start;
         overflow-x: auto;
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none;  /* IE 10+ */
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
     }
 
-    .bottom-nav::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+    .bottom-nav::-webkit-scrollbar { display: none; }
 
     .bottom-nav-link {
-        flex: 0 0 54px; /* Fixed width to prevent squishing */
+        flex: 0 0 60px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 0;
-        height: 54px;
+        height: 60px;
         color: var(--text-secondary);
-        text-decoration: none;
         transition: 0.4s var(--bezier);
         border-radius: 50%;
+        scroll-snap-align: center;
     }
 
-    .bottom-nav-link i { font-size: 1.5rem; }
-    .bottom-nav-link span { display: none; }
+    .bottom-nav-link i { font-size: 1.6rem; }
     
     .bottom-nav-link.active {
         color: var(--accent);
-        background: rgba(217, 108, 43, 0.15);
-        box-shadow: 0 0 15px rgba(217, 108, 43, 0.2);
+        background: rgba(217, 108, 43, 0.12);
+        box-shadow: 0 0 20px rgba(217, 108, 43, 0.15);
+    }
+
+    /* Standardized List Items (Mobile Refined) */
+    .st-item {
+        flex-wrap: wrap;
+        padding: 20px 0;
+    }
+
+    .st-item-info {
+        flex: 0 0 60%;
+    }
+
+    .st-item-meta {
+        flex: 0 0 40%;
+        text-align: right;
+    }
+
+    .st-item-actions {
+        flex: 0 0 100%;
+        margin-top: 12px;
+        justify-content: stretch;
+    }
+
+    .st-item-actions > .btn {
+        flex: 1;
+        padding: 10px !important;
+        font-size: 0.7rem !important;
     }
 
     .btn {
-        padding: 12px 24px !important;
-        font-size: 0.85rem !important;
-        width: auto !important;
+        padding: 12px 20px !important;
+        font-size: 0.8rem !important;
+        border-radius: 14px !important;
     }
 
-    /* Ergonomic List Stacking */
-    .st-list-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
-
-    .st-list-item > div[style*="text-align: right"],
-    .st-list-item > .st-flex-stack {
-        width: 100%;
-        text-align: left !important;
-        align-items: flex-start !important;
-        border-top: 1px solid rgba(255,255,255,0.05);
-        padding-top: 12px;
-    }
-
-    /* Force tables to be scrollable but better styled */
     table, .st-table {
         display: block;
         overflow-x: auto;
-        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
     }
-    
-    /* Ensure all flex containers inside cards wrap */
-    .card-core > div[style*="display: flex"] {
-        flex-wrap: wrap !important;
-        gap: 16px !important;
-    }
-
-    /* Toast adjustment for mobile safe area */
-    #toast-container {
-        bottom: 100px;
-        right: 20px;
-        left: 20px;
-    }
-    .toast { width: 100%; justify-content: center; }
 }
