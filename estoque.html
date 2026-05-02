@@ -80,34 +80,38 @@
 </head>
 <body class="dashboard-body">
 
-    <div class="container" style="padding-top: 80px; padding-bottom: 120px;">
+    <div class="bento-grid">
         
-        <div class="header-section reveal">
-            <div>
-                <h1 class="premium-title">ESTOQUE <span class="text-gradient">SIMPLIFICADO</span></h1>
-                <p class="premium-subtitle">Gestão de produtos e empréstimos em lista única.</p>
+        <div class="card-shell reveal span-12">
+            <div class="card-core">
+                <div class="header-content">
+                    <h1 class="premium-title">ESTOQUE <span class="text-gradient">SIMPLIFICADO</span></h1>
+                    <p class="premium-subtitle">Gestão de produtos e empréstimos em lista única.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="openLoanModal()">
+                        <i class="ph-bold ph-hand-coins"></i> NOVO EMPRÉSTIMO
+                    </button>
+                </div>
             </div>
-            <button class="btn btn-primary" onclick="openLoanModal()">
-                <i class="ph-bold ph-hand-coins"></i> NOVO EMPRÉSTIMO
-            </button>
         </div>
 
         <!-- Search Bar -->
-        <div class="card-shell reveal" style="margin-bottom: 32px;">
-            <div class="card-core" style="padding: 12px 16px;">
-                <div style="position: relative;">
-                    <i class="ph ph-magnifying-glass" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
-                    <input type="text" id="stock-search" placeholder="BUSCAR POR PRODUTO OU SKU..." style="padding-left: 48px; border: none; background: transparent;" oninput="filterStock()">
+        <div class="card-shell reveal span-12" style="animation-delay: 0.1s;">
+            <div class="card-core">
+                <div class="search-bar">
+                    <i class="ph-light ph-magnifying-glass"></i>
+                    <input type="text" id="stock-search" placeholder="BUSCAR POR PRODUTO OU SKU..." oninput="filterStock()">
                 </div>
             </div>
         </div>
 
         <!-- Inventory List -->
-        <div class="section-title reveal">
+        <div class="section-title reveal span-12">
             <i class="ph-fill ph-package"></i> LISTA DE PRODUTOS
         </div>
         
-        <div class="card-shell reveal">
+        <div class="card-shell reveal span-12">
             <div class="card-core" style="padding: 0; overflow: hidden;">
                 <div style="overflow-x: auto;">
                     <table class="inventory-table">
@@ -127,11 +131,11 @@
         </div>
 
         <!-- Borrowed Items Section -->
-        <div class="section-title reveal" style="margin-top: 60px;">
+        <div class="section-title reveal span-12" style="margin-top: 60px;">
             <i class="ph-fill ph-hand-coins"></i> PRODUTOS EMPRESTADOS (OBS)
         </div>
 
-        <div class="card-shell reveal">
+        <div class="card-shell reveal span-12">
             <div class="card-core" style="padding: 0; overflow-x: auto;">
                 <table class="inventory-table">
                     <thead>

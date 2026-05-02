@@ -438,35 +438,33 @@ select option {
     h2 { font-size: 1.4rem !important; }
     h3 { font-size: 1.1rem !important; text-transform: uppercase; letter-spacing: 0.05em; }
     
-    /* Force Single Column & Prevent Overflow */
-    .bento-grid, .grid-stack, .alunos-grid {
+    /* Force Single Column & Perfect Centering */
+    .bento-grid, .grid-stack, .alunos-grid, .container {
         display: flex !important;
         flex-direction: column !important;
-        grid-template-columns: 1fr !important; /* Fallback */
-        gap: 20px !important;
-        padding: 0 !important;
-        margin-left: 0 !important;
+        align-items: center !important;
         width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    .container, .bento-grid {
+        max-width: 500px !important;
         margin: 0 auto !important;
-        width: 100% !important;
-        max-width: 500px !important; /* Centered column feel on larger mobile */
-        padding: 24px 20px 140px !important; /* Consistent lateral margins */
+        padding: 20px 20px 140px !important; /* Safe lateral and bottom margins */
+        gap: 20px !important;
     }
 
-    .card-shell {
-        width: 100% !important;
+    .card-shell, .span-12, .span-8, .span-4, .span-6 {
         grid-column: span 12 !important;
-        padding: 6px !important;
-        margin-bottom: 0 !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
     }
 
     .card-core {
-        padding: 24px !important;
+        padding: 24px 20px !important;
         min-height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     .stat-value {
