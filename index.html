@@ -52,6 +52,39 @@
             margin-top: 8px;
             font-weight: 300;
         }
+        .login-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px;
+            border-radius: 100px;
+            margin-bottom: 32px;
+            border: 1px solid var(--glass-border);
+            position: relative;
+        }
+        .login-tab {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 100px;
+            transition: all 0.4s var(--bezier);
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .login-tab.active {
+            background: var(--accent);
+            color: #FFF;
+            box-shadow: 0 8px 20px var(--accent-glow);
+        }
+        .login-tab i { font-size: 1.1rem; }
     </style>
 </head>
 <body>
@@ -59,27 +92,39 @@
     <div class="login-page">
         <div class="login-card">
             <div class="login-header reveal">
-                <h1>SHAPETRACK</h1>
-                <span>PREMIUM MENTORSHIP</span>
+                <h1 id="brand-title">SHAPETRACK</h1>
+                <span id="brand-subtitle">PREMIUM MENTORSHIP</span>
             </div>
 
             <div class="card-shell reveal" style="animation-delay: 0.2s;">
                 <div class="card-core">
-                    <h2 style="margin-bottom: 8px; font-size: 1.2rem;">AUTENTICAÇÃO</h2>
-                    <p style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 32px;">Insira suas credenciais para acessar o ecossistema.</p>
+                    
+                    <div class="login-tabs">
+                        <div class="login-tab active" data-role="mentor" onclick="switchTab(this)">
+                            <i class="ph-fill ph-briefcase"></i> MENTOR
+                        </div>
+                        <div class="login-tab" data-role="client" onclick="switchTab(this)">
+                            <i class="ph-fill ph-user"></i> PACIENTE
+                        </div>
+                    </div>
+
+                    <div id="login-context" style="margin-bottom: 32px;">
+                        <h2 id="login-title" style="margin-bottom: 8px; font-size: 1.2rem;">ACESSO MENTOR</h2>
+                        <p id="login-desc" style="color: var(--text-secondary); font-size: 0.8rem;">Área restrita para gestão de protocolos e alunos.</p>
+                    </div>
                     
                     <form id="login-form">
                         <div class="form-group">
-                            <label>E-MAIL CORPORATIVO</label>
-                            <input type="email" id="email" placeholder="nome@exemplo.com" required>
+                            <label>E-MAIL DE ACESSO</label>
+                            <input type="email" id="email" placeholder="seu@email.com" required>
                         </div>
                         <div class="form-group">
                             <label>CHAVE DE ACESSO</label>
                             <input type="password" id="password" placeholder="••••••••" required>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px; height: 54px; font-size: 0.85rem;">
-                            ENTRAR NO SISTEMA
+                        <button type="submit" id="login-btn" class="btn btn-primary" style="width: 100%; margin-top: 12px; height: 58px; font-size: 0.85rem;">
+                            AUTENTICAR ACESSO
                             <div class="btn-icon"><i class="ph-fill ph-shield-check"></i></div>
                         </button>
                     </form>
@@ -92,27 +137,72 @@
         </div>
     </div>
 
-    <script src="js/config.js?v=3.9"></script>
+    <script src="js/config.js?v=4.5"></script>
     <script>
+        let selectedRole = 'mentor';
+
+        function switchTab(el) {
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            selectedRole = el.dataset.role;
+
+            const title = document.getElementById('login-title');
+            const desc = document.getElementById('login-desc');
+            const btn = document.getElementById('login-btn');
+
+            if (selectedRole === 'mentor') {
+                title.textContent = 'ACESSO MENTOR';
+                desc.textContent = 'Área restrita para gestão de protocolos e alunos.';
+                btn.innerHTML = 'AUTENTICAR MENTOR <div class="btn-icon"><i class="ph-fill ph-shield-check"></i></div>';
+            } else {
+                title.textContent = 'ACESSO PACIENTE';
+                desc.textContent = 'Acompanhe seu progresso, treinos e evoluções.';
+                btn.innerHTML = 'ENTRAR NO MEU PERFIL <div class="btn-icon"><i class="ph-fill ph-user-focus"></i></div>';
+            }
+        }
+
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const btn = document.getElementById('login-btn');
+
+            btn.disabled = true;
+            btn.innerHTML = 'VERIFICANDO... <div class="btn-icon"><i class="ph-fill ph-spinner ph-spin"></i></div>';
 
             const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
             if (error) {
                 showToast(error.message, 'error');
+                btn.disabled = false;
+                switchTab(document.querySelector(`.login-tab[data-role="${selectedRole}"]`));
             } else {
-                showToast('Acesso Autorizado');
-                setTimeout(() => window.location.href = 'dashboard.html', 1500);
+                showToast('Acesso Autorizado. Carregando seu perfil...', 'success');
+                
+                // Fetch profile to decide where to go
+                const { profile } = await App.init();
+                
+                setTimeout(() => {
+                    if (profile && profile.role === 'client') {
+                        window.location.href = 'relatorio.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                }, 1000);
             }
         });
 
-        // Check if already logged in
+        // Check session and auto-redirect
         async function checkSession() {
             const { data: { session } } = await sb.auth.getSession();
-            if (session) window.location.href = 'dashboard.html';
+            if (session) {
+                const { profile } = await App.init();
+                if (profile && profile.role === 'client') {
+                    window.location.href = 'relatorio.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+            }
         }
         checkSession();
     </script>
