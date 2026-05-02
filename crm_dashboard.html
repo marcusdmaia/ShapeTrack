@@ -17,56 +17,52 @@
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
                 <span class="eyebrow">Monitoramento Ativo</span>
-                <h1 style="margin: 4px 0;">GESTÃO 360º</h1>
+                <h1>GESTÃO 360º</h1>
                 <p style="color: var(--text-secondary); font-size: 0.85rem;">Visão completa da retenção e saúde do ecossistema.</p>
             </div>
         </div>
 
         <!-- Summary Stats -->
-        <div class="grid-stack" style="grid-column: span 12;">
-            <div class="card-shell reveal" style="animation-delay: 0.1s;">
-                <div class="card-core">
-                    <span class="eyebrow">CONTAS A RECEBER</span>
-                    <div id="pending-revenue" class="stat-value" style="color: var(--accent);">R$ 0,00</div>
-                </div>
-            </div>
-            <div class="card-shell reveal" style="animation-delay: 0.2s;">
-                <div class="card-core">
-                    <span class="eyebrow">RISCO DE EVASÃO</span>
-                    <div id="churn-risk" class="stat-value" style="color: #FF4B4B;">0</div>
-                </div>
-            </div>
-            <div class="card-shell reveal" style="animation-delay: 0.3s;">
-                <div class="card-core">
-                    <span class="eyebrow">ANIVERSARIANTES</span>
-                    <div id="birthdays" class="stat-value">0</div>
-                </div>
-            </div>
-            <div class="card-shell reveal" style="animation-delay: 0.4s;">
-                <div class="card-core">
-                    <span class="eyebrow">CONVERSÃO LEAD</span>
-                    <div id="conversion-rate" class="stat-value">0%</div>
+        <div class="card-shell reveal" style="grid-column: span 12; animation-delay: 0.1s;">
+            <div class="card-core">
+                <div class="st-flex-stack" style="justify-content: space-around; width: 100%;">
+                    <div style="text-align: center;">
+                        <span class="eyebrow">CONTAS A RECEBER</span>
+                        <div id="pending-revenue" class="stat-value" style="color: var(--accent); font-weight: 800;">R$ 0,00</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <span class="eyebrow">RISCO DE EVASÃO</span>
+                        <div id="churn-risk" class="stat-value" style="color: #FF4B4B; font-weight: 800;">0</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <span class="eyebrow">ANIVERSARIANTES</span>
+                        <div id="birthdays" class="stat-value" style="font-weight: 800;">0</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <span class="eyebrow">CONVERSÃO LEAD</span>
+                        <div id="conversion-rate" class="stat-value" style="font-weight: 800;">0%</div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Ranking Elite (Span 4) -->
-        <div class="card-shell reveal" style="grid-column: span 4;">
+        <div class="card-shell reveal" style="grid-column: span 4; animation-delay: 0.2s;">
             <div class="card-core" style="min-height: 400px;">
                 <span class="eyebrow">TOP PERFORMANCE</span>
                 <h3><i class="ph-light ph-crown" style="color: #FFD700; margin-right: 8px;"></i> RANKING ELITE</h3>
-                <div id="ranking-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
+                <div id="ranking-list" class="st-list" style="margin-top: 24px;">
                     <!-- Top 5 via JS -->
                 </div>
             </div>
         </div>
 
         <!-- Alerta de Retenção (Span 8) -->
-        <div class="card-shell reveal" style="grid-column: span 8;">
+        <div class="card-shell reveal" style="grid-column: span 8; animation-delay: 0.3s;">
             <div class="card-core" style="min-height: 400px;">
                 <span class="eyebrow">FOCO EM RESGATE</span>
                 <h3><i class="ph-light ph-warning-octagon" style="color: #ef4444; margin-right: 8px;"></i> ALERTA DE RETENÇÃO</h3>
-                <div id="retention-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
+                <div id="retention-list" class="st-list" style="margin-top: 24px;">
                     <div style="text-align:center; padding: 40px; color: var(--text-secondary);">PROCESSANDO DADOS...</div>
                 </div>
             </div>
@@ -76,20 +72,40 @@
             <div class="card-core">
                 <span class="eyebrow">CONTROLE DE CAIXA</span>
                 <h3><i class="ph-light ph-hand-coins" style="color: var(--accent); margin-right: 8px;"></i> PENDÊNCIAS FINANCEIRAS</h3>
-                <div id="receivables-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
+                <div id="receivables-list" class="st-list" style="margin-top: 24px;">
                     <div style="text-align:center; padding: 40px; color: var(--text-secondary);">TUDO EM DIA.</div>
                 </div>
             </div>
         </div>
+
         <div class="card-shell reveal" style="grid-column: span 12;">
             <div class="card-core">
                 <span class="eyebrow">HISTÓRICO</span>
                 <h3><i class="ph-light ph-shopping-cart" style="color: var(--accent); margin-right: 8px;"></i> ÚLTIMAS VENDAS</h3>
-                <div id="sales-history-list" style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px;">
+                <div id="sales-history-list" class="st-list" style="margin-top: 24px;">
                     <div style="text-align:center; padding: 40px; color: var(--text-secondary);">PROCESSANDO...</div>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="st-bottom-nav">
+        <a href="dashboard.html" class="st-nav-item">
+            <i class="ph-light ph-house"></i>
+            <span>Painel</span>
+        </a>
+        <a href="crm_dashboard.html" class="st-nav-item active">
+            <i class="ph-fill ph-chart-line-up"></i>
+            <span>CRM</span>
+        </a>
+        <a href="vendas.html" class="st-nav-item">
+            <i class="ph-light ph-shopping-cart"></i>
+            <span>Vendas</span>
+        </a>
+        <a href="alunos.html" class="st-nav-item">
+            <i class="ph-light ph-users"></i>
+            <span>Alunos</span>
+        </a>
     </div>
 
     <script src="js/config.js?v=3.9"></script>
@@ -110,23 +126,25 @@
             document.getElementById('pending-revenue').textContent = totalDue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             document.getElementById('receivables-list').innerHTML = pendingSales.length ? pendingSales.map(s => `
-                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); gap: 16px;">
+                <div class="st-list-item">
                     <div style="flex: 1;">
                         <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${s.profiles?.full_name || 'Desconhecido'}</div>
-                        <div style="font-size: 0.7rem; color: #ef4444; font-weight: 700; margin-top: 4px;">Pendente: R$ ${(s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                        <div style="font-size: 0.7rem; color: #ef4444; font-weight: 800; margin-top: 4px;">PENDENTE: R$ ${(s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
                     </div>
-                    <div style="text-align: right; margin-right: 16px;">
-                        <div style="font-size: 0.65rem; color: var(--text-secondary);">Vencimento</div>
-                        <div style="font-size: 0.75rem; font-weight: 600; color: #FFF;">${s.due_date ? new Date(s.due_date).toLocaleDateString('pt-BR') : '--'}</div>
-                    </div>
-                    <div style="display: flex; gap: 8px;">
-                        <a href="https://wa.me/55${s.profiles?.whatsapp?.replace(/\D/g,'') || ''}?text=${encodeURIComponent('Olá ' + (s.profiles?.full_name || '') + '! Identificamos uma pendência no valor de R$ ' + (s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + ' referente ao seu protocolo. Como podemos facilitar para você?')}" 
-                           target="_blank" class="btn" style="padding: 8px 16px; font-size: 0.65rem; background: #25D366; color:#000;">
-                            <i class="ph-fill ph-whatsapp-logo"></i> COBRAR
-                        </a>
-                        <button class="btn" style="padding: 8px 12px; font-size: 0.65rem; background: rgba(255,75,75,0.1); border: 1px solid rgba(255,75,75,0.2); color:#ff4b4b;" onclick="deleteSale('${s.id}')">
-                            <i class="ph-light ph-trash"></i>
-                        </button>
+                    <div class="st-flex-stack" style="gap: 24px;">
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.6rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Vencimento</div>
+                            <div style="font-size: 0.8rem; font-weight: 700; color: #FFF;">${s.due_date ? new Date(s.due_date).toLocaleDateString('pt-BR') : '--'}</div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <a href="https://wa.me/55${s.profiles?.whatsapp?.replace(/\D/g,'') || ''}?text=${encodeURIComponent('Olá ' + (s.profiles?.full_name || '') + '! Identificamos uma pendência no valor de R$ ' + (s.total_price - (s.amount_paid || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + ' referente ao seu protocolo. Como podemos facilitar para você?')}" 
+                               target="_blank" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.7rem; background: #25D366; color:#000; box-shadow: none;">
+                                <i class="ph-fill ph-whatsapp-logo"></i> COBRAR
+                            </a>
+                            <button class="btn btn-secondary" style="padding: 8px 12px; color:#ff4b4b; border-color: rgba(255,75,75,0.2);" onclick="deleteSale('${s.id}')">
+                                <i class="ph-light ph-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>`).join('') : '<div style="text-align:center; padding: 20px; color: var(--text-secondary);">Sem pendências.</div>';
 
@@ -140,15 +158,17 @@
 
             document.getElementById('churn-risk').textContent = inactiveClients.length;
             document.getElementById('retention-list').innerHTML = inactiveClients.length ? inactiveClients.sort((a,b) => b.days - a.days).map(c => `
-                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); gap: 16px;">
+                <div class="st-list-item">
                     <div style="flex: 1;">
                         <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${c.full_name}</div>
                         <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 4px;">Última atividade: ${c.lastDate}</div>
                     </div>
-                    <span class="badge ${c.days > 90 ? 'badge-danger' : 'badge-warning'}" style="font-size: 0.6rem;">${c.isNever ? 'INATIVO' : c.days + 'D'}</span>
-                    <a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="padding: 8px 16px; font-size: 0.65rem; background: #25D366; color:#000;">
-                        <i class="ph-fill ph-whatsapp-logo"></i> RESGATAR
-                    </a>
+                    <div class="st-flex-stack">
+                        <span class="badge ${c.days > 90 ? 'badge-danger' : 'badge-warning'}">${c.isNever ? 'INATIVO' : c.days + ' DIAS'}</span>
+                        <a href="https://wa.me/55${c.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn btn-primary" style="padding: 8px 16px; font-size: 0.7rem; background: #25D366; color:#000; box-shadow: none;">
+                            <i class="ph-fill ph-whatsapp-logo"></i> RESGATAR
+                        </a>
+                    </div>
                 </div>`).join('') : '<div style="text-align:center; padding: 20px; color: var(--text-secondary);">Base 100% ativa.</div>';
 
             document.getElementById('birthdays').textContent = clients.filter(c => c.birthday && parseInt(c.birthday.split('-')[1]) === (now.getMonth() + 1)).length;
@@ -194,18 +214,20 @@
             }
 
             document.getElementById('sales-history-list').innerHTML = sales.length ? sales.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).map(s => `
-                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); gap: 16px;">
+                <div class="st-list-item">
                     <div style="flex: 1;">
                         <div style="font-weight: 700; color: #FFF; font-size: 0.9rem;">${s.profiles?.full_name || 'Desconhecido'}</div>
                         <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 4px;">Data: ${new Date(s.created_at).toLocaleDateString('pt-BR')}</div>
                     </div>
-                    <div style="text-align: right; margin-right: 16px;">
-                        <div style="font-size: 0.85rem; font-weight: 800; color: #FFF;">R$ ${s.total_price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
-                        <div style="margin-top: 4px;"><span class="badge ${s.payment_status === 'Pago' ? 'badge-success' : 'badge-warning'}" style="font-size: 0.55rem;">${s.payment_status.toUpperCase()}</span></div>
+                    <div class="st-flex-stack">
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.9rem; font-weight: 800; color: #FFF;">R$ ${s.total_price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                            <div style="margin-top: 4px;"><span class="badge ${s.payment_status === 'Pago' ? 'badge-success' : 'badge-warning'}">${s.payment_status}</span></div>
+                        </div>
+                        <button class="btn btn-secondary" style="padding: 8px 12px; color:#ff4b4b; border-color: rgba(255,75,75,0.2);" onclick="deleteSale('${s.id}')">
+                            <i class="ph-light ph-trash"></i>
+                        </button>
                     </div>
-                    <button class="btn" style="padding: 8px 12px; font-size: 0.65rem; background: rgba(255,75,75,0.1); border: 1px solid rgba(255,75,75,0.2); color:#ff4b4b;" onclick="deleteSale('${s.id}')">
-                        <i class="ph-light ph-trash"></i>
-                    </button>
                 </div>`).join('') : '<div style="text-align:center; padding: 20px; color: var(--text-secondary);">Nenhuma venda registrada.</div>';
         }
 

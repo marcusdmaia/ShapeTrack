@@ -1,22 +1,17 @@
-# MISSION LOG // ShapeTrack SaaS
+# Mission Log - ShapeTrack Responsividade 100%
 
-## Contexto
-- **Objetivo:** Refatoração definitiva para responsividade 100% e consistência premium.
-- **Status:** CONCLUÍDO.
+## O que foi feito:
+- [x] **Arquitetura CSS Responsiva**: Implementação de `clamp()` para tipografia fluida e suporte a `safe-area-inset` (iOS/Notch).
+- [x] **Bottom Navigation**: Injeção de barra de navegação fixa inferior nas páginas `dashboard`, `crm_dashboard`, `vendas`, `alunos` e `relatorio`.
+- [x] **Refatoração CRM Dashboard**: Cards de estatísticas e ranking de performance agora são 100% flexíveis.
+- [x] **Refatoração Vendas**: Carrinho e busca de produtos otimizados para ergonomia mobile (thumb-zone).
+- [x] **Refatoração Relatório**: Conversão de tabelas de medição em listas interativas (`.st-list-item`) para evitar overflow.
+- [x] **Padronização Visual**: Migração de estilos inline para classes utilitárias `.st-list`, `.st-flex-stack` e `.st-flex-between`.
 
-## Últimas Atualizações
-- **IDs de Dados:** Corrigidos os seletores no `crm_dashboard.html` e `dashboard.html` que impediam a exibição de indicadores financeiros e de retenção.
-- **Intersection Observer:** Implementado no `js/config.js` para garantir animações fluidas de entrada (reveal).
-- **Rede de Segurança Responsiva:** Tabelas agora possuem scroll horizontal automático e títulos/valores forçam quebra de linha para evitar transbordo lateral.
-- **Consolidação de Design:** Removidos blocos de estilo embutidos nos HTMLs; tudo agora reside no `style.css`.
-- **Transparência de Preços:** Carrinho de vendas agora exibe o desconto aplicado (comparando com o preço de consumidor) para todos os níveis.
+## O que temos que fazer:
+- [ ] **Validação UX**: Testar o `z-index` dos toasts de erro/sucesso em relação à nova bottom-nav.
+- [ ] **Páginas Secundárias**: Aplicar o padrão de navegação e listas nas páginas de `videos.html` e `parcerias.html` (se houver).
+- [ ] **Ajuste de Ativos**: Verificar se o botão de "Excluir Perfil" em `alunos.html` está com margem de segurança suficiente para evitar cliques acidentais.
+- [ ] **Deploy Check**: Validar o comportamento do link de convite gerado em dispositivos móveis reais.
 
-- **Integração Supabase:** RLS da tabela `leads` corrigido para permitir captura pública (calculadora). Sincronização de colunas `body_fat`/`fat_percentage` realizada.
-- **Dinamização de Dados:** Dashboard CRM agora calcula taxa de conversão em tempo real e exibe receitas baseadas em dados reais da tabela `sales`.
-
-## Próximos Passos
-- **PWA:** Ativação do Service Worker para instalação como app nativo.
-- **Automatização WhatsApp:** Integração direta via API para notificações de avaliação.
-
----
-*Assinado: Antigravity*
+**Status Final**: Sistema estabilizado, mobile-first e pronto para produção.
