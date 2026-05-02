@@ -281,8 +281,38 @@ td { padding: 16px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255
 .badge-warning { background: rgba(217, 108, 43, 0.1); color: var(--accent); }
 
 /* Component: Modals */
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(24px); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 24px; }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(24px); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 24px; }
+.modal.active { display: flex; }
 .modal-card { width: 100%; max-width: 480px; }
+
+/* Component: Inventory & Stock */
+.inventory-table { width: 100%; border-collapse: collapse; }
+.qty-control { display: flex; align-items: center; gap: 12px; }
+.qty-btn {
+    width: 30px; height: 30px; border-radius: 8px;
+    border: 1px solid var(--glass-border); background: rgba(255,255,255,0.03);
+    color: #FFF; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
+}
+.qty-btn:hover { background: var(--accent); color: #000; border-color: var(--accent); }
+.qty-val { font-size: 1.1rem; font-weight: 800; min-width: 35px; text-align: center; }
+
+/* Component: Comparison Rows (Reports) */
+.comp-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--glass-border); gap: 12px; }
+.comp-label { font-size: 0.75rem; font-weight: 800; color: var(--text-secondary); width: 120px; }
+.comp-deltas { display: flex; flex-wrap: wrap; gap: 12px; flex: 1; justify-content: flex-end; }
+.delta-box { text-align: right; }
+.delta-box .label { display: block; font-size: 0.55rem; color: var(--text-secondary); margin-bottom: 2px; }
+.delta-box .value { font-size: 1rem; font-weight: 800; }
+.val-plus { color: #10B981; }
+.val-minus { color: #EF4444; }
+
+/* Component: Data Visualization Grid */
+.leads-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-top: 24px; }
+.chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 24px; }
+.chart-container { height: 250px; width: 100%; margin-top: 16px; }
+
+#bmi-avatar { transition: transform 0.5s var(--bezier); width: 100%; height: 100%; object-fit: contain; }
+#bmi-avatar:hover { transform: scale(1.1) rotate(5deg); }
 
 /* Component: Video Thumbnails */
 .video-thumb { width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-inner); overflow: hidden; position: relative; border: 1px solid var(--glass-border); }
@@ -313,6 +343,9 @@ input, select, textarea {
     font-weight: 500;
     transition: all 0.4s var(--bezier);
 }
+
+.profile-edit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
+#error-overlay { display: none; position: fixed; inset: 0; background: var(--bg-dark); z-index: 10000; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; }
 
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
     outline: none;
@@ -439,7 +472,7 @@ select option {
     h3 { font-size: 1.1rem !important; text-transform: uppercase; letter-spacing: 0.05em; }
     
     /* Force Single Column & Perfect Centering */
-    .bento-grid, .grid-stack, .alunos-grid, .container {
+    .bento-grid, .grid-stack, .alunos-grid, .container, .leads-grid, .chart-grid {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
