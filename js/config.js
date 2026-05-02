@@ -19,20 +19,30 @@ const App = {
         if (!profile || profile.id !== session.user.id) {
             let { data, error } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
             
-            // If not found by ID, try to find by email (manual registration fallback)
+            // Fallback 1: Find by email (manual registration)
             if (error || !data) {
-                const { data: emailData, error: emailError } = await sb.from('profiles').select('*').eq('email', session.user.email).is('id', null).single();
+                const { data: emailData } = await sb.from('profiles').select('*').eq('email', session.user.email).is('id', null).single();
                 if (emailData) {
-                    // Update the manual entry with the new session ID
                     const { data: updatedData } = await sb.from('profiles').update({ id: session.user.id }).eq('email', session.user.email).select().single();
                     data = updatedData;
-                } else if (error && error.code !== 'PGRST116') {
-                    console.error('Profile fetch error:', error);
-                    return null;
                 }
             }
+
+            // Fallback 2: Auto-create basic profile if trigger failed
+            if (!data) {
+                const { data: newData, error: createError } = await sb.from('profiles').insert([
+                    { id: session.user.id, email: session.user.email, full_name: session.user.user_metadata?.full_name || 'Novo Usuário', role: 'client' }
+                ]).select().single();
+                if (!createError) data = newData;
+            }
+
             profile = data;
             if (profile) sessionStorage.setItem('st_profile', JSON.stringify(profile));
+        }
+
+        if (!profile) {
+            console.error('Critical: Profile not found after recovery attempts.');
+            return { session, profile: { role: 'client', full_name: 'USUÁRIO' } }; // Fail-safe default
         }
 
         this.profile = profile;
@@ -62,6 +72,30 @@ function showToast(message, type = 'success') {
 }
 
 function setupNav(profile, activePage) {
+    // 1. Define links based on role
+    let links = [];
+    
+    if (profile.role === 'client') {
+        links = [
+            { name: 'MEU PROGRESSO', url: 'relatorio.html', icon: 'ph-chart-line' },
+            { name: 'LOJA PREMIUM', url: 'loja.html', icon: 'ph-shopping-bag' },
+            { name: 'CONTEÚDO', url: 'videos.html', icon: 'ph-play-circle' },
+            { name: 'PERFIL', url: 'configuracoes.html', icon: 'ph-user-gear' }
+        ];
+    } else {
+        links = [
+            { name: 'INÍCIO', url: 'dashboard.html', icon: 'ph-house' },
+            { name: 'GESTÃO 360', url: 'crm_dashboard.html', icon: 'ph-users-three' },
+            { name: 'VENDAS', url: 'vendas.html', icon: 'ph-shopping-cart' },
+            { name: 'ALUNOS', url: 'alunos.html', icon: 'ph-student' },
+            { name: 'ESTOQUE', url: 'estoque.html', icon: 'ph-package' },
+            { name: 'VÍDEOS', url: 'videos.html', icon: 'ph-video-camera' },
+            { name: 'PARCERIAS', url: 'parcerias.html', icon: 'ph-planet' },
+            { name: 'LEADS', url: 'leads_admin.html', icon: 'ph-users-four' },
+            { name: 'CONFIGURAÇÕES', url: 'configuracoes.html', icon: 'ph-gear' }
+        ];
+    }
+
     // 1. Desktop Navbar Generation/Sync
     let navbar = document.querySelector('.navbar');
     if (!navbar) {
@@ -70,23 +104,8 @@ function setupNav(profile, activePage) {
         document.body.prepend(navbar);
     }
 
-    let links = [
-        { name: 'INÍCIO', url: 'dashboard.html', icon: 'ph-house' },
-        { name: 'GESTÃO 360', url: 'crm_dashboard.html', icon: 'ph-users-three' },
-        { name: 'VENDAS', url: 'vendas.html', icon: 'ph-shopping-cart' },
-        { name: 'ALUNOS', url: 'alunos.html', icon: 'ph-student' },
-        { name: 'ESTOQUE', url: 'estoque.html', icon: 'ph-package' },
-        { name: 'VÍDEOS', url: 'videos.html', icon: 'ph-video-camera' },
-        { name: 'PARCERIAS', url: 'parcerias.html', icon: 'ph-planet' },
-        { name: 'LEADS', url: 'leads_admin.html', icon: 'ph-users-four' },
-        { name: 'CONFIGURAÇÕES', url: 'configuracoes.html', icon: 'ph-gear' }
-    ];
-
-    // Filter or adjust links based on role if needed, but for now we'll keep the standard list
-    // unless the user specifically wants different visibility.
-
     navbar.innerHTML = `
-        <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
+        <a href="${profile.role === 'client' ? 'relatorio.html' : 'dashboard.html'}" class="nav-logo">SHAPE<span>TRACK</span></a>
         <div class="nav-links">
             ${links.map(link => `
                 <a href="${link.url}" class="nav-link ${activePage === link.url ? 'active' : ''}">

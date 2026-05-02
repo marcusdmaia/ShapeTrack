@@ -109,20 +109,31 @@
             btn.disabled = true;
             btn.innerHTML = 'PROCESSANDO... <div class="btn-icon"><i class="ph-light ph-spinner ph-spin"></i></div>';
 
-            const { data, error } = await sb.auth.signUp({ email, password });
+            const { data, error } = await sb.auth.signUp({ 
+                email, 
+                password,
+                options: { data: { full_name: name } }
+            });
+
             if (error) {
-                msg.style.color = '#ef4444';
-                msg.textContent = `ERRO: ${error.message.toUpperCase()}`;
+                if (error.message.includes('already registered')) {
+                    msg.style.color = 'var(--accent)';
+                    msg.innerHTML = `VOCÊ JÁ POSSUI UMA CONTA.<br><a href="index.html" class="btn btn-secondary" style="margin-top:16px; width:100%; display:block; text-decoration:none; padding:12px;">IR PARA LOGIN</a>`;
+                } else {
+                    msg.style.color = '#ef4444';
+                    msg.textContent = `ERRO: ${error.message.toUpperCase()}`;
+                }
                 btn.disabled = false;
-                btn.innerHTML = 'CRIAR MINHA CONTA <div class="btn-icon"><i class="ph-light ph-user-plus"></i></div>';
+                btn.innerHTML = 'INICIAR MEU PROTOCOLO <div class="btn-icon"><i class="ph-light ph-user-plus"></i></div>';
                 return;
             }
 
             if (data.user) {
+                // Perfil será criado via Trigger no Supabase ou via fallback no config.js.
+                // Mas garantimos aqui os campos extras do cadastro.
                 const profileData = { 
-                    id: data.user.id, 
-                    full_name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
+                    full_name: name,
+                    email: email,
                     whatsapp: document.getElementById('whatsapp').value,
                     birthday: document.getElementById('birthday').value,
                     height: parseFloat(document.getElementById('height').value),
@@ -133,17 +144,15 @@
                     is_active: true
                 };
 
-                const { error: profileError } = await sb.from('profiles').insert([profileData]);
+                const { error: profileError } = await sb.from('profiles').upsert({ id: data.user.id, ...profileData });
 
                 if (profileError) {
-                    msg.style.color = '#ef4444';
-                    msg.textContent = 'ERRO AO VINCULAR PERFIL: ' + profileError.message;
-                    btn.disabled = false;
-                } else {
-                    msg.style.color = '#2ecc71';
-                    msg.textContent = 'CONTA CRIADA! REDIRECIONANDO...';
-                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+                    console.error('Profile link error:', profileError);
                 }
+                
+                msg.style.color = '#2ecc71';
+                msg.textContent = 'CONTA CRIADA! REDIRECIONANDO...';
+                setTimeout(() => { window.location.href = 'relatorio.html'; }, 1500);
             }
         });
 
