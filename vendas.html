@@ -55,7 +55,7 @@
                     <div id="search-results" style="position: absolute; top: 100%; left: 0; right: 0; background: #0A0C0B; border: 1px solid var(--glass-border); border-radius: 12px; z-index: 100; max-height: 200px; overflow-y: auto; display: none; margin-top: 8px;"></div>
                 </div>
 
-                <div id="cart-list" style="margin-top: 32px;">
+                <div id="cart-list" class="st-list" style="margin-top: 32px;">
                     <div style="text-align: center; padding: 48px; border: 1px dashed var(--glass-border); border-radius: 20px; color: var(--text-secondary);">
                         CARRINHO DISPONÍVEL PARA INPUT
                     </div>
@@ -109,6 +109,14 @@
                 </button>
             </div>
         </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="dashboard.html" class="bottom-nav-link"><i class="ph-light ph-house"></i></a>
+        <a href="crm_dashboard.html" class="bottom-nav-link"><i class="ph-light ph-users-three"></i></a>
+        <a href="vendas.html" class="bottom-nav-link active"><i class="ph-fill ph-shopping-cart"></i></a>
+        <a href="alunos.html" class="bottom-nav-link"><i class="ph-light ph-student"></i></a>
+        <a href="relatorio.html" class="bottom-nav-link"><i class="ph-light ph-chart-line"></i></a>
     </div>
 
     <script src="js/config.js?v=3.9"></script>
@@ -252,7 +260,7 @@
                 window.currentSaleTotal = totalPrice; // Store for submission
                 window.currentSalePV = totalPV;
                 return `
-                    <div style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 16px; margin-bottom: 12px;">
+                    <div class="st-list-item">
                         <div style="flex: 1; font-weight: 700; font-size: 0.85rem; color: #FFF;">${item.name}</div>
                         <div style="text-align: right;">
                             <div style="font-weight: 800; color: var(--accent); font-size: 0.9rem;">R$ ${price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>

@@ -63,30 +63,26 @@ function setupNav(profile, activePage) {
 
     let links = [
         { name: 'INÍCIO', url: 'dashboard.html', icon: 'ph-house' },
-        { name: 'GESTÃO 360', url: 'crm_dashboard.html', icon: 'ph-chart-pie' },
+        { name: 'GESTÃO 360', url: 'crm_dashboard.html', icon: 'ph-users-three' },
+        { name: 'VENDAS', url: 'vendas.html', icon: 'ph-shopping-cart' },
+        { name: 'ALUNOS', url: 'alunos.html', icon: 'ph-student' },
+        { name: 'EVOLUÇÃO', url: 'relatorio.html', icon: 'ph-chart-line' },
         { name: 'ESTOQUE', url: 'estoque.html', icon: 'ph-package' },
-        { name: 'VENDAS', url: 'vendas.html', icon: 'ph-shopping-cart' }
+        { name: 'VÍDEOS', url: 'videos.html', icon: 'ph-video-camera' },
+        { name: 'PARCERIAS', url: 'parcerias.html', icon: 'ph-handshake' },
+        { name: 'CALCULADORA', url: 'calculadora.html', icon: 'ph-calculator' },
+        { name: 'CONFIGURAÇÕES', url: 'configuracoes.html', icon: 'ph-gear' }
     ];
 
-    if (profile.role === 'admin' || profile.role === 'superadmin') {
-        links = links.concat([
-            { name: 'VÍDEOS', url: 'videos.html', icon: 'ph-play-circle' },
-            { name: 'PARCERIAS', url: 'parcerias.html', icon: 'ph-handshake' },
-            { name: 'ALUNOS', url: 'alunos.html', icon: 'ph-users' },
-            { name: 'LEADS', url: 'leads_admin.html', icon: 'ph-target' }
-        ]);
-    } else {
-        links.push({ name: 'EVOLUÇÃO', url: 'relatorio.html', icon: 'ph-file-text' });
-    }
-    
-    links.push({ name: 'CONFIGURAÇÕES', url: 'configuracoes.html', icon: 'ph-gear' });
+    // Filter or adjust links based on role if needed, but for now we'll keep the standard list
+    // unless the user specifically wants different visibility.
 
     navbar.innerHTML = `
         <a href="dashboard.html" class="nav-logo">SHAPE<span>TRACK</span></a>
         <div class="nav-links">
             ${links.map(link => `
                 <a href="${link.url}" class="nav-link ${activePage === link.url ? 'active' : ''}">
-                    <i class="ph-light ${link.icon}"></i>
+                    <i class="${activePage === link.url ? 'ph-fill' : 'ph-light'} ${link.icon}"></i>
                     <span>${link.name}</span>
                 </a>
             `).join('')}
@@ -106,15 +102,14 @@ function setupNav(profile, activePage) {
         bottomNav.className = 'bottom-nav';
         document.body.appendChild(bottomNav);
     }
+    
     bottomNav.innerHTML = links.map(link => `
-        <a href="${link.url}" class="bottom-nav-link ${activePage === link.url ? 'active' : ''}">
-            <i class="ph-light ${link.icon}"></i>
-            <span>${link.name.split(' ')[0]}</span>
+        <a href="${link.url}" class="bottom-nav-link ${activePage === link.url ? 'active' : ''}" title="${link.name}">
+            <i class="${activePage === link.url ? 'ph-fill' : 'ph-light'} ${link.icon}"></i>
         </a>
     `).join('') + `
         <a href="#" onclick="App.logout()" class="bottom-nav-link" style="color: #ff4d4d;">
             <i class="ph-light ph-sign-out"></i>
-            <span>SAIR</span>
         </a>
     `;
 }

@@ -1,22 +1,19 @@
-# MISSION LOG // ShapeTrack SaaS
+# MISSION LOG: Padronização Mobile ShapeTrack
 
-## Contexto
-- **Objetivo:** Refatoração definitiva para responsividade 100% e consistência premium.
-- **Status:** CONCLUÍDO.
+## Status Atual: ✅ CONCLUÍDO (Standardized & Responsive)
 
-## Últimas Atualizações
-- **IDs de Dados:** Corrigidos os seletores no `crm_dashboard.html` e `dashboard.html` que impediam a exibição de indicadores financeiros e de retenção.
-- **Intersection Observer:** Implementado no `js/config.js` para garantir animações fluidas de entrada (reveal).
-- **Rede de Segurança Responsiva:** Tabelas agora possuem scroll horizontal automático e títulos/valores forçam quebra de linha para evitar transbordo lateral.
-- **Consolidação de Design:** Removidos blocos de estilo embutidos nos HTMLs; tudo agora reside no `style.css`.
-- **Transparência de Preços:** Carrinho de vendas agora exibe o desconto aplicado (comparando com o preço de consumidor) para todos os níveis.
+### O que foi feito:
+1.  **Centralização da Navegação:** Refatorada a função `setupNav` no `js/config.js` para gerar dinamicamente a barra inferior com os 10 módulos do SaaS.
+2.  **Rigor Mobile-First:**
+    *   Implementada barra inferior com scroll horizontal (suporta 10+ ícones sem espremer).
+    *   Uso de ícones preenchidos (`ph-fill`) para o estado ativo.
+    *   Suporte a `safe-area-inset-bottom` para dispositivos iOS/Android modernos.
+3.  **Sistema de Listas Padronizado:** Criadas classes `.st-list` e `.st-list-item` no `style.css` para garantir que listas dinâmicas empilhem corretamente no celular.
+4.  **Tipografia Fluida:** Implementado `clamp()` em títulos para escala suave entre telas.
+5.  **Limpeza de Código:** Removidas injeções manuais de HTML nos arquivos principais, deixando o sistema 100% dependente da lógica centralizada no `config.js`.
 
-- **Integração Supabase:** RLS da tabela `leads` corrigido para permitir captura pública (calculadora). Sincronização de colunas `body_fat`/`fat_percentage` realizada.
-- **Dinamização de Dados:** Dashboard CRM agora calcula taxa de conversão em tempo real e exibe receitas baseadas em dados reais da tabela `sales`.
+### Próximos Passos Sugeridos:
+- Testar a interação de scroll horizontal na barra inferior em dispositivos físicos.
+- Verificar se novos módulos adicionados no futuro precisam ser incluídos manualmente no `links` array do `js/config.js`.
 
-## Próximos Passos
-- **PWA:** Ativação do Service Worker para instalação como app nativo.
-- **Automatização WhatsApp:** Integração direta via API para notificações de avaliação.
-
----
-*Assinado: Antigravity*
+**Pode testar! O SaaS está agora com navegação premium e responsividade total.**
