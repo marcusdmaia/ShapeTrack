@@ -281,7 +281,7 @@ td { padding: 16px; font-size: 0.9rem; border-bottom: 1px solid rgba(255,255,255
 .badge-warning { background: rgba(217, 108, 43, 0.1); color: var(--accent); }
 
 /* Component: Modals */
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(24px); display: none; align-items: center; justify-content: center; z-index: 10000; padding: 24px; }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(24px); display: none; align-items: center; justify-content: center; z-index: 20000; padding: 24px; }
 .modal.active { display: flex; }
 .modal-card { width: 100%; max-width: 480px; }
 
