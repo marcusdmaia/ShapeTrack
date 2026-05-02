@@ -17,9 +17,9 @@
         <div class="card-shell reveal span-12">
             <div class="card-core">
                 <div class="header-content">
-                    <span class="eyebrow">Ajustes de Sistema</span>
-                    <h1>CONFIGURAÇÕES</h1>
-                    <p class="text-secondary">Gerencie suas chaves de acesso e conexões neurais.</p>
+                    <span class="eyebrow" id="header-eyebrow">Ajustes de Sistema</span>
+                    <h1 id="header-title">CONFIGURAÇÕES</h1>
+                    <p class="text-secondary" id="header-desc">Gerencie suas chaves de acesso e conexões neurais.</p>
                 </div>
             </div>
         </div>
@@ -27,28 +27,63 @@
         <!-- Profile Settings -->
         <div class="card-shell reveal span-12" style="animation-delay: 0.1s;">
             <div class="card-core">
-                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-user-circle" style="color: var(--accent);"></i> IDENTIDADE PROFISSIONAL</h3>
-                <div class="form-group">
-                    <label>NOME COMPLETO</label>
-                    <input type="text" id="full_name" placeholder="IDENTIFICAÇÃO NO SISTEMA">
+                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-user-circle" style="color: var(--accent);"></i> IDENTIDADE NO SISTEMA</h3>
+                
+                <div class="profile-edit-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+                    <div class="form-group">
+                        <label>NOME COMPLETO</label>
+                        <input type="text" id="full_name" placeholder="IDENTIFICAÇÃO NO SISTEMA">
+                    </div>
+                    <div class="form-group">
+                        <label>WHATSAPP (DDD + NÚMERO)</label>
+                        <input type="tel" id="whatsapp" placeholder="EX: 11999999999">
+                    </div>
+                    <div class="form-group">
+                        <label>E-MAIL DE ACESSO (PROTEGIDO)</label>
+                        <input type="text" id="email_display" disabled style="opacity: 0.5; cursor: not-allowed;">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>WHATSAPP (DDD + NÚMERO)</label>
-                    <input type="tel" id="whatsapp" placeholder="EX: 11999999999">
+
+                <!-- Campos específicos de Aluno -->
+                <div id="client-fields" style="display: none; border-top: 1px solid var(--glass-border); margin-top: 24px; padding-top: 24px;">
+                    <div class="profile-edit-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                        <div class="form-group">
+                            <label>DATA DE NASCIMENTO</label>
+                            <input type="date" id="birthday">
+                        </div>
+                        <div class="form-group">
+                            <label>ALTURA (CM)</label>
+                            <input type="number" id="height" placeholder="Ex: 175">
+                        </div>
+                        <div class="form-group">
+                            <label>GÊNERO</label>
+                            <select id="gender">
+                                <option value="MASCULINO">MASCULINO</option>
+                                <option value="FEMININO">FEMININO</option>
+                                <option value="OUTRO">OUTRO</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>OBJETIVO PRINCIPAL</label>
+                            <select id="goal">
+                                <option value="EMAGRECIMENTO">EMAGRECIMENTO</option>
+                                <option value="HIPERTROFIA">HIPERTROFIA</option>
+                                <option value="PERFORMANCE">PERFORMANCE</option>
+                                <option value="SAÚDE">SAÚDE</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>E-MAIL DE ACESSO (PROTEGIDO)</label>
-                    <input type="text" id="email_display" disabled style="opacity: 0.5; cursor: not-allowed;">
-                </div>
-                <button class="btn btn-primary" onclick="updateProfile()" style="width: 100%;">
+
+                <button class="btn btn-primary" onclick="updateProfile()" style="width: 100%; margin-top: 24px;">
                     SALVAR ALTERAÇÕES
                     <div class="btn-icon"><i class="ph-light ph-floppy-disk"></i></div>
                 </button>
             </div>
         </div>
 
-        <!-- Google Integration -->
-        <div class="card-shell reveal span-12" style="animation-delay: 0.2s;">
+        <!-- Google Integration (Mentor Only) -->
+        <div id="google-section" class="card-shell reveal span-12" style="animation-delay: 0.2s;">
             <div class="card-core">
                 <h3 style="margin-bottom: 24px;"><i class="ph-light ph-google-logo" style="color: #4285F4;"></i> SINCRONISMO GOOGLE</h3>
                 <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 24px;">Conecte sua agenda para orquestração automática de avaliações e lembretes.</p>
@@ -70,7 +105,7 @@
         </div>
     </div>
 
-    <script src="js/config.js?v=3.9"></script>
+    <script src="js/config.js?v=4.5"></script>
     <script>
         const GOOGLE_CLIENT_ID = '859217445398-8jutv09ole7ci2fmj3djv8skk0gekkjh.apps.googleusercontent.com';
         const REDIRECT_URI = window.location.origin + window.location.pathname;
@@ -79,29 +114,96 @@
             const context = await App.init('configuracoes.html');
             if (!context) return;
             
+            // Preencher campos básicos
             document.getElementById('full_name').value = context.profile.full_name || '';
             document.getElementById('whatsapp').value = context.profile.whatsapp || '';
             document.getElementById('email_display').value = context.session.user.email;
-            checkGoogleConnection(context.profile);
 
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('code')) handleGoogleCallback(urlParams.get('code'), context.session.user.id);
+            // Lógica por papel (Role)
+            if (context.profile.role === 'client') {
+                document.getElementById('header-eyebrow').textContent = 'Meu Perfil Premium';
+                document.getElementById('header-title').textContent = 'MEUS DADOS';
+                document.getElementById('header-desc').textContent = 'Mantenha seus dados atualizados para melhores resultados no protocolo.';
+                
+                document.getElementById('client-fields').style.display = 'block';
+                document.getElementById('google-section').style.display = 'none';
+
+                // Preencher campos extras
+                document.getElementById('birthday').value = context.profile.birthday || '';
+                document.getElementById('height').value = context.profile.height || '';
+                document.getElementById('gender').value = context.profile.gender || 'MASCULINO';
+                document.getElementById('goal').value = context.profile.goal || 'EMAGRECIMENTO';
+            } else {
+                checkGoogleConnection(context.profile);
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('code')) handleGoogleCallback(urlParams.get('code'), context.session.user.id);
+            }
         }
 
         async function updateProfile() {
-            const name = document.getElementById('full_name').value;
-            const wa = document.getElementById('whatsapp').value;
-            const { error } = await sb.from('profiles').update({ 
-                full_name: name,
-                whatsapp: wa 
-            }).eq('id', App.profile.id);
+            const profileData = {
+                full_name: document.getElementById('full_name').value,
+                whatsapp: document.getElementById('whatsapp').value
+            };
+
+            // Adicionar campos extras se for aluno
+            if (App.profile.role === 'client') {
+                profileData.birthday = document.getElementById('birthday').value;
+                profileData.height = parseFloat(document.getElementById('height').value);
+                profileData.gender = document.getElementById('gender').value;
+                profileData.goal = document.getElementById('goal').value;
+            }
+
+            const { error } = await sb.from('profiles').update(profileData).eq('id', App.profile.id);
 
             if (error) showToast(error.message, 'error');
             else {
-                sessionStorage.removeItem('st_profile'); // Clear cache
-                showToast('Identidade atualizada');
+                sessionStorage.removeItem('st_profile'); // Limpar cache
+                showToast('Perfil atualizado com sucesso!');
+                setTimeout(() => location.reload(), 1000);
             }
         }
+
+        function checkGoogleConnection(profile) {
+            const status = document.getElementById('google-status');
+            const btn = document.getElementById('btn-google');
+            if (!status || !btn) return;
+
+            if (profile.google_refresh_token) {
+                status.innerHTML = '<span style="color:#2ecc71;"><i class="ph-fill ph-check-circle"></i> CONEXÃO ATIVA</span>';
+                btn.innerHTML = 'RECONECTAR AGENDA <div class="btn-icon" style="background: rgba(255,255,255,0.2);"><i class="ph-light ph-arrows-clockwise"></i></div>';
+            } else {
+                status.innerHTML = '<span style="color:var(--text-secondary);"><i class="ph-light ph-x-circle"></i> STATUS: DESCONECTADO</span>';
+            }
+        }
+
+        function startGoogleAuth() {
+            const scope = 'https://www.googleapis.com/auth/calendar.events';
+            window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
+        }
+
+        async function handleGoogleCallback(code, userId) {
+            showToast('Sincronizando com Google...');
+            try {
+                const { data, error } = await sb.functions.invoke('google-auth-exchange', {
+                    body: { code, redirect_uri: REDIRECT_URI }
+                });
+                if (error) throw error;
+                if (data.refresh_token) {
+                    await sb.from('profiles').update({ google_refresh_token: data.refresh_token }).eq('id', userId);
+                    window.location.href = 'configuracoes.html';
+                }
+            } catch (err) { showToast('Erro na sincronização', 'error'); }
+        }
+
+        async function handleLogout() {
+            sessionStorage.removeItem('st_profile');
+            await sb.auth.signOut();
+            window.location.href = 'index.html';
+        }
+
+        init();
+    </script>
 
         function checkGoogleConnection(profile) {
             const status = document.getElementById('google-status');
