@@ -175,36 +175,48 @@
 
             document.getElementById('form-manual-aluno').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                console.log('Iniciando cadastro manual (Dashboard)...');
                 const btn = e.target.querySelector('button[type="submit"]');
+                const originalText = btn.textContent;
                 btn.disabled = true;
+                btn.textContent = 'CADASTRANDO...';
 
-                const payload = {
-                    full_name: document.getElementById('m_name').value,
-                    whatsapp: document.getElementById('m_whatsapp').value,
-                    email: document.getElementById('m_email').value,
-                    birthday: document.getElementById('m_birth').value || null,
-                    height: parseInt(document.getElementById('m_height').value) || null,
-                    gender: document.getElementById('m_gender').value,
-                    goal: document.getElementById('m_goal').value,
-                    discount_level: parseInt(document.getElementById('m_discount').value) || 0,
-                    notes: document.getElementById('m_notes').value,
-                    business_presented: document.getElementById('m_business').checked,
-                    role: 'aluno',
-                    mentor_id: context.profile.id,
-                    is_active: true
-                };
+                try {
+                    const payload = {
+                        full_name: document.getElementById('m_name').value,
+                        whatsapp: document.getElementById('m_whatsapp').value,
+                        email: document.getElementById('m_email').value,
+                        birthday: document.getElementById('m_birth').value || null,
+                        height: parseInt(document.getElementById('m_height').value) || null,
+                        gender: document.getElementById('m_gender').value,
+                        goal: document.getElementById('m_goal').value,
+                        discount_level: parseInt(document.getElementById('m_discount').value) || 0,
+                        notes: document.getElementById('m_notes').value,
+                        business_presented: document.getElementById('m_business').checked,
+                        role: 'aluno',
+                        mentor_id: context.profile.id,
+                        is_active: true
+                    };
 
-                const { error } = await sb.from('profiles').insert(payload);
+                    console.log('Payload:', payload);
+                    const { error } = await sb.from('profiles').insert(payload);
 
-                if (error) {
-                    showToast(error.message, 'error');
-                } else {
-                    showToast('Aluno cadastrado com sucesso!');
-                    closeModal('modal-aluno');
-                    loadStats(context.profile.id);
-                    e.target.reset();
+                    if (error) {
+                        console.error('Erro Supabase:', error);
+                        showToast(error.message, 'error');
+                    } else {
+                        showToast('Aluno cadastrado com sucesso!');
+                        closeModal('modal-aluno');
+                        loadStats(context.profile.id);
+                        e.target.reset();
+                    }
+                } catch (err) {
+                    console.error('Erro Fatal:', err);
+                    showToast('Erro interno ao cadastrar', 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
                 }
-                btn.disabled = false;
             });
         }
 
