@@ -50,6 +50,7 @@
                     <div class="tab-item" onclick="filterCategory('energia')">ENERGIA</div>
                     <div class="tab-item" onclick="filterCategory('saude')">SAÚDE & BELEZA</div>
                     <div class="tab-item" onclick="filterCategory('performance')">PERFORMANCE</div>
+                    <div class="tab-item" onclick="filterCategory('estetica')">ESTÉTICA</div>
                 </div>
 
                 <div class="product-grid" id="product-list">
@@ -87,17 +88,61 @@
     <script src="js/config.js?v=3.9"></script>
     <script>
         const allProducts = [
-            { id: 1, category: 'emagrecimento', name: 'Shake (Fórmula 1 - 550g)', desc: 'Refeição inteligente, 19g proteína, 23 vitaminas.', flavors: 'Banana, Baunilha, Chocolate, Cookies, Coco, Doce de Leite, Morango, Limão, Pistache', price: 246.00, pv: 25.75 },
-            { id: 2, category: 'emagrecimento', name: 'NutreV (672g)', desc: 'A alternativa perfeita ao leite. Bebida vegetal rica em fibras.', flavors: 'Original / Lácteo', price: 79.00, pv: 7.40 },
-            { id: 3, category: 'emagrecimento', name: 'Nutri Soup (416g)', desc: 'Conforto de uma sopa com ciência de refeição completa.', flavors: 'Frango com Legumes, Creme Verde', price: 246.00, pv: 25.75 },
-            { id: 4, category: 'energia', name: 'Herbal Concentrate (51g)', desc: 'Acelerador botânico termogênico. Blend de chás.', flavors: 'Limão, Original', price: 222.00, pv: 21.45 },
-            { id: 5, category: 'energia', name: 'Herbal Concentrate (102g)', desc: 'Versão econômica do seu acelerador diário. +60 porções.', flavors: 'Laranja, Canela, Original', price: 364.00, pv: 37.60 },
-            { id: 6, category: 'energia', name: 'N-R-G Pó (60g)', desc: 'Energia e foco inabaláveis. Cafeína extraída do guaraná.', flavors: 'Original', price: 159.00, pv: 15.85 },
-            { id: 7, category: 'energia', name: 'Shape Control (30 caps)', desc: 'Laranja Moro e Cromo para redução de medidas abdominais.', flavors: 'Cápsulas', price: 338.00, pv: 35.35 },
-            { id: 8, category: 'saude', name: 'Fiber Concentrate (450ml)', desc: 'Faxina interna refrescante. 3g fibras por porção.', flavors: 'Uva, Manga, Limão Immune', price: 206.00, pv: 20.30 },
-            { id: 9, category: 'saude', name: 'Beauty Booster Colágeno', desc: 'Estética e firmeza com Colágeno Verisol.', flavors: 'Frutas Vermelhas', price: 301.00, pv: 27.80 },
-            { id: 10, category: 'performance', name: 'Whey Protein 3W (510g)', desc: 'Combustível de reconstrução muscular. 25g proteína.', flavors: 'Chocolate, Baunilha', price: 256.00, pv: 24.55 },
-            { id: 11, category: 'performance', name: 'Creatina Premium (150g)', desc: 'Rendimento atlético e preservação de força.', flavors: 'Neutro', price: 181.00, pv: 18.45 }
+            // 🟢 EMAGRECIMENTO E NUTRIÇÃO
+            { id:1, category:'emagrecimento', name:'Shake Banana Caramelizada (550g)', desc:'Refeição inteligente com ~19g de proteína, fibras e 23 vitaminas. Ideal para substituir até 2 refeições, saciedade prolongada com apenas ~200 calorias.', flavors:'Banana Caramelizada', price:246, pv:25.75 },
+            { id:2, category:'emagrecimento', name:'Shake Baunilha Cremoso (550g)', desc:'Refeição inteligente com ~19g de proteína, fibras e 23 vitaminas. Ideal para substituir até 2 refeições, saciedade prolongada com apenas ~200 calorias.', flavors:'Baunilha Cremoso', price:246, pv:25.75 },
+            { id:3, category:'emagrecimento', name:'Shake Chocolate Sensation (550g)', desc:'Refeição inteligente com ~19g de proteína, fibras e 23 vitaminas. Ideal para substituir até 2 refeições, saciedade prolongada com apenas ~200 calorias.', flavors:'Chocolate Sensation', price:246, pv:25.75 },
+            { id:4, category:'emagrecimento', name:'Shake Cookies & Cream (550g)', desc:'Refeição inteligente com ~19g de proteína, fibras e 23 vitaminas. Ideal para substituir até 2 refeições, saciedade prolongada com apenas ~200 calorias.', flavors:'Cookies & Cream', price:246, pv:25.75 },
+            { id:5, category:'emagrecimento', name:'Shake Coco (550g)', desc:'Refeição inteligente com ~19g de proteína, fibras e 23 vitaminas. Ideal para substituir até 2 refeições, saciedade prolongada com apenas ~200 calorias.', flavors:'Coco', price:246, pv:25.75 },
+            { id:6, category:'emagrecimento', name:'Shake Doce de Leite (550g)', desc:'Refeição inteligente com ~19g de proteína, fibras e 23 vitaminas. Ideal para substituir até 2 refeições, saciedade prolongada com apenas ~200 calorias.', flavors:'Doce de Leite', price:246, pv:25.75 },
+            { id:7, category:'emagrecimento', name:'Shake Frapê de Abacaxi (550g)', desc:'Refeição inteligente com ~19g de proteína, fibras e 23 vitaminas. Ideal para substituir até 2 refeições, saciedade prolongada com apenas ~200 calorias.', flavors:'Frapê de Abacaxi', price:246, pv:25.75 },
+            { id:8, category:'emagrecimento', name:'Shake Morango Cremoso (550g)', desc:'Refeição inteligente com ~19g de proteína, fibras e 23 vitaminas. Ideal para substituir até 2 refeições, saciedade prolongada com apenas ~200 calorias.', flavors:'Morango Cremoso', price:246, pv:25.75 },
+            { id:9, category:'emagrecimento', name:'Shake Torta de Limão (550g)', desc:'Refeição inteligente com ~19g de proteína, fibras e 23 vitaminas. Ideal para substituir até 2 refeições, saciedade prolongada com apenas ~200 calorias.', flavors:'Torta de Limão', price:246, pv:25.75 },
+            { id:10, category:'emagrecimento', name:'Shake Pistache (550g)', desc:'Refeição inteligente com ~19g de proteína, fibras e 23 vitaminas. Ideal para substituir até 2 refeições, saciedade prolongada com apenas ~200 calorias.', flavors:'Pistache', price:246, pv:25.75 },
+            { id:11, category:'emagrecimento', name:'NutreV (672g)', desc:'A alternativa perfeita ao leite. Bebida vegetal à base de proteína isolada de soja, fortificada com cálcio e rica em fibras prebióticas. Zero lactose e zero colesterol — ideal para deixar seu Shake mais cremoso e proteico.', flavors:'Original / Lácteo', price:79, pv:7.40 },
+            { id:12, category:'emagrecimento', name:'Nutri Soup Frango com Legumes (416g)', desc:'O conforto de uma sopa quentinha com ciência de refeição completa. 17g de proteínas, fibras e 23 vitaminas e minerais. Ideal para substituir o jantar e acordar desinchado.', flavors:'Frango com Legumes', price:246, pv:25.75 },
+            { id:13, category:'emagrecimento', name:'Nutri Soup Creme Verde (416g)', desc:'O conforto de uma sopa quentinha com ciência de refeição completa. 17g de proteínas, fibras e 23 vitaminas e minerais. Ideal para substituir o jantar e acordar desinchado.', flavors:'Creme Verde', price:246, pv:25.75 },
+
+            // 🔥 ENERGIA E METABOLISMO
+            { id:14, category:'energia', name:'Herbal Concentrate (51g) - Limão', desc:'Acelerador botânico diário. Blend de chá verde, chá preto, hibisco, malva e cardamomo. Rica em antioxidantes e cafeína, acelera temporariamente o metabolismo e auxilia na redução de retenção de líquidos.', flavors:'Limão', price:222, pv:21.45 },
+            { id:15, category:'energia', name:'Herbal Concentrate (51g) - Original', desc:'Acelerador botânico diário. Blend de chá verde, chá preto, hibisco, malva e cardamomo. Rica em antioxidantes e cafeína, acelera temporariamente o metabolismo e auxilia na redução de retenção de líquidos.', flavors:'Original', price:222, pv:21.45 },
+            { id:16, category:'energia', name:'Herbal Concentrate (102g) - Laranja e Especiarias', desc:'Versão econômica do acelerador diário, +60 porções. Auxilia na hidratação, queima de calorias (termogênese) e combate ao inchaço.', flavors:'Laranja e Especiarias', price:364, pv:37.60 },
+            { id:17, category:'energia', name:'Herbal Concentrate (102g) - Canela', desc:'Versão econômica do acelerador diário, +60 porções. Auxilia na hidratação, queima de calorias (termogênese) e combate ao inchaço.', flavors:'Canela', price:364, pv:37.60 },
+            { id:18, category:'energia', name:'Herbal Concentrate (102g) - Original', desc:'Versão econômica do acelerador diário, +60 porções. Auxilia na hidratação, queima de calorias (termogênese) e combate ao inchaço.', flavors:'Original', price:364, pv:37.60 },
+            { id:19, category:'energia', name:'N-R-G Pó (60g)', desc:'Energia e foco inabaláveis. Cafeína limpa do guaraná autêntico. Eleva o estado de alerta e a concentração sem causar picos de fadiga.', flavors:'Original', price:159, pv:15.85 },
+            { id:20, category:'energia', name:'N-R-G Pó (100g) - Guaraná Tropical', desc:'Foco e energia por mais tempo. Mantém a hidratação e a disposição em alta para quem tem estilo de vida ativo.', flavors:'Guaraná Tropical', price:252, pv:24.45 },
+            { id:21, category:'energia', name:'N-R-G Pó (100g) - Original', desc:'Foco e energia por mais tempo. Mantém a hidratação e a disposição em alta para quem tem estilo de vida ativo.', flavors:'Original', price:252, pv:24.45 },
+            { id:22, category:'energia', name:'Liftoff Amora Intenso (15 sachês)', desc:'Ignição mental para dias intensos. Taurina, cafeína e vitaminas B e C. Foco extremo, perfeito como pré-treino efervescente de baixas calorias.', flavors:'Amora Intenso', price:196, pv:20.20 },
+            { id:23, category:'energia', name:'Liftoff Limão Siciliano (15 sachês)', desc:'Ignição mental para dias intensos. Taurina, cafeína e vitaminas B e C. Foco extremo, perfeito como pré-treino efervescente de baixas calorias.', flavors:'Limão Siciliano', price:196, pv:20.20 },
+            { id:24, category:'energia', name:'Liftoff Limão Abacaxi (15 sachês)', desc:'Ignição mental para dias intensos. Taurina, cafeína e vitaminas B e C. Foco extremo, perfeito como pré-treino efervescente de baixas calorias.', flavors:'Limão Abacaxi', price:196, pv:20.20 },
+            { id:25, category:'energia', name:'Shape Control (30 cápsulas)', desc:'Ciência a favor da redução de medidas. Extrato de Laranja Moro (Morosil) e Picolinato de Cromo. Atua no metabolismo de gorduras e ajuda a reduzir gordura abdominal.', flavors:'Cápsulas', price:338, pv:35.35 },
+
+            // 🛡️ SAÚDE E BELEZA
+            { id:26, category:'saude', name:'Fiber Concentrate Uva (450ml)', desc:'Faxina interna refrescante. Regula o trânsito intestinal e auxilia na hidratação, 3g de fibras por porção.', flavors:'Uva', price:206, pv:20.30 },
+            { id:27, category:'saude', name:'Fiber Concentrate Manga (450ml)', desc:'Faxina interna refrescante. Regula o trânsito intestinal e auxilia na hidratação, 3g de fibras por porção.', flavors:'Manga', price:206, pv:20.30 },
+            { id:28, category:'saude', name:'Fiber Concentrate Limão com Mel Immune (450ml)', desc:'Faxina interna que blinda a imunidade. Rica em Zinco, Vitamina C e Selênio, além de 3g de fibras por porção.', flavors:'Limão com Mel (Immune)', price:206, pv:20.30 },
+            { id:29, category:'saude', name:'Beauty Booster Colágeno (240g)', desc:'Estética e firmeza de dentro para fora. Colágeno Verisol, Whey Protein, vitaminas A, B, C, D e E. Reduz rugas, aumenta elasticidade e fortalece unhas e cabelos com ~45 calorias.', flavors:'Frutas Vermelhas', price:301, pv:27.80 },
+            { id:30, category:'saude', name:'Herbalifeline (Ômega-3)', desc:'O poderoso desinflamatório. Ômega-3 de óleos de peixes de águas profundas. Protege o sistema cardiovascular, função cognitiva e defesa das células.', flavors:'Cápsulas em gel', price:281, pv:27.70 },
+            { id:31, category:'saude', name:'OnActive Drink Chocolate (264g)', desc:'Nutrição focada na juventude celular. Luteína, Zeaxantina, 9g de proteína e 23 vitaminas essenciais. Apoia saúde da visão e flexibilidade cognitiva.', flavors:'Chocolate', price:176, pv:19.45 },
+            { id:32, category:'saude', name:'Multivitaminas e Minerais (90 tabletes)', desc:'Complementa a rotina com 22 vitaminas e minerais essenciais. Mantém o sistema imune e o funcionamento do organismo em plenitude.', flavors:'Tabletes', price:122, pv:10.75 },
+            { id:33, category:'saude', name:'Xtra-Cal (60 tabletes)', desc:'Previne perda óssea e osteoporose. Altas concentrações de Cálcio, Magnésio e Vitamina D. Essencial para estrutura do corpo e evitar cãibras.', flavors:'Tabletes', price:109, pv:11.00 },
+
+            // 💪 PERFORMANCE
+            { id:34, category:'performance', name:'Barras de Proteína Baunilha com Amêndoas (7 un)', desc:'Lanche prático com ~10g de proteínas e deliciosa cobertura. Corta a vontade de doce sem sabotar a dieta.', flavors:'Baunilha com Amêndoas', price:110, pv:10.40 },
+            { id:35, category:'performance', name:'Barras de Proteína Limão Citrus (7 un)', desc:'Lanche prático com ~10g de proteínas e deliciosa cobertura. Corta a vontade de doce sem sabotar a dieta.', flavors:'Limão Citrus', price:110, pv:10.40 },
+            { id:36, category:'performance', name:'Sopa Instantânea Frango com Legumes (7 sachês)', desc:'Pausa salgada e proteica. Cremosa, fonte de vitaminas e minerais com ~90 calorias. Saciedade e nutrição nas tardes corridas.', flavors:'Frango com Legumes', price:87, pv:9.35 },
+            { id:37, category:'performance', name:'Sopa Instantânea Creme de Cebola (7 sachês)', desc:'Pausa salgada e proteica. Cremosa, fonte de vitaminas e minerais com ~90 calorias. Saciedade e nutrição nas tardes corridas.', flavors:'Creme de Cebola', price:87, pv:9.35 },
+            { id:38, category:'performance', name:'Protein Powder (240g)', desc:'Aumenta o aporte de proteína sem açúcar ou gorduras. Perfeito para adicionar em shakes, sucos e pratos do dia a dia.', flavors:'Neutro', price:221, pv:19.30 },
+            { id:39, category:'performance', name:'Protein Powder (480g)', desc:'Versão econômica. Aumenta o aporte de proteína sem açúcar ou gorduras. Perfeito para adicionar em shakes, sucos e pratos do dia a dia.', flavors:'Neutro', price:401, pv:39.25 },
+            { id:40, category:'performance', name:'Whey Protein 3W Chocolate (510g)', desc:'Combustível da reconstrução muscular. Blend de 25g de proteínas (Whey isolado, concentrado e hidrolisado) para absorção imediata e sustentada.', flavors:'Chocolate', price:256, pv:24.55 },
+            { id:41, category:'performance', name:'Whey Protein 3W Baunilha (510g)', desc:'Combustível da reconstrução muscular. Blend de 25g de proteínas (Whey isolado, concentrado e hidrolisado) para absorção imediata e sustentada.', flavors:'Baunilha', price:256, pv:24.55 },
+            { id:42, category:'performance', name:'Creatina Premium (150g)', desc:'O suplemento mais estudado para rendimento atlético. 100% creatina pura monohidratada para preservação de massa magra.', flavors:'Neutro', price:181, pv:18.45 },
+            { id:43, category:'performance', name:'CR7 Drive Berry Mix', desc:'A bebida dos campeões. Equilíbrio de eletrólitos, 4 carboidratos de ação escalonada e vitaminas B. Hidrata e gera energia constante no exercício.', flavors:'Berry Mix (Frutas Silvestres)', price:243, pv:26.75 },
+
+            // ✨ NUTRIÇÃO EXTERNA (sem preço — consultar via WhatsApp)
+            { id:44, category:'estetica', name:'Linha Skin', desc:'Tecnologia e cuidado botânico livre de parabenos e sulfatos. Reduz visivelmente os sinais de envelhecimento, limpando, tonificando e trazendo luminosidade e saúde para o rosto.', flavors:'Consultar via WhatsApp', price:0, pv:0 },
+            { id:45, category:'estetica', name:'Linha Corporal Soft Green', desc:'Energia e bem-estar do Chá Verde. Desodorante, sabonetes e loção corporal com pH fisiológico e dermatologicamente testados. Hidrata sem agredir a pele com perfume leve e refrescante.', flavors:'Consultar via WhatsApp', price:0, pv:0 },
+            { id:46, category:'estetica', name:'Linha Herbal Aloe', desc:'Fortificação e beleza natural para os cabelos. Shampoos e condicionadores que reduzem fios quebradiços em 90%, deixando o cabelo 10x mais forte na primeira aplicação.', flavors:'Consultar via WhatsApp', price:0, pv:0 }
         ];
 
         let cart = [];
@@ -124,6 +169,7 @@
             
             container.innerHTML = filtered.map(p => {
                 const finalPrice = p.price * (1 - (userDiscount / 100));
+                const isConsultar = p.price === 0;
                 return `
                     <div class="product-card reveal">
                         <div class="product-info">
@@ -134,11 +180,18 @@
                             </div>
                         </div>
                         <div class="product-price">
-                            <div class="price-de">DE R$ ${p.price.toFixed(2)}</div>
-                            <div class="price-por">R$ ${finalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
-                            <button class="btn btn-secondary" style="width: 100%; margin-top: 16px; font-size: 0.7rem;" onclick="addToCart(${p.id})">
-                                ADICIONAR AO CARRINHO
-                            </button>
+                            ${isConsultar ? `
+                                <div style="font-size:0.85rem;font-weight:700;color:var(--accent);margin-bottom:12px;">PREÇO SOB CONSULTA</div>
+                                <button class="btn btn-secondary" style="width: 100%; font-size: 0.7rem;" onclick="consultarWhatsApp('${p.name}')">
+                                    CONSULTAR VIA WHATSAPP
+                                </button>
+                            ` : `
+                                <div class="price-de">DE R$ ${p.price.toFixed(2)}</div>
+                                <div class="price-por">R$ ${finalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
+                                <button class="btn btn-secondary" style="width: 100%; margin-top: 16px; font-size: 0.7rem;" onclick="addToCart(${p.id})">
+                                    ADICIONAR AO CARRINHO
+                                </button>
+                            `}
                         </div>
                     </div>
                 `;
@@ -187,6 +240,12 @@
         }
 
         function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
+
+        function consultarWhatsApp(productName) {
+            const msg = `Olá! Gostaria de saber mais sobre o produto *${productName}* (Nutrição Externa).\n\n_Enviado via ShapeTrack App_`;
+            const url = `https://wa.me/${mentorWhatsApp}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        }
 
         function sendToWhatsApp() {
             if (cart.length === 0) return;
