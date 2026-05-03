@@ -141,7 +141,7 @@
 
             const now = new Date();
             const inactiveAlunos = alunos.map(c => {
-                const alunoSales = sales.filter(s => s.aluno_id === c.id);
+                const alunoSales = sales.filter(s => s.client_id === c.id);
                 if (alunoSales.length === 0) return { ...c, days: 999, lastDate: 'Nunca', isNever: true };
                 const lastSale = alunoSales.reduce((a, b) => new Date(a.created_at) > new Date(b.created_at) ? a : b);
                 return { ...c, days: Math.floor((now - new Date(lastSale.created_at)) / (1000 * 60 * 60 * 24)), lastDate: new Date(lastSale.created_at).toLocaleDateString('pt-BR'), isNever: false };
@@ -174,15 +174,15 @@
             }
 
             // Performance Ranking Calculation
-            const { data: allAssessments } = await sb.from('assessments').select('aluno_id, weight, created_at').eq('mentor_id', mentorId).order('created_at', { ascending: true });
+            const { data: allAssessments } = await sb.from('assessments').select('client_id, weight, created_at').eq('mentor_id', mentorId).order('created_at', { ascending: true });
             if (allAssessments) {
                 const ranking = alunos.map(c => {
-                    const cAssessments = allAssessments.filter(a => a.aluno_id === c.id);
+                    const cAssessments = allAssessments.filter(a => a.client_id === c.id);
                     if (cAssessments.length < 2 || !c.target_weight) return null;
                     
                     const first = cAssessments[0];
                     const last = cAssessments[cAssessments.length - 1];
-                    const initial = c.initial_weight || first.weight;
+                    const initial = first.weight;
                     const target = c.target_weight;
                     
                     let progress = 0;

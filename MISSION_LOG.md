@@ -71,6 +71,17 @@
 - **Valores Padrão:** Definidos valores padrão (`DEFAULT`) para `is_active` (true) e `role` (aluno) na tabela `profiles`, garantindo que inserções via Trigger ou API nunca falhem por campos nulos.
 - **Fallback de Nome:** Implementado `COALESCE` para garantir que o nome nunca seja nulo no banco, mesmo que o formulário falhe em enviar.
 
+## 🛠️ MODIFICAÇÕES REALIZADAS (VERSÃO 4.0.4 - SYSTEM STABILIZATION)
+
+### 📊 Padronização de Dados (CRM Dashboard)
+- **Consistência de Chaves:** Corrigida a inconsistência entre `aluno_id` e `client_id`. O sistema agora utiliza `client_id` de forma padronizada em todos os módulos (`sales`, `assessments`, `crm_dashboard`), garantindo que o mentor veja os dados de vendas e avaliações corretamente.
+- **Resiliência no Ranking:** O algoritmo de "Ranking Elite" agora utiliza o peso da primeira avaliação como base caso o campo `initial_weight` não esteja preenchido, garantindo que o progresso de 0% a 100% seja calculado sem erros.
+- **Filtros de Segurança:** Refinadas as consultas para garantir que apenas dados vinculados ao `mentor_id` logado sejam processados nos cálculos de Churn, Faturamento e Performance.
+
+### 🛡️ Auditoria de Integridade
+- **Verificação Completa:** Realizado sweep em todo o ecossistema para eliminar variáveis órfãs (`aluno_id`, `student_id`).
+- **PWA Health:** Validado o funcionamento do Manifesto e Service Worker nas rotas de relatório e dashboard.
+
 ---
 *Assinado: Antigravity AI Console*
 
