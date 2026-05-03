@@ -167,7 +167,7 @@
 
             // Adicionar campos extras se for aluno
             if (App.profile.role === 'aluno') {
-                profileData.birthday = document.getElementById('birthday').value;
+                profileData.birthday = document.getElementById('birthday').value || null;
                 profileData.height = parseFloat(document.getElementById('height').value);
                 profileData.gender = document.getElementById('gender').value;
                 profileData.goal = document.getElementById('goal').value;

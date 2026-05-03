@@ -181,7 +181,7 @@
                 const payload = {
                     full_name: document.getElementById('m_name').value,
                     whatsapp: document.getElementById('m_whatsapp').value,
-                    birthday: document.getElementById('m_birth').value,
+                    birthday: document.getElementById('m_birth').value || null,
                     height: parseInt(document.getElementById('m_height').value),
                     gender: document.getElementById('m_gender').value,
                     goal: document.getElementById('m_goal').value,

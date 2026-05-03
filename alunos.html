@@ -242,8 +242,8 @@
                 const payload = {
                     full_name: document.getElementById('m_name').value,
                     whatsapp: document.getElementById('m_whatsapp').value,
-                    birthday: document.getElementById('m_birth').value,
-                    height: parseInt(document.getElementById('m_height').value),
+                    birthday: document.getElementById('m_birth').value || null,
+                    height: parseInt(document.getElementById('m_height').value) || null,
                     gender: document.getElementById('m_gender').value,
                     goal: document.getElementById('m_goal').value,
                     discount_level: parseInt(document.getElementById('m_discount').value),
@@ -340,8 +340,8 @@
             const updates = {
                 full_name: document.getElementById('crm-name').value,
                 whatsapp: document.getElementById('crm-whatsapp').value,
-                birthday: document.getElementById('crm-birthday').value,
-                height: parseInt(document.getElementById('crm-height').value),
+                birthday: document.getElementById('crm-birthday').value || null,
+                height: parseInt(document.getElementById('crm-height').value) || null,
                 gender: document.getElementById('crm-gender').value,
                 goal: document.getElementById('crm-goal').value,
                 discount_level: parseInt(document.getElementById('crm-discount').value),
