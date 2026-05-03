@@ -202,7 +202,7 @@
         }
 
         async function loadClients(mentorId) {
-            const { data: clients } = await sb.from('profiles').select('id, full_name, discount_level').eq('mentor_id', mentorId).eq('role', 'client');
+            const { data: clients } = await sb.from('profiles').select('id, full_name, discount_level').eq('mentor_id', mentorId).eq('role', 'aluno');
             allClients = clients || [];
             const select = document.getElementById('select-client');
             allClients.forEach(c => {

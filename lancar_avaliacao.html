@@ -130,7 +130,7 @@
         }
 
         async function loadAlunos(mentorId) {
-            const { data: alunos } = await sb.from('profiles').select('id, full_name').eq('mentor_id', mentorId).eq('role', 'client');
+            const { data: alunos } = await sb.from('profiles').select('id, full_name').eq('mentor_id', mentorId).eq('role', 'aluno');
             const select = document.getElementById('select-aluno');
             alunos?.forEach(a => {
                 const opt = document.createElement('option');

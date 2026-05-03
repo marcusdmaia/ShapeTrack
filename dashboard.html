@@ -181,14 +181,15 @@
                 const payload = {
                     full_name: document.getElementById('m_name').value,
                     whatsapp: document.getElementById('m_whatsapp').value,
+                    email: document.getElementById('m_email').value,
                     birthday: document.getElementById('m_birth').value || null,
-                    height: parseInt(document.getElementById('m_height').value),
+                    height: parseInt(document.getElementById('m_height').value) || null,
                     gender: document.getElementById('m_gender').value,
                     goal: document.getElementById('m_goal').value,
-                    discount_level: parseInt(document.getElementById('m_discount').value),
+                    discount_level: parseInt(document.getElementById('m_discount').value) || 0,
                     notes: document.getElementById('m_notes').value,
                     business_presented: document.getElementById('m_business').checked,
-                    role: 'client',
+                    role: 'aluno',
                     mentor_id: context.profile.id,
                     is_active: true
                 };
@@ -209,7 +210,7 @@
 
         async function loadStats(userId) {
             try {
-                const { data: clients } = await sb.from('profiles').select('id').eq('mentor_id', userId).eq('role', 'client');
+                const { data: clients } = await sb.from('profiles').select('id').eq('mentor_id', userId).eq('role', 'aluno');
                 const { data: sales } = await sb.from('sales').select('total_price').eq('mentor_id', userId);
                 
                 if (clients) document.getElementById('total-clients').innerText = clients.length;

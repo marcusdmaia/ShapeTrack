@@ -122,7 +122,7 @@
             if (!confirm('TRANSFORMAR ESTE LEAD EM UM ALUNO OFICIAL?')) return;
             const lead = allLeads.find(l => l.id === leadId);
             const { error: pError } = await sb.from('profiles').insert([{
-                id: lead.id, full_name: lead.full_name, role: 'client', mentor_id: App.profile.id, whatsapp: lead.whatsapp
+                id: lead.id, full_name: lead.full_name, role: 'aluno', mentor_id: App.profile.id, whatsapp: lead.whatsapp
             }]);
             if (pError) return showToast(pError.message, 'error');
             await sb.from('leads').delete().eq('id', leadId);
