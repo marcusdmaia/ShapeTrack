@@ -105,6 +105,21 @@
                     </div>
                 </div>
 
+                <!-- Inventory Integration Toggle -->
+                <div class="form-group" style="margin-top: 24px; padding: 16px; background: #F8FAFC; border: 1px solid var(--glass-border); border-radius: 16px; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="ph-fill ph-package" style="color: var(--accent); font-size: 1.4rem;"></i>
+                        <div>
+                            <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-primary);">INTEGRAR COM ESTOQUE</div>
+                            <div style="font-size: 0.65rem; color: var(--text-secondary);">BAIXA AUTOMÁTICA DE ITENS</div>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="sync-inventory">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
                 <button id="btn-finish" class="btn btn-primary" style="width: 100%; margin-top: 24px;">
                     FINALIZAR VENDA
                     <div class="btn-icon"><i class="ph-light ph-check"></i></div>
@@ -326,6 +341,35 @@
             try {
                 const total = window.currentSaleTotal || 0;
                 const type = document.getElementById('payment-type').value;
+                const syncInventory = document.getElementById('sync-inventory').checked;
+
+                // 1. Process inventory deduction if enabled
+                if (syncInventory) {
+                    for (const item of cart) {
+                        // Get current stock
+                        const { data: invData } = await sb.from('inventory')
+                            .select('quantity')
+                            .eq('mentor_id', App.profile.id)
+                            .eq('sku', item.sku)
+                            .single();
+
+                        if (invData) {
+                            const newQty = invData.quantity - item.qty;
+                            if (newQty < 0) {
+                                throw new Error(`Estoque insuficiente para: ${item.name}`);
+                            }
+                            await sb.from('inventory')
+                                .update({ quantity: newQty })
+                                .eq('mentor_id', App.profile.id)
+                                .eq('sku', item.sku);
+                        } else {
+                            // If product not in inventory, maybe skip or alert? 
+                            // For now, we skip to avoid breaking the sale, but could be a warning.
+                        }
+                    }
+                }
+
+                // 2. Insert Sale Record
                 const { error } = await sb.from('sales').insert([{
                     client_id: clientId, mentor_id: App.profile.id,
                     total_price: total, total_pv: window.currentSalePV || 0,
