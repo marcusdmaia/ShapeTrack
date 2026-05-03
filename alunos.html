@@ -246,7 +246,6 @@
                     const payload = {
                         full_name: document.getElementById('m_name').value,
                         whatsapp: document.getElementById('m_whatsapp').value,
-                        email: document.getElementById('m_email').value,
                         birthday: document.getElementById('m_birth').value || null,
                         height: parseInt(document.getElementById('m_height').value) || null,
                         gender: document.getElementById('m_gender').value,
@@ -337,7 +336,6 @@
             document.getElementById('crm-aluno-id').value = alunoId;
             document.getElementById('crm-name').value = aluno.full_name || '';
             document.getElementById('crm-whatsapp').value = aluno.whatsapp || aluno.phone || '';
-            document.getElementById('crm-email').value = aluno.email || '';
             document.getElementById('crm-birthday').value = aluno.birthday || '';
             document.getElementById('crm-height').value = aluno.height || '';
             document.getElementById('crm-gender').value = aluno.gender || 'masculino';

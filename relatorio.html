@@ -193,10 +193,9 @@
                 if (pErr || !prof) { document.getElementById('error-overlay').style.display = 'flex'; return; }
 
                 document.getElementById('prof-name').textContent = (prof.full_name || 'USUÁRIO').toUpperCase();
-                document.getElementById('prof-contact').textContent = `${prof.email || '--'} • ${prof.whatsapp || prof.phone || '--'}`;
+                document.getElementById('prof-contact').textContent = `${prof.whatsapp || prof.phone || '--'}`;
                 document.getElementById('edit-name').value = prof.full_name || '';
                 document.getElementById('edit-phone').value = prof.whatsapp || prof.phone || '';
-                document.getElementById('edit-email').value = prof.email || '';
                 document.getElementById('edit-birthday').value = prof.birthday || '';
                 document.getElementById('edit-height').value = prof.height || '';
                 document.getElementById('edit-gender').value = prof.gender || 'masculino';

@@ -27,11 +27,11 @@ const App = {
         if (!profile || profile.id !== session.user.id || isLegacyRole) {
             let { data, error } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
             
-            // Fallback 1: Find by email (manual registration)
+            // Fallback 1: Find by whatsapp (manual registration)
             if (error || !data) {
-                const { data: emailData } = await sb.from('profiles').select('*').eq('email', session.user.email).is('id', null).single();
-                if (emailData) {
-                    const { data: updatedData } = await sb.from('profiles').update({ id: session.user.id }).eq('email', session.user.email).select().single();
+                const { data: whatsappData } = await sb.from('profiles').select('*').eq('whatsapp', session.user.user_metadata?.whatsapp).is('id', null).single();
+                if (whatsappData) {
+                    const { data: updatedData } = await sb.from('profiles').update({ id: session.user.id }).eq('whatsapp', session.user.user_metadata?.whatsapp).select().single();
                     data = updatedData;
                 }
             }
@@ -39,7 +39,7 @@ const App = {
             // Fallback 2: Auto-create basic profile if trigger failed
             if (!data) {
                 const { data: newData, error: createError } = await sb.from('profiles').insert([
-                    { id: session.user.id, email: session.user.email, full_name: session.user.user_metadata?.full_name || 'Novo Usuário', role: 'aluno' }
+                    { id: session.user.id, full_name: session.user.user_metadata?.full_name || 'Novo Usuário', role: 'aluno' }
                 ]).select().single();
                 if (!createError) data = newData;
             }
