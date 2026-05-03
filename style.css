@@ -463,17 +463,24 @@ select option {
     .desktop-only { display: none !important; }
 }
 
-/* Mobile & Responsiveness Audit - STICK TO ESSENTIALS */
+/* Mobile & Responsiveness Audit - REFINED PROPORTIONS */
 @media (max-width: 768px) {
     :root {
-        --radius-outer: 1.25rem;
-        --radius-inner: 1rem;
+        --radius-outer: 1rem;
+        --radius-inner: 0.75rem;
     }
 
-    h1 { font-size: clamp(1.8rem, 10vw, 2.4rem) !important; line-height: 1.1 !important; letter-spacing: -0.04em !important; }
-    h2 { font-size: 1.4rem !important; }
-    h3 { font-size: 1.1rem !important; text-transform: uppercase; letter-spacing: 0.05em; }
+    h1 { font-size: clamp(1.25rem, 6vw, 1.6rem) !important; line-height: 1.15 !important; letter-spacing: -0.03em !important; }
+    h2 { font-size: 1.05rem !important; }
+    h3 { font-size: 0.85rem !important; text-transform: uppercase; letter-spacing: 0.06em; }
     
+    .eyebrow {
+        font-size: 8px !important;
+        padding: 4px 10px !important;
+        margin-bottom: 12px !important;
+        letter-spacing: 0.2em !important;
+    }
+
     /* Force Single Column & Perfect Centering */
     .bento-grid, .grid-stack, .alunos-grid, .container, .leads-grid, .st-grid, .chart-grid {
         display: flex !important;
@@ -482,8 +489,8 @@ select option {
         width: 100% !important;
         max-width: 500px !important;
         margin: 0 auto !important;
-        padding: 20px 20px 140px !important; /* Safe lateral and bottom margins */
-        gap: 20px !important;
+        padding: 16px 16px 120px !important;
+        gap: 12px !important;
     }
 
     .card-shell, .span-12, .span-8, .span-4, .span-6 {
@@ -494,8 +501,13 @@ select option {
         display: block !important;
     }
 
+    .card-shell {
+        padding: 4px !important;
+        border-radius: var(--radius-outer) !important;
+    }
+
     .card-core {
-        padding: 24px 20px !important;
+        padding: 16px 14px !important;
         min-height: auto !important;
         display: flex !important;
         flex-direction: column !important;
@@ -504,30 +516,46 @@ select option {
     }
 
     .stat-value {
-        font-size: 2.4rem !important;
+        font-size: 1.6rem !important;
         letter-spacing: -0.03em !important;
+    }
+
+    /* Compact inputs & forms */
+    input, select, textarea {
+        padding: 12px 16px !important;
+        font-size: 0.8rem !important;
+        border-radius: 12px !important;
+    }
+
+    .form-group {
+        margin-bottom: 14px !important;
+    }
+
+    .form-group label {
+        font-size: 0.6rem !important;
+        margin-bottom: 6px !important;
     }
 
     .navbar { display: none !important; }
 
-    /* Standardized Bottom Navigation (Native-Feel / Horizontal Scroll) */
+    /* Refined Bottom Navigation (Compact & Clean) */
     .bottom-nav {
         display: flex !important;
         position: fixed;
-        bottom: 20px;
-        bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+        bottom: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
         left: 50%;
         transform: translateX(-50%);
-        width: calc(100% - 40px);
-        max-width: 480px;
-        background: rgba(255, 255, 255, 0.9);
+        width: calc(100% - 32px);
+        max-width: 400px;
+        background: rgba(255, 255, 255, 0.92);
         backdrop-filter: blur(32px) saturate(200%);
         -webkit-backdrop-filter: blur(32px) saturate(200%);
         border: 1px solid var(--glass-border);
-        border-radius: 3rem;
-        padding: 8px 12px;
+        border-radius: 2rem;
+        padding: 4px 8px;
         z-index: 10000;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         justify-content: flex-start;
         overflow-x: auto;
         scrollbar-width: none;
@@ -536,49 +564,79 @@ select option {
     .bottom-nav::-webkit-scrollbar { display: none; }
 
     .bottom-nav-link {
-        flex: 0 0 60px;
+        flex: 0 0 48px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 54px;
+        height: 40px;
         color: var(--text-secondary);
         transition: 0.4s var(--bezier);
-        border-radius: 2rem;
+        border-radius: 1.25rem;
     }
 
-    .bottom-nav-link i { font-size: 1.5rem; }
+    .bottom-nav-link i { font-size: 1.15rem; }
     
     .bottom-nav-link.active {
         color: var(--accent);
-        background: rgba(217, 108, 43, 0.15);
+        background: rgba(217, 108, 43, 0.12);
     }
 
-    /* Standardized List Items (Mobile Refined) */
+    /* Compact List Items */
     .st-item {
         flex-direction: column !important;
         align-items: flex-start !important;
-        padding: 20px 0;
-        gap: 12px;
+        padding: 14px 0;
+        gap: 8px;
     }
 
     .st-item-info { width: 100% !important; }
+    .st-item-title { font-size: 0.78rem !important; }
+    .st-item-subtitle { font-size: 0.62rem !important; }
     .st-item-meta { width: 100% !important; text-align: left !important; }
-    .st-item-actions { width: 100% !important; justify-content: flex-start; margin-top: 8px; }
+    .st-item-value { font-size: 0.82rem !important; }
+    .st-item-detail { font-size: 0.58rem !important; }
+    .st-item-actions { width: 100% !important; justify-content: flex-start; margin-top: 4px; }
 
     .btn {
-        width: 100% !important; /* Full width buttons on mobile for better ergonomics */
-        padding: 16px 20px !important;
-        font-size: 0.85rem !important;
-        border-radius: 16px !important;
+        width: 100% !important;
+        padding: 11px 16px !important;
+        font-size: 0.75rem !important;
+        border-radius: 12px !important;
     }
 
+    .btn-icon {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 0.65rem !important;
+    }
+
+    /* Compact tables */
     table, .st-table {
         display: block;
         width: 100%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
+
+    th { padding: 10px !important; font-size: 0.6rem !important; }
+    td { padding: 10px !important; font-size: 0.75rem !important; }
+
+    /* Compact comparison rows */
+    .comp-row { padding: 12px !important; border-radius: 12px !important; }
+    .comp-label { font-size: 0.65rem !important; width: 90px !important; }
+    .delta-box .label { font-size: 0.5rem !important; }
+    .delta-box .value { font-size: 0.82rem !important; }
+
+    /* Compact charts */
+    .chart-container { height: 180px !important; margin-top: 10px !important; }
+
+    /* Compact modals */
+    .modal { padding: 16px !important; }
+
+    /* Security box */
+    .security-box i { font-size: 2rem !important; }
+    .security-box p { font-size: 0.65rem !important; }
 
     /* Prevent any horizontal overflow at the source */
     * { max-width: 100% !important; }
