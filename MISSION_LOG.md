@@ -64,6 +64,13 @@
 - **Política RLS:** Criada a política "Mentors can view their students", garantindo que os mentores consigam enxergar seus alunos no dashboard. Sem isso, a lista de alunos aparecia vazia mesmo com os dados no banco.
 - **Estabilização de Schema:** Adicionadas as colunas `full_name` e `is_active` na tabela `profiles` do Supabase para evitar erros durante o cadastro de novos alunos.
 
+## 🛠️ MODIFICAÇÕES REALIZADAS (VERSÃO 4.0.3 - CRITICAL FIX)
+
+### 🚀 Estabilização de Registro de Alunos
+- **Resiliência de Trigger:** Atualizada a função `handle_new_user` no Supabase com a cláusula `ON CONFLICT (id) DO UPDATE`. Isso resolve o erro "Database error saving new user" que ocorria quando um aluno tentava se cadastrar e o perfil já existia ou faltavam metadados.
+- **Valores Padrão:** Definidos valores padrão (`DEFAULT`) para `is_active` (true) e `role` (aluno) na tabela `profiles`, garantindo que inserções via Trigger ou API nunca falhem por campos nulos.
+- **Fallback de Nome:** Implementado `COALESCE` para garantir que o nome nunca seja nulo no banco, mesmo que o formulário falhe em enviar.
+
 ---
 *Assinado: Antigravity AI Console*
 
