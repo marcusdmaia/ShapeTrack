@@ -75,9 +75,9 @@ function showToast(message, type = 'success') {
         width: auto;
     `;
     toast.innerHTML = `
-        <div class="card-core" style="padding: 16px 24px; display: flex; align-items: center; gap: 12px; background: ${type === 'success' ? '#0A0C0B' : '#451010'};">
-            <i class="ph-light ${type === 'success' ? 'ph-check-circle' : 'ph-warning-circle'}" style="color: ${type === 'success' ? 'var(--accent)' : '#ff4d4d'}; font-size: 1.2rem;"></i>
-            <span style="font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">${message}</span>
+        <div class="card-core" style="padding: 16px 24px; display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1px solid ${type === 'success' ? 'var(--accent)' : '#ff4d4d'};">
+            <i class="ph-fill ${type === 'success' ? 'ph-check-circle' : 'ph-warning-circle'}" style="color: ${type === 'success' ? 'var(--accent)' : '#ff4d4d'}; font-size: 1.2rem;"></i>
+            <span style="font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-primary);">${message}</span>
         </div>
     `;
     document.body.appendChild(toast);

@@ -9,13 +9,13 @@
     <link rel="stylesheet" href="style.css?v=3.9">
     <style>
         body {
-            background: #050807;
+            background: var(--bg-dark);
             overflow: hidden;
         }
         .login-page {
             display: flex;
             min-height: 100dvh;
-            background: url('login_bg_performance_1777734357298.png') center/cover no-repeat;
+            background: #F1F5F9;
             align-items: center;
             justify-content: center;
             position: relative;
@@ -24,8 +24,8 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at center, rgba(5, 8, 7, 0.4) 0%, rgba(5, 8, 7, 0.95) 100%);
-            backdrop-filter: blur(10px);
+            background: radial-gradient(circle at top right, rgba(217, 108, 43, 0.05) 0%, transparent 70%);
+            backdrop-filter: none;
         }
         .login-card {
             width: 100%;
@@ -42,7 +42,7 @@
             font-size: 3.5rem;
             letter-spacing: -2px;
             line-height: 0.9;
-            color: #FFF;
+            color: var(--text-primary);
         }
         .login-header span {
             color: var(--accent);
@@ -54,7 +54,7 @@
         }
         .login-tabs {
             display: flex;
-            background: rgba(255, 255, 255, 0.03);
+            background: #F8FAFC;
             padding: 6px;
             border-radius: 100px;
             margin-bottom: 32px;
@@ -82,7 +82,7 @@
         .login-tab.active {
             background: var(--accent);
             color: #FFF;
-            box-shadow: 0 8px 20px var(--accent-glow);
+            box-shadow: 0 4px 12px var(--accent-glow);
         }
         .login-tab i { font-size: 1.1rem; }
     </style>

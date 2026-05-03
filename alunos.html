@@ -57,11 +57,11 @@
                 <div class="form-group">
                     <label>LINK DE CONVITE</label>
                     <div style="display: flex; gap: 12px;">
-                        <input type="text" id="invite-link" readonly style="background: rgba(255,255,255,0.02);">
-                        <button class="btn" style="background: var(--accent); color: #FFF; padding: 0 20px;" onclick="copyLink()"><i class="ph-light ph-copy"></i></button>
+                        <input type="text" id="invite-link" readonly style="background: #FFFFFF;">
+                        <button class="btn" style="background: var(--accent); color: #FFFFFF; padding: 0 20px;" onclick="copyLink()"><i class="ph-light ph-copy"></i></button>
                     </div>
                 </div>
-                <button class="btn" onclick="closeModal()" style="width: 100%; background: rgba(255,255,255,0.05); color: #FFF; margin-top: 12px;">FECHAR</button>
+                <button class="btn" onclick="closeModal()" style="width: 100%; background: #F1F5F9; color: var(--text-primary); margin-top: 12px;">FECHAR</button>
             </div>
         </div>
     </div>
@@ -126,16 +126,16 @@
                     </div>
                     <div class="form-group span-2" style="grid-column: span 2;">
                         <label>OBSERVAÇÕES DO PROTOCOLO</label>
-                        <textarea id="crm-notes" placeholder="HISTÓRICO..." style="width: 100%; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 12px; color: #FFF; padding: 12px;"></textarea>
+                        <textarea id="crm-notes" placeholder="HISTÓRICO..." style="width: 100%; height: 80px; background: #FFFFFF; border: 1px solid var(--glass-border); border-radius: 12px; color: var(--text-primary); padding: 12px;"></textarea>
                     </div>
-                    <div class="form-group span-2" style="grid-column: span 2; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border);">
+                    <div class="form-group span-2" style="grid-column: span 2; display: flex; align-items: center; gap: 12px; background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border);">
                         <input type="checkbox" id="crm-business" style="width: 20px; height: 20px;">
                         <label style="margin-bottom: 0;">NEGÓCIO APRESENTADO?</label>
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px;">
-                    <button class="btn" onclick="closeModal()" style="background: rgba(255,255,255,0.05); color: #FFF;">CANCELAR</button>
+                    <button class="btn" onclick="closeModal()" style="background: #F1F5F9; color: var(--text-primary);">CANCELAR</button>
                     <button class="btn btn-primary" onclick="saveCRM()">SALVAR ALTERAÇÕES</button>
                 </div>
             </div>
@@ -171,15 +171,15 @@
                     <div class="card-core">
                         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
                             <div style="width: 48px; height: 48px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; border: 2px solid var(--accent);">${initials || '?'}</div>
-                            <div style="flex: 1;">
-                                <h3 style="font-size: 1rem; margin: 0; color: #FFF;">${aluno.full_name.toUpperCase()}</h3>
+                             <div style="flex: 1;">
+                                 <h3 style="font-size: 1rem; margin: 0; color: var(--text-primary);">${aluno.full_name.toUpperCase()}</h3>
                                 <p style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 4px;">DESDE ${new Date(aluno.created_at).toLocaleDateString('pt-BR')}</p>
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                            <a href="lancar_avaliacao.html?aluno=${aluno.id}" class="btn" style="background: var(--accent); color: #FFF; font-size: 0.7rem;"><i class="ph-light ph-clipboard-text"></i> AVALIAR</a>
-                            <button class="btn" style="background: rgba(255,255,255,0.05); color: #FFF; font-size: 0.7rem;" onclick="openCRM('${aluno.id}')"><i class="ph-light ph-user-circle-gear"></i> PERFIL</button>
-                            <a href="relatorio.html?aluno=${aluno.id}" class="btn" style="background: rgba(255,255,255,0.05); color: #FFF; font-size: 0.7rem;"><i class="ph-light ph-chart-line-up"></i> EVOLUÇÃO</a>
+                            <a href="lancar_avaliacao.html?aluno=${aluno.id}" class="btn" style="background: var(--accent); color: #FFFFFF; font-size: 0.7rem;"><i class="ph-light ph-clipboard-text"></i> AVALIAR</a>
+                            <button class="btn" style="background: #F1F5F9; color: var(--text-primary); font-size: 0.7rem;" onclick="openCRM('${aluno.id}')"><i class="ph-light ph-user-circle-gear"></i> PERFIL</button>
+                            <a href="relatorio.html?aluno=${aluno.id}" class="btn" style="background: #F1F5F9; color: var(--text-primary); font-size: 0.7rem;"><i class="ph-light ph-chart-line-up"></i> EVOLUÇÃO</a>
                             <a href="https://wa.me/55${aluno.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn btn-whatsapp" style="font-size: 0.7rem;"><i class="ph-fill ph-whatsapp-logo"></i> CONTATO</a>
                             <button class="btn btn-danger" style="grid-column: span 2; font-size: 0.7rem;" onclick="deleteAluno('${aluno.id}')"><i class="ph-light ph-trash"></i> EXCLUIR PERFIL</button>
                         </div>

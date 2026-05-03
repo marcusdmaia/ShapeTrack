@@ -22,7 +22,7 @@
                     <p class="text-secondary">Monitoramento de prospecção e conversão em tempo real.</p>
                 </div>
                 <div class="header-actions">
-                    <button class="btn" style="background: rgba(255,255,255,0.05); color: #FFF;" onclick="window.open('calculadora.html', '_blank')">
+                    <button class="btn" style="background: #F1F5F9; color: var(--text-primary);" onclick="window.open('calculadora.html', '_blank')">
                         ABRIR CALCULADORA
                         <div class="btn-icon"><i class="ph-light ph-calculator"></i></div>
                     </button>
@@ -83,18 +83,18 @@
                             <span><i class="ph-light ph-calendar"></i> ${date}</span>
                             <span style="background: var(--accent); color: #FFF; padding: 4px 8px; border-radius: 6px;">${goalText}</span>
                         </div>
-                        <h3 style="font-size: 1.1rem; font-weight: 800; color: #FFF; margin-bottom: 20px;">${lead.full_name.toUpperCase()}</h3>
+                        <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin-bottom: 20px;">${lead.full_name.toUpperCase()}</h3>
                         
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: rgba(255,255,255,0.02); padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); margin-bottom: 24px;">
-                            <div style="display: flex; flex-direction: column;"><span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 700;">CALORIAS</span><span style="font-size: 1rem; font-weight: 800; color: #FFF;">${macros.calories}</span></div>
-                            <div style="display: flex; flex-direction: column;"><span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 700;">PROTEÍNA</span><span style="font-size: 1rem; font-weight: 800; color: #FFF;">${macros.protein}g</span></div>
-                            <div style="display: flex; flex-direction: column;"><span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 700;">CARBOS</span><span style="font-size: 1rem; font-weight: 800; color: #FFF;">${macros.carbs}g</span></div>
-                            <div style="display: flex; flex-direction: column;"><span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 700;">ÁGUA</span><span style="font-size: 1rem; font-weight: 800; color: #FFF;">${macros.water}L</span></div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid var(--glass-border); margin-bottom: 24px;">
+                            <div style="display: flex; flex-direction: column;"><span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 700;">CALORIAS</span><span style="font-size: 1rem; font-weight: 800; color: var(--text-primary);">${macros.calories}</span></div>
+                            <div style="display: flex; flex-direction: column;"><span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 700;">PROTEÍNA</span><span style="font-size: 1rem; font-weight: 800; color: var(--text-primary);">${macros.protein}g</span></div>
+                            <div style="display: flex; flex-direction: column;"><span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 700;">CARBOS</span><span style="font-size: 1rem; font-weight: 800; color: var(--text-primary);">${macros.carbs}g</span></div>
+                            <div style="display: flex; flex-direction: column;"><span style="font-size: 0.6rem; color: var(--text-secondary); font-weight: 700;">ÁGUA</span><span style="font-size: 1rem; font-weight: 800; color: var(--text-primary);">${macros.water}L</span></div>
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                             <button class="btn btn-primary" onclick="convertLead('${lead.id}')" style="font-size: 0.7rem; padding: 10px;">CONVERTER</button>
-                            <a href="https://wa.me/55${lead.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="background: #25D366; color: #000; font-size: 0.7rem; padding: 10px;"><i class="ph-fill ph-whatsapp-logo"></i> WHATSAPP</a>
+                            <a href="https://wa.me/55${lead.whatsapp?.replace(/\D/g,'')}" target="_blank" class="btn" style="background: #25D366; color: #FFF; font-size: 0.7rem; padding: 10px;"><i class="ph-fill ph-whatsapp-logo"></i> WHATSAPP</a>
                         </div>
                         <button class="btn" onclick="deleteLead('${lead.id}')" style="width: 100%; margin-top: 10px; background: rgba(239, 68, 68, 0.1); color: #ef4444; font-size: 0.7rem; padding: 8px; border: 1px solid rgba(239, 68, 68, 0.2);">
                             <i class="ph ph-trash"></i> EXCLUIR LEAD

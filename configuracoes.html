@@ -88,9 +88,9 @@
                 <h3 style="margin-bottom: 24px;"><i class="ph-light ph-google-logo" style="color: #4285F4;"></i> SINCRONISMO GOOGLE</h3>
                 <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 24px;">Conecte sua agenda para orquestração automática de avaliações e lembretes.</p>
                 <div id="google-status" style="margin-bottom: 16px; font-size: 0.8rem; font-weight: 700;">VERIFICANDO CONEXÃO...</div>
-                <button class="btn" id="btn-google" onclick="startGoogleAuth()" style="width: 100%; background: #4285F4; color: #FFF;">
+                <button class="btn" id="btn-google" onclick="startGoogleAuth()" style="width: 100%; background: #4285F4; color: #FFFFFF;">
                     CONECTAR GOOGLE CALENDAR
-                    <div class="btn-icon" style="background: rgba(255,255,255,0.2);"><i class="ph-light ph-link"></i></div>
+                    <div class="btn-icon" style="background: rgba(0,0,0,0.1);"><i class="ph-light ph-link"></i></div>
                 </button>
             </div>
         </div>
@@ -171,7 +171,7 @@
 
             if (profile.google_refresh_token) {
                 status.innerHTML = '<span style="color:#2ecc71;"><i class="ph-fill ph-check-circle"></i> CONEXÃO ATIVA</span>';
-                btn.innerHTML = 'RECONECTAR AGENDA <div class="btn-icon" style="background: rgba(255,255,255,0.2);"><i class="ph-light ph-arrows-clockwise"></i></div>';
+                btn.innerHTML = 'RECONECTAR AGENDA <div class="btn-icon" style="background: rgba(0,0,0,0.1);"><i class="ph-light ph-arrows-clockwise"></i></div>';
             } else {
                 status.innerHTML = '<span style="color:var(--text-secondary);"><i class="ph-light ph-x-circle"></i> STATUS: DESCONECTADO</span>';
             }
@@ -210,7 +210,7 @@
             const btn = document.getElementById('btn-google');
             if (profile.google_refresh_token) {
                 status.innerHTML = '<span style="color:#2ecc71;"><i class="ph-fill ph-check-circle"></i> CONEXÃO ATIVA</span>';
-                btn.innerHTML = 'RECONECTAR AGENDA <div class="btn-icon" style="background: rgba(255,255,255,0.2);"><i class="ph-light ph-arrows-clockwise"></i></div>';
+                btn.innerHTML = 'RECONECTAR AGENDA <div class="btn-icon" style="background: rgba(0,0,0,0.1);"><i class="ph-light ph-arrows-clockwise"></i></div>';
             } else {
                 status.innerHTML = '<span style="color:var(--text-secondary);"><i class="ph-light ph-x-circle"></i> STATUS: DESCONECTADO</span>';
             }

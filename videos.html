@@ -54,7 +54,7 @@
                     <label style="margin-bottom: 0;">DISPONIBILIZAR PARA COLABORAÇÃO?</label>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
-                    <button class="btn" onclick="closeModal()" style="background: rgba(255,255,255,0.05); color: #FFF;">CANCELAR</button>
+                    <button class="btn" onclick="closeModal()" style="background: #F1F5F9; color: var(--text-primary);">CANCELAR</button>
                     <button class="btn btn-primary" onclick="saveVideo()">SALVAR VÍDEO</button>
                 </div>
             </div>
@@ -108,12 +108,12 @@
                             </div>
                         </div>
                         <div style="padding: 16px 8px;">
-                            <h4 style="font-size: 0.9rem; font-weight: 800; color: #FFF; margin-bottom: 8px;">${v.title.toUpperCase()}</h4>
+                            <h4 style="font-size: 0.9rem; font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">${v.title.toUpperCase()}</h4>
                             <div style="display: flex; align-items: center; gap: 8px; font-size: 0.65rem; font-weight: 700; color: ${v.is_public_to_mentors ? 'var(--accent)' : 'var(--text-secondary)'}; margin-bottom: 16px;">
                                 <i class="ph-light ${v.is_public_to_mentors ? 'ph-share-network' : 'ph-lock'}"></i> ${v.is_public_to_mentors ? 'DISPONÍVEL PARA PARCERIAS' : 'CONTEÚDO PRIVADO'}
                             </div>
                             <div style="display: flex; gap: 8px; border-top: 1px solid var(--glass-border); padding-top: 16px;">
-                                <button class="btn" style="flex: 1; font-size: 0.65rem; padding: 8px; background: rgba(255,255,255,0.05); color: #FFF;" onclick="toggleColab('${v.id}', ${v.is_public_to_mentors})">ALTERNAR COLAB</button>
+                                <button class="btn" style="flex: 1; font-size: 0.65rem; padding: 8px; background: #F1F5F9; color: var(--text-primary);" onclick="toggleColab('${v.id}', ${v.is_public_to_mentors})">ALTERNAR COLAB</button>
                                 <button class="btn" style="color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 8px; width: 40px;" onclick="deleteVideo('${v.id}')"><i class="ph-light ph-trash"></i></button>
                             </div>
                         </div>
