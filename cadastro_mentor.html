@@ -99,7 +99,6 @@
                 const { error: profileError } = await sb.from('profiles').upsert({ 
                     id: data.user.id,
                     full_name: name,
-                    email: email,
                     role: 'mentor',
                     discount_level: parseInt(document.getElementById('mentor_level').value),
                     is_active: true

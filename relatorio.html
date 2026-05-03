@@ -298,7 +298,7 @@
         function toggleProfileEdit() { const s=document.getElementById('profile-edit-section'); s.style.display=s.style.display==='none'?'block':'none'; }
         async function saveProfile() {
             try {
-                const u = {full_name:document.getElementById('edit-name').value,whatsapp:document.getElementById('edit-phone').value,email:document.getElementById('edit-email').value,birthday:document.getElementById('edit-birthday').value,height:parseFloat(document.getElementById('edit-height').value),gender:document.getElementById('edit-gender').value,goal:document.getElementById('edit-goal').value,notes:document.getElementById('edit-notes').value,business_presented:document.getElementById('edit-business').checked};
+                const u = {full_name:document.getElementById('edit-name').value,whatsapp:document.getElementById('edit-phone').value,birthday:document.getElementById('edit-birthday').value,height:parseFloat(document.getElementById('edit-height').value),gender:document.getElementById('edit-gender').value,goal:document.getElementById('edit-goal').value,notes:document.getElementById('edit-notes').value,business_presented:document.getElementById('edit-business').checked};
                 const {error}=await sb.from('profiles').update(u).eq('id',studentId);
                 if(error) showToast(error.message,'error'); else {showToast('Perfil atualizado!');loadData();toggleProfileEdit();}
             } catch(e) { console.error(e); }
