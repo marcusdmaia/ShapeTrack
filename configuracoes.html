@@ -75,6 +75,21 @@
                     </div>
                 </div>
 
+                <!-- Campos específicos de Mentor -->
+                <div id="mentor-fields" style="display: none; border-top: 1px solid var(--glass-border); margin-top: 24px; padding-top: 24px;">
+                    <div class="profile-edit-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                        <div class="form-group">
+                            <label>SEU NÍVEL NA HERBALIFE</label>
+                            <select id="mentor_level">
+                                <option value="25">25% — Distribuidor</option>
+                                <option value="35">35% — Consultor Senior</option>
+                                <option value="42">42% — Construtor de Sucesso</option>
+                                <option value="50">50% — Supervisor</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <button class="btn btn-primary" onclick="updateProfile()" style="width: 100%; margin-top: 24px;">
                     SALVAR ALTERAÇÕES
                     <div class="btn-icon"><i class="ph-light ph-floppy-disk"></i></div>
@@ -134,6 +149,10 @@
                 document.getElementById('gender').value = context.profile.gender || 'MASCULINO';
                 document.getElementById('goal').value = context.profile.goal || 'EMAGRECIMENTO';
             } else {
+                // Mentor: mostrar campo de nível
+                document.getElementById('mentor-fields').style.display = 'block';
+                document.getElementById('mentor_level').value = context.profile.discount_level || 25;
+
                 checkGoogleConnection(context.profile);
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.get('code')) handleGoogleCallback(urlParams.get('code'), context.session.user.id);
@@ -152,6 +171,9 @@
                 profileData.height = parseFloat(document.getElementById('height').value);
                 profileData.gender = document.getElementById('gender').value;
                 profileData.goal = document.getElementById('goal').value;
+            } else {
+                // Mentor: salvar nível
+                profileData.discount_level = parseInt(document.getElementById('mentor_level').value);
             }
 
             const { error } = await sb.from('profiles').update(profileData).eq('id', App.profile.id);

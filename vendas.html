@@ -40,12 +40,12 @@
                         <label>NÍVEL DE DESCONTO</label>
                         <select id="select-discount" onchange="renderCart(); setupSearch();" style="background: #FFFFFF;">
                             <option value="consumer">PREÇO CHEIO (VENDA DIRETA)</option>
-                            <option value="c14">CLIENTE PREMIUM BRONZE (14%)</option>
+                            <option value="c14">CLIENTE PREMIUM (14%)</option>
                             <option value="c23">CLIENTE PREMIUM PRATA (23%)</option>
-                            <option value="c25">CONSULTOR (25%)</option>
                             <option value="c32">CLIENTE PREMIUM OURO (32%)</option>
+                            <option value="c25">DISTRIBUIDOR (25%)</option>
                             <option value="c35">CONSULTOR SENIOR (35%)</option>
-                            <option value="c42">PRODUTOR QUALIFICADO (42%)</option>
+                            <option value="c42">CONSTRUTOR DE SUCESSO (42%)</option>
                             <option value="c50">SUPERVISOR (50%)</option>
                         </select>
                     </div>
@@ -186,9 +186,17 @@
         let cart = [];
         let allClients = [];
 
+        let mentorCostKey = 'c25'; // Default: Distribuidor
+
         async function init() {
             const context = await App.init('vendas.html');
             if (!context) return;
+
+            // Determinar o nível de custo do mentor para cálculo de lucro
+            const mentorLevel = context.profile.discount_level || 25;
+            const costMap = { 25: 'c25', 35: 'c35', 42: 'c42', 50: 'c50' };
+            mentorCostKey = costMap[mentorLevel] || 'c25';
+
             loadClients(context.session.user.id);
             setupSearch();
         }
@@ -209,7 +217,7 @@
                 if (client) {
                     const level = client.discount_level || 0;
                     // Mapear número de desconto para o ID do select no vendas.html
-                    const map = { 0: 'consumer', 14: 'c14', 25: 'c25', 35: 'c35', 42: 'c42', 50: 'c50' };
+                    const map = { 0: 'consumer', 14: 'c14', 23: 'c23', 32: 'c32', 25: 'c25', 35: 'c35', 42: 'c42', 50: 'c50' };
                     document.getElementById('select-discount').value = map[level] || 'consumer';
                     renderCart();
                 }
@@ -267,7 +275,7 @@
                 const isDiscounted = price < item.consumer;
                 totalPV += item.pv * item.qty;
                 totalPrice += price * item.qty;
-                totalCost += item.c50 * item.qty;
+                totalCost += (item[mentorCostKey] || item.c25) * item.qty;
                 window.currentSaleTotal = totalPrice; // Store for submission
                 window.currentSalePV = totalPV;
                 return `

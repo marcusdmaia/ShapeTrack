@@ -39,6 +39,16 @@
                 <input type="password" id="password" placeholder="MÍNIMO 6 CARACTERES" required>
             </div>
 
+            <div class="form-group">
+                <label>SEU NÍVEL NA HERBALIFE</label>
+                <select id="mentor_level">
+                    <option value="25">25% — Distribuidor</option>
+                    <option value="35">35% — Consultor Senior</option>
+                    <option value="42">42% — Construtor de Sucesso</option>
+                    <option value="50">50% — Supervisor</option>
+                </select>
+            </div>
+
             <button class="btn btn-primary" id="signupBtn" style="width: 100%; margin-top: 24px;">
                 CRIAR MINHA CONTA DE MENTOR
                 <div class="btn-icon"><i class="ph-light ph-shield-check"></i></div>
@@ -91,6 +101,7 @@
                     full_name: name,
                     email: email,
                     role: 'mentor',
+                    discount_level: parseInt(document.getElementById('mentor_level').value),
                     is_active: true
                 });
 
