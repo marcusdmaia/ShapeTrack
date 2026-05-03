@@ -49,10 +49,13 @@
 ### 🔗 Vinculação Estratégica (Marcus Dalascio)
 - **Mentor Match:** Preparado o script SQL para vinculação do aluno `clubeforlife@gmail.com` ao mentor `marcusdalascio@gmail.com`.
 
-## ⏳ PRÓXIMOS PASSOS
-- [ ] Confirmar se o SQL de vinculação foi rodado com sucesso no painel do Supabase.
-- [ ] Realizar teste de login com `clubeforlife@gmail.com` para validar redirecionamento automático para `relatorio.html`.
-- [ ] Revisar fluxos de "Esqueci minha senha" para garantir que o envio de e-mail do Supabase esteja configurado.
+## 🛠️ MODIFICAÇÕES REALIZADAS (VERSÃO 4.0.0 - PWA)
+
+### 📱 Transformação em Aplicativo (PWA)
+- **Instalabilidade:** Criado o `manifest.json` e o `sw.js` para permitir que o ShapeTrack seja instalado na tela inicial do celular.
+- **Identidade Visual:** Gerados ícones de alta resolução (192px e 512px) baseados no logo premium enviado pelo usuário.
+- **Configuração Global:** Injetado o script de registro do Service Worker nas páginas principais (`index`, `dashboard`, `relatorio`).
+- **Experiência Nativa:** O app agora abre em modo `standalone` (sem barras de navegador), proporcionando uma imersão total.
 
 ---
 *Assinado: Antigravity AI Console*
