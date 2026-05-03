@@ -40,8 +40,19 @@
 - **Loja do Aluno:** Lançamento da página de Catálogo (`loja.html`) no painel do aluno. Oferece visualização de suplementos segmentados, aplicação automática do desconto no preço de tabela ("DE/POR") e um gerador de pedidos direto para o WhatsApp do mentor com os valores corretos calculados.
 - **Roteamento Híbrido:** O painel principal (`dashboard.html`) redireciona alunos instantaneamente para a sua interface de acompanhamento, separando de vez a experiência do mentor da do cliente final.
 
-## ✅ ESTADO ATUAL: 100% SINCRONIZADO (DB & UI)
-O ecossistema ShapeTrack agora possui uma loja premium ativa, regras de negócio robustas de descontos e paridade total entre as interfaces e o armazenamento.
+## 🛠️ MODIFICAÇÕES REALIZADAS (VERSÃO 3.10.1)
+
+### 🔐 Estabilização de Cadastro (cadastro_aluno.html)
+- **Consistência de Dados:** Adicionado o campo `email` ao payload de salvamento na tabela `profiles`. Agora, tanto o cadastro manual pelo mentor quanto o cadastro pelo link do aluno garantem o espelhamento do e-mail.
+- **Robustez:** Isso fortalece a lógica de fallback do `config.js` que utiliza o e-mail para recuperar perfis órfãos.
+
+### 🔗 Vinculação Estratégica (Marcus Dalascio)
+- **Mentor Match:** Preparado o script SQL para vinculação do aluno `clubeforlife@gmail.com` ao mentor `marcusdalascio@gmail.com`.
+
+## ⏳ PRÓXIMOS PASSOS
+- [ ] Confirmar se o SQL de vinculação foi rodado com sucesso no painel do Supabase.
+- [ ] Realizar teste de login com `clubeforlife@gmail.com` para validar redirecionamento automático para `relatorio.html`.
+- [ ] Revisar fluxos de "Esqueci minha senha" para garantir que o envio de e-mail do Supabase esteja configurado.
 
 ---
 *Assinado: Antigravity AI Console*
