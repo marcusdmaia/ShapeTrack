@@ -50,6 +50,9 @@
                     <div class="tab-item" onclick="filterCategory('energia')">ENERGIA</div>
                     <div class="tab-item" onclick="filterCategory('saude')">SAÚDE & BELEZA</div>
                     <div class="tab-item" onclick="filterCategory('performance')">PERFORMANCE</div>
+                    <div class="tab-item" onclick="filterCategory('gourmet')">GOURMET</div>
+                    <div class="tab-item" onclick="filterCategory('h24')">H24 SPORT</div>
+                    <div class="tab-item" onclick="filterCategory('economica')">ECONÔMICAS</div>
                     <div class="tab-item" onclick="filterCategory('estetica')">ESTÉTICA</div>
                 </div>
 
@@ -118,10 +121,26 @@
             { id:21, category:'performance', name:'Creatina Premium (150g)', desc:'O suplemento mais estudado para rendimento atlético e preservação de força. 100% creatina pura monohidratada para auxiliar contra a perda de massa magra.', flavors:'Neutro', price:181, pv:18.45 },
             { id:22, category:'performance', name:'CR7 Drive', desc:'A bebida dos campeões. Equilíbrio perfeito de eletrólitos (sódio, potássio, magnésio), 4 carboidratos de ação escalonada e vitaminas B. Hidrata e gera energia constante no exercício.', flavors:'Berry Mix (Frutas Silvestres)', price:243, pv:26.75 },
 
+            // 🍦 LANCHES GOURMET E COMPLEMENTOS
+            { id:23, category:'gourmet', name:'Protein Ice Cream (Sorvete Proteico)', desc:'O seu sorvete saudável, cremoso e sem culpa! Ótimo aporte de proteínas de alta qualidade e fibras, com baixíssima caloria e quase nada de açúcar comparado aos sorvetes tradicionais. Perfeito para matar a vontade de doce como lanche ou sobremesa inteligente.', flavors:'Chocolate, Baunilha', price:473, pv:59.80 },
+            { id:24, category:'gourmet', name:'Protein Crunch (Crispies de Proteína)', desc:'O toque crocante para as suas receitas! Bolinhas crocantes de proteína para salpicar no Shake, iogurte ou frutas. Deixa a refeição mais gostosa e adiciona saciedade e nutrientes sem estragar a dieta.', flavors:'Chocolate', price:112, pv:12.30 },
+            { id:25, category:'gourmet', name:'Fiber Powder (275g)', desc:'A fibra invisível que transforma qualquer refeição. Sem sabor, pode ser adicionada em shakes, sucos ou na comida para atingir a meta diária de fibras. A chave para um intestino regulado e fome controlada por muito mais tempo.', flavors:'Neutro', price:243, pv:24.65 },
+
+            // 🏋️ NUTRIÇÃO ESPORTIVA AVANÇADA (H24)
+            { id:26, category:'h24', name:'BCAA 5:1:1 (120 tabletes)', desc:'A proteção que o seu músculo exige. Aminoácidos essenciais (Leucina, Isoleucina e Valina) e Vitamina B6. Previne fadiga muscular e acelera a recuperação para quem pega pesado no treino.', flavors:'Tabletes', price:264, pv:25.85 },
+            { id:27, category:'h24', name:'Glutamina (150g)', desc:'Aliada da recuperação e vitalidade. L-Glutamina pura para reconstrução e recuperação muscular após treinos intensos. Amplamente reconhecida por apoiar o intestino e o sistema imune.', flavors:'Neutro', price:80, pv:9.10 },
+            { id:28, category:'h24', name:'Tri-Core Protein Blend (1.010kg)', desc:'Nutrição completa para atletas de resistência. Blend de proteínas, carboidratos inteligentes para reposição de glicogênio, cálcio, ferro e vitaminas. Recuperação total após atividades exaustivas e de longa duração.', flavors:'Chocolate', price:467, pv:46.80 },
+
+            // 📦 EMBALAGENS ECONÔMICAS
+            { id:29, category:'economica', name:'Shake Embalagem Econômica', desc:'O seu Shake preferido em tamanho gigante para a família toda! Muito mais porções da refeição inteligente para não correr o risco de ficar sem no meio do mês.', flavors:'Baunilha Cremoso, Doce de Leite, Morango Cremoso', price:786, pv:102.00 },
+            { id:30, category:'economica', name:'Shake Chocolate Sensation (Grande)', desc:'O Shake Chocolate Sensation em tamanho família com valor promocional diferenciado. Mais porções para garantir o mês todo.', flavors:'Chocolate Sensation', price:786, pv:96.90 },
+            { id:31, category:'economica', name:'Herbal Concentrate (357g - Família)', desc:'O acelerador do metabolismo no formato de maior rendimento. Mais de 200 porções do blend de chás para manter a família toda com energia, desinchada e focada.', flavors:'Original', price:1072, pv:138.05 },
+            { id:32, category:'economica', name:'N-R-G Pó (330g - Família)', desc:'A fonte inesgotável de foco e estado de alerta diário. Melhor rendimento nos estudos e trabalho na versão econômica de altíssimo rendimento.', flavors:'Guaraná Tropical', price:668, pv:84.80 },
+
             // ✨ NUTRIÇÃO EXTERNA
-            { id:23, category:'estetica', name:'Linha Skin', desc:'Tecnologia e cuidado botânico livre de parabenos e sulfatos. Reduz visivelmente os sinais de envelhecimento, limpando, tonificando e trazendo luminosidade e saúde para o rosto.', flavors:'Consultar via WhatsApp', price:0, pv:0 },
-            { id:24, category:'estetica', name:'Linha Corporal Soft Green', desc:'Energia e bem-estar do Chá Verde. Desodorante, sabonetes e loção corporal com pH fisiológico e dermatologicamente testados. Hidrata sem agredir a pele com perfume leve e refrescante.', flavors:'Consultar via WhatsApp', price:0, pv:0 },
-            { id:25, category:'estetica', name:'Linha Herbal Aloe', desc:'Fortificação e beleza natural para os cabelos. Shampoos e condicionadores que reduzem fios quebradiços em 90%, deixando o cabelo 10x mais forte na primeira aplicação.', flavors:'Consultar via WhatsApp', price:0, pv:0 }
+            { id:33, category:'estetica', name:'Linha Skin', desc:'Tecnologia e cuidado botânico livre de parabenos e sulfatos. Reduz visivelmente os sinais de envelhecimento, limpando, tonificando e trazendo luminosidade e saúde para o rosto.', flavors:'Consultar via WhatsApp', price:0, pv:0 },
+            { id:34, category:'estetica', name:'Linha Corporal Soft Green', desc:'Energia e bem-estar do Chá Verde. Desodorante, sabonetes e loção corporal com pH fisiológico e dermatologicamente testados. Hidrata sem agredir a pele com perfume leve e refrescante.', flavors:'Consultar via WhatsApp', price:0, pv:0 },
+            { id:35, category:'estetica', name:'Linha Herbal Aloe', desc:'Fortificação e beleza natural para os cabelos. Shampoos e condicionadores que reduzem fios quebradiços em 90%, deixando o cabelo 10x mais forte na primeira aplicação.', flavors:'Consultar via WhatsApp', price:0, pv:0 }
         ];
 
         let cart = [];
