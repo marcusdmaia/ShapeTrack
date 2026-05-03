@@ -57,6 +57,13 @@
 - **Configuração Global:** Injetado o script de registro do Service Worker nas páginas principais (`index`, `dashboard`, `relatorio`).
 - **Experiência Nativa:** O app agora abre em modo `standalone` (sem barras de navegador), proporcionando uma imersão total.
 
+## 🛠️ MODIFICAÇÕES REALIZADAS (VERSÃO 4.0.2 - HOTFIX)
+
+### 🔗 Correção de Vinculação e Visibilidade
+- **Database Link:** Aluno `clubeforlife@gmail.com` agora está oficialmente vinculado ao mentor `marcusdalascio@gmail.com` via `mentor_id`.
+- **Política RLS:** Criada a política "Mentors can view their students", garantindo que os mentores consigam enxergar seus alunos no dashboard. Sem isso, a lista de alunos aparecia vazia mesmo com os dados no banco.
+- **Estabilização de Schema:** Adicionadas as colunas `full_name` e `is_active` na tabela `profiles` do Supabase para evitar erros durante o cadastro de novos alunos.
+
 ---
 *Assinado: Antigravity AI Console*
 
