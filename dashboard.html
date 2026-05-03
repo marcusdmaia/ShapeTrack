@@ -83,9 +83,13 @@
                             <label>NOME COMPLETO</label>
                             <input type="text" id="m_name" placeholder="EX: JOÃO DA SILVA" required>
                         </div>
-                        <div class="form-group span-2">
-                            <label>WHATSAPP (CONTATO PRINCIPAL)</label>
+                        <div class="form-group">
+                            <label>WHATSAPP</label>
                             <input type="text" id="m_whatsapp" placeholder="11999999999" required>
+                        </div>
+                        <div class="form-group">
+                            <label>E-MAIL</label>
+                            <input type="email" id="m_email" placeholder="email@exemplo.com" required>
                         </div>
                         <div class="form-group">
                             <label>NASCIMENTO</label>
@@ -181,6 +185,7 @@
                     const payload = {
                         full_name: document.getElementById('m_name').value,
                         whatsapp: document.getElementById('m_whatsapp').value,
+                        email: document.getElementById('m_email').value,
                         birthday: document.getElementById('m_birth').value || null,
                         height: parseInt(document.getElementById('m_height').value) || null,
                         gender: document.getElementById('m_gender').value,
