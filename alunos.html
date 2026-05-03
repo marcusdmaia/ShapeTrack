@@ -167,8 +167,8 @@
                         <input type="text" id="crm-whatsapp" placeholder="11999999999">
                     </div>
                     <div class="form-group">
-                        <label>E-MAIL</label>
-                        <input type="email" id="crm-email" placeholder="email@exemplo.com">
+                        <label>E-MAIL (LOGIN - NÃO ALTERÁVEL)</label>
+                        <input type="email" id="crm-email" placeholder="email@exemplo.com" disabled style="opacity: 0.6; cursor: not-allowed;">
                     </div>
 
                     <div class="form-group">
@@ -354,7 +354,7 @@
             const updates = {
                 full_name: document.getElementById('crm-name').value,
                 whatsapp: document.getElementById('crm-whatsapp').value,
-                email: document.getElementById('crm-email').value,
+                // Email removido do update para garantir que seja travado
                 birthday: document.getElementById('crm-birthday').value || null,
                 height: parseInt(document.getElementById('crm-height').value) || null,
                 gender: document.getElementById('crm-gender').value,
