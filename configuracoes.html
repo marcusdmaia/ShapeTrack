@@ -99,13 +99,30 @@
 
         <!-- Google Integration (Mentor Only) -->
         <div id="google-section" class="card-shell reveal span-12" style="animation-delay: 0.2s;">
-            <div class="card-core">
-                <h3 style="margin-bottom: 24px;"><i class="ph-light ph-google-logo" style="color: #4285F4;"></i> SINCRONISMO GOOGLE</h3>
-                <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 24px;">Conecte sua agenda para orquestração automática de avaliações e lembretes.</p>
-                <div id="google-status" style="margin-bottom: 16px; font-size: 0.8rem; font-weight: 700;">VERIFICANDO CONEXÃO...</div>
-                <button class="btn" id="btn-google" onclick="startGoogleAuth()" style="width: 100%; background: #4285F4; color: #FFFFFF;">
+            <div class="card-core" style="background: linear-gradient(135deg, rgba(66, 133, 244, 0.05) 0%, transparent 100%);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                    <div>
+                        <h3 style="margin-bottom: 8px;"><i class="ph-fill ph-google-logo" style="color: #4285F4;"></i> SINCRONISMO GOOGLE</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem;">Conecte sua agenda para orquestração automática de avaliações e lembretes.</p>
+                    </div>
+                    <div id="google-status-pill" style="padding: 6px 12px; border-radius: 100px; font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; border: 1px solid var(--glass-border);">
+                        VERIFICANDO...
+                    </div>
+                </div>
+                
+                <div id="google-connected-info" style="display: none; margin-bottom: 24px; padding: 16px; background: rgba(46, 204, 113, 0.1); border-radius: 12px; border: 1px solid rgba(46, 204, 113, 0.2);">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="ph-fill ph-calendar-check" style="color: #2ecc71; font-size: 1.5rem;"></i>
+                        <div>
+                            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">AGENDA VINCULADA</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">O ShapeTrack agora agendará retornos automaticamente.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn" id="btn-google" onclick="startGoogleAuth()" style="width: 100%; height: 56px; font-weight: 700; transition: all 0.4s var(--bezier);">
                     CONECTAR GOOGLE CALENDAR
-                    <div class="btn-icon" style="background: rgba(0,0,0,0.1);"><i class="ph-light ph-link"></i></div>
+                    <div class="btn-icon"><i class="ph-light ph-link"></i></div>
                 </button>
             </div>
         </div>
@@ -187,19 +204,35 @@
         }
 
         function checkGoogleConnection(profile) {
-            const status = document.getElementById('google-status');
+            const statusPill = document.getElementById('google-status-pill');
+            const connectedInfo = document.getElementById('google-connected-info');
             const btn = document.getElementById('btn-google');
-            if (!status || !btn) return;
+            if (!statusPill || !btn) return;
 
             if (profile.google_refresh_token) {
-                status.innerHTML = '<span style="color:#2ecc71;"><i class="ph-fill ph-check-circle"></i> CONEXÃO ATIVA</span>';
+                statusPill.innerHTML = '<i class="ph-fill ph-check-circle" style="color:#2ecc71;"></i> ATIVA';
+                statusPill.style.background = 'rgba(46, 204, 113, 0.1)';
+                statusPill.style.color = '#2ecc71';
+                statusPill.style.borderColor = 'rgba(46, 204, 113, 0.3)';
+                
+                connectedInfo.style.display = 'block';
+                
                 btn.innerHTML = 'DESCONECTAR AGENDA <div class="btn-icon" style="background: rgba(0,0,0,0.1);"><i class="ph-light ph-link-break"></i></div>';
-                btn.style.background = '#ff4d4d';
+                btn.style.background = 'rgba(239, 68, 68, 0.1)';
+                btn.style.color = '#ef4444';
+                btn.style.border = '1px solid rgba(239, 68, 68, 0.2)';
                 btn.onclick = disconnectGoogle;
             } else {
-                status.innerHTML = '<span style="color:var(--text-secondary);"><i class="ph-light ph-x-circle"></i> STATUS: DESCONECTADO</span>';
+                statusPill.innerHTML = '<i class="ph-fill ph-x-circle" style="color:var(--text-secondary);"></i> INATIVA';
+                statusPill.style.background = 'rgba(0,0,0,0.02)';
+                statusPill.style.color = 'var(--text-secondary)';
+                
+                connectedInfo.style.display = 'none';
+                
                 btn.innerHTML = 'CONECTAR GOOGLE CALENDAR <div class="btn-icon" style="background: rgba(0,0,0,0.1);"><i class="ph-light ph-link"></i></div>';
                 btn.style.background = '#4285F4';
+                btn.style.color = '#FFFFFF';
+                btn.style.border = 'none';
                 btn.onclick = startGoogleAuth;
             }
         }
