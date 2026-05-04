@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcus Maia // Vitrine Exclusiva</title>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --primary: #2F5948;
+            --accent: #D96C2B;
+            --accent-glow: rgba(217, 108, 43, 0.1);
+            --text-main: #0F172A;
+            --text-dim: #64748B;
+            --glass-border: #E2E8F0;
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: var(--text-main); font-family: var(--font-main); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        header { 
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 0;
+        }
+
+        .header-wrap { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; }
+        .logo span { color: var(--accent); }
+
+        .cart-trigger { 
+            position: relative; cursor: pointer; 
+            padding: 12px; background: #FFF; 
+            border: 1px solid var(--glass-border); border-radius: 50%;
+            transition: 0.3s; box-shadow: var(--shadow);
+        }
+        .cart-trigger:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .cart-count { 
+            position: absolute; top: -2px; right: -2px;
+            background: var(--accent); color: #FFF;
+            width: 20px; height: 20px; border-radius: 50%;
+            font-size: 0.65rem; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid #FFF;
+        }
+
+        /* Hero Section */
+        .hero { padding: 80px 0 60px; text-align: center; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.1; letter-spacing: -2px; margin-bottom: 16px; }
+        .hero p { color: var(--text-dim); font-size: 1rem; max-width: 550px; margin: 0 auto; line-height: 1.6; }
+        
+        .badge-vip {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(217, 108, 43, 0.08); color: var(--accent);
+            padding: 8px 16px; border-radius: 50px;
+            font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 2px; border: 1px solid rgba(217, 108, 43, 0.15);
+            margin-bottom: 24px;
+        }
+
+        /* Product Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-bottom: 80px; }
+        
+        .product-card {
+            background: var(--card-bg); border: 1px solid var(--glass-border);
+            border-radius: 24px; padding: 24px; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: flex; flex-direction: column; box-shadow: var(--shadow);
+        }
+        .product-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 20px 50px rgba(0,0,0,0.06); }
+
+        .p-cat { font-size: 0.6rem; font-weight: 800; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; opacity: 0.7; }
+        .p-name { font-size: 1.1rem; font-weight: 800; margin-bottom: 12px; line-height: 1.3; color: var(--text-main); }
+        .p-desc { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 24px; flex-grow: 1; }
+        
+        .p-price { padding-top: 20px; border-top: 1px solid #F1F5F9; }
+        .price-de { font-size: 0.75rem; color: var(--text-dim); text-decoration: line-through; margin-bottom: 2px; }
+        .price-por { font-size: 1.4rem; font-weight: 800; color: var(--text-main); }
+        .price-por small { font-size: 0.8rem; font-weight: 600; color: var(--accent); }
+
+        .btn-buy { 
+            width: 100%; margin-top: 20px; padding: 16px;
+            background: var(--accent); color: #FFF;
+            border: none; border-radius: 14px;
+            font-size: 0.85rem; font-weight: 700; cursor: pointer;
+            transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
+            box-shadow: 0 8px 20px var(--accent-glow);
+        }
+        .btn-buy:hover { background: var(--text-main); transform: scale(1.02); }
+
+        /* Checkout Overlay */
+        #modal-checkout { 
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        #modal-checkout.active { display: flex; }
+        .checkout-card { 
+            background: #FFF; border: 1px solid var(--glass-border);
+            border-radius: 24px; width: 100%; max-width: 480px; padding: 32px;
+            position: relative; box-shadow: 0 30px 100px rgba(0,0,0,0.1);
+        }
+        .btn-close { 
+            position: absolute; top: 20px; right: 20px;
+            background: #F1F5F9; border: none; color: var(--text-main); 
+            width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .hero { padding: 40px 0; }
+            .grid { gap: 16px; }
+            .product-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-wrap">
+            <div class="logo">MARCUS<span>MAIA</span></div>
+            <div class="cart-trigger" onclick="openCheckout()">
+                <i class="ph-bold ph-shopping-bag" style="color: var(--accent);"></i>
+                <div class="cart-count" id="cart-count">0</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="hero">
+            <div class="badge-vip">
+                <i class="ph-fill ph-sparkle"></i> bronze premium • 14% OFF
+            </div>
+            <h1>Sua Nutrição com <br> <span style="color: var(--accent);">Vantagem Exclusiva.</span></h1>
+            <p>Aproveite seu desconto de 14% em todo o catálogo oficial. <br> Pagamento seguro e entrega prioritária.</p>
+        </section>
+
+        <div class="grid" id="product-grid"></div>
+    </div>
+
+    <div id="modal-checkout">
+        <div class="checkout-card">
+            <button class="btn-close" onclick="closeCheckout()"><i class="ph-bold ph-x"></i></button>
+            <div style="text-align: center; margin-bottom: 24px;">
+                <h2 style="font-size: 1.3rem; font-weight: 800; letter-spacing: -1px;">FECHAR PEDIDO</h2>
+                <p style="color: var(--text-dim); font-size: 0.75rem;">Processamento seguro via Mercado Pago</p>
+            </div>
+            
+            <div id="paymentCardBrick_container"></div>
+            
+            <div id="checkout-summary" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #F1F5F9;"></div>
+        </div>
+    </div>
+
+    <script src="products.js"></script>
+    <script>
+        const mp = new MercadoPago('SUA_PUBLIC_KEY_AQUI'); // Substituir pela sua chave
+        let cart = [];
+        let bricksBuilder = mp.bricks();
+
+        function renderProducts() {
+            const container = document.getElementById('product-grid');
+            container.innerHTML = STORE_PRODUCTS.map(p => `
+                <div class="product-card">
+                    <div class="p-cat">${p.category}</div>
+                    <div class="p-name">${p.name}</div>
+                    <div class="p-desc">${p.desc}</div>
+                    <div class="p-price">
+                        <div class="price-de">De R$ ${p.priceDe.toFixed(2)}</div>
+                        <div class="price-por"><small>R$</small> ${p.pricePor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                        <button class="btn-buy" onclick="addToCart(${p.id})">
+                            COMPRAR AGORA
+                            <i class="ph-bold ph-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            const p = STORE_PRODUCTS.find(x => x.id === id);
+            cart.push(p);
+            document.getElementById('cart-count').textContent = cart.length;
+            showToast('Item adicionado!');
+        }
+
+        async function openCheckout() {
+            if (cart.length === 0) return;
+            document.getElementById('modal-checkout').classList.add('active');
+            const total = cart.reduce((s, i) => s + i.pricePor, 0);
+            document.getElementById('checkout-summary').innerHTML = `
+                <div style="display: flex; justify-content: space-between; font-weight: 800;">
+                    <span style="font-size: 0.8rem; color: var(--text-dim);">TOTAL A PAGAR</span>
+                    <span style="color: var(--accent); font-size: 1.2rem;">R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                </div>
+            `;
+            renderPaymentBrick(total);
+        }
+
+        async function renderPaymentBrick(amount) {
+            const settings = {
+                initialization: { amount: amount, payer: { email: "" } },
+                customization: {
+                    visual: { style: { theme: 'default' } }, // Estilo claro para combinar
+                    paymentMethods: { maxInstallments: 12, types: { excluded: ['ticket'] } }
+                },
+                callbacks: {
+                    onSubmit: ({ formData }) => {
+                        return new Promise((resolve, reject) => {
+                            fetch("/api/process_payment", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(formData),
+                            })
+                            .then(r => r.json())
+                            .then(res => {
+                                if(res.status === 'approved') {
+                                    alert('COMPRA REALIZADA! Verifique seu e-mail.');
+                                    cart = []; document.getElementById('cart-count').textContent = '0';
+                                    closeCheckout();
+                                } else alert('Erro: ' + res.status_detail);
+                                resolve();
+                            }).catch(e => reject(e));
+                        });
+                    }
+                }
+            };
+            window.paymentBrickController = await bricksBuilder.create('payment', 'paymentCardBrick_container', settings);
+        }
+
+        function closeCheckout() {
+            document.getElementById('modal-checkout').classList.remove('active');
+            if (window.paymentBrickController) window.paymentBrickController.unmount();
+        }
+
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.style.cssText = 'position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:var(--text-main); color:#FFF; padding:12px 24px; border-radius:50px; font-weight:800; font-size:0.75rem; z-index:9999; box-shadow:0 10px 30px rgba(0,0,0,0.1);';
+            t.textContent = msg.toUpperCase();
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 2000);
+        }
+
+        renderProducts();
+    </script>
+</body>
+</html>
