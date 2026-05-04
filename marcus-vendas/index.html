@@ -205,36 +205,65 @@
             const flavorSelect = document.getElementById(`flavor-${id}`);
             const selectedFlavor = flavorSelect ? flavorSelect.value : p.flavors[0];
             
-            cart.push({ ...p, selectedFlavor });
+            cart.push({ ...p, selectedFlavor, cartId: Date.now() + Math.random() });
             document.getElementById('cart-count').textContent = cart.length;
             showToast(`ADICIONADO: ${p.name} (${selectedFlavor})`);
+        }
+
+        function removeFromCart(cartId) {
+            cart = cart.filter(item => item.cartId !== cartId);
+            document.getElementById('cart-count').textContent = cart.length;
+            
+            if (cart.length === 0) {
+                closeCheckout();
+                showToast('CARRINHO VAZIO');
+            } else {
+                updateCheckoutSummary();
+            }
         }
 
         async function openCheckout() {
             if (cart.length === 0) return;
             document.getElementById('modal-checkout').classList.add('active');
+            updateCheckoutSummary();
+        }
+
+        function updateCheckoutSummary() {
             const total = cart.reduce((s, i) => s + i.pricePor, 0);
             
             let itemsHtml = cart.map(i => `
-                <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 8px; color: var(--text-dim);">
-                    <span>${i.name} (${i.selectedFlavor})</span>
-                    <span>R$ ${i.pricePor.toFixed(2)}</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.7rem; margin-bottom: 12px; padding: 8px; background: #F8FAFC; border-radius: 10px;">
+                    <div style="flex: 1; padding-right: 10px;">
+                        <div style="font-weight: 800; color: var(--text-main);">${i.name}</div>
+                        <div style="font-size: 0.6rem; color: var(--accent);">${i.selectedFlavor.toUpperCase()}</div>
+                    </div>
+                    <div style="font-weight: 800; color: var(--text-main); margin-right: 12px;">R$ ${i.pricePor.toFixed(2)}</div>
+                    <button onclick="removeFromCart(${i.cartId})" style="background: none; border: none; color: #EF4444; cursor: pointer; font-size: 1rem; display: flex; align-items: center;">
+                        <i class="ph-bold ph-trash"></i>
+                    </button>
                 </div>
             `).join('');
 
             document.getElementById('checkout-summary').innerHTML = `
-                <div style="margin-bottom: 20px; max-height: 150px; overflow-y: auto; padding-right: 10px;">
+                <div style="margin-bottom: 20px; max-height: 200px; overflow-y: auto; padding-right: 5px;">
                     ${itemsHtml}
                 </div>
-                <div style="display: flex; justify-content: space-between; font-weight: 800; border-top: 1px solid #F1F5F9; padding-top: 16px;">
-                    <span style="font-size: 0.8rem; color: var(--text-dim);">TOTAL A PAGAR</span>
-                    <span style="color: var(--accent); font-size: 1.2rem;">R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
+                <div style="display: flex; justify-content: space-between; font-weight: 800; border-top: 2px solid #F1F5F9; padding-top: 16px;">
+                    <span style="font-size: 0.8rem; color: var(--text-dim);">TOTAL DO PEDIDO</span>
+                    <span style="color: var(--accent); font-size: 1.4rem; letter-spacing: -1px;">R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
                 </div>
             `;
+            
+            // Re-renderiza o Brick se o valor mudar significativamente ou se necessário
             renderPaymentBrick(total);
         }
 
         async function renderPaymentBrick(amount) {
+            // Se já existir um Brick, removemos para criar um novo com o valor atualizado
+            if (window.paymentBrickController) {
+                await window.paymentBrickController.unmount();
+            }
+
             const settings = {
                 initialization: { amount: amount, payer: { email: "" } },
                 customization: {
