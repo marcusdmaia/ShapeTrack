@@ -38,10 +38,19 @@ const App = {
 
             // Fallback 2: Auto-create basic profile if trigger failed
             if (!data) {
+                const intendedRole = localStorage.getItem('st_intended_role') || 'aluno';
                 const { data: newData, error: createError } = await sb.from('profiles').insert([
-                    { id: session.user.id, email: session.user.email, full_name: session.user.user_metadata?.full_name || 'Novo Usuário', role: 'aluno' }
+                    { 
+                        id: session.user.id, 
+                        email: session.user.email, 
+                        full_name: session.user.user_metadata?.full_name || 'Novo Usuário', 
+                        role: intendedRole 
+                    }
                 ]).select().single();
-                if (!createError) data = newData;
+                if (!createError) {
+                    data = newData;
+                    localStorage.removeItem('st_intended_role');
+                }
             }
 
             profile = data;
@@ -158,6 +167,26 @@ App.logout = () => {
     sessionStorage.removeItem('st_profile');
     sb.auth.signOut().then(() => window.location.href='index.html');
 };
+
+async function signInWithGoogle() {
+    // Save intended role to apply after redirect
+    const role = typeof selectedRole !== 'undefined' ? selectedRole : 'aluno';
+    localStorage.setItem('st_intended_role', role);
+
+    const { data, error } = await sb.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            queryParams: {
+                access_type: 'offline',
+                prompt: 'consent'
+            },
+            scopes: 'https://www.googleapis.com/auth/calendar.events',
+            redirectTo: window.location.origin + (window.location.pathname.includes('index.html') ? window.location.pathname : '/index.html')
+        }
+    });
+
+    if (error) showToast(error.message, 'error');
+}
 
 // 3. Reveal Observer for Premium Animations
 document.addEventListener('DOMContentLoaded', () => {
