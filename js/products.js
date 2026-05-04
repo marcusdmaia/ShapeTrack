@@ -29,21 +29,9 @@ const SHAPETRACK_PRODUCTS = [
         prices: { consumer: 181.0, c14: 144.02, c23: 131.01, c32: 118.0, c25: 131.01, c35: 120.21, c42: 112.65, c50: 104.01 } 
     },
     { 
-        sku: "497K", name: "FIBER CONCENTRATE LIMÃO E MEL", category: "saude", 
-        desc: "A faxina interna refrescante. A versão Immune blinda a imunidade com Zinco, Vitamina C e Selênio.", 
-        flavors: "Limão com Mel (Immune)", pv: 20.3, 
-        prices: { consumer: 206.0, c14: 150.73, c23: 135.48, c32: 120.22, c25: 135.48, c35: 122.82, c42: 113.95, c50: 103.82 } 
-    },
-    { 
-        sku: "498K", name: "FIBER CONCENTRATE MANGA", category: "saude", 
+        sku: "FIBER-MIX", name: "FIBER CONCENTRATE (TODOS OS SABORES)", category: "saude", 
         desc: "A faxina interna refrescante. Regula o trânsito intestinal e auxilia na hidratação, 3g de fibras por porção.", 
-        flavors: "Manga", pv: 20.3, 
-        prices: { consumer: 206.0, c14: 150.73, c23: 135.48, c32: 120.22, c25: 135.48, c35: 122.82, c42: 113.95, c50: 103.82 } 
-    },
-    { 
-        sku: "496K", name: "FIBER CONCENTRATE UVA", category: "saude", 
-        desc: "A faxina interna refrescante. Regula o trânsito intestinal e auxilia na hidratação, 3g de fibras por porção.", 
-        flavors: "Uva", pv: 20.3, 
+        flavors: "Uva, Manga, Limão com Mel (Immune)", pv: 20.3, 
         prices: { consumer: 206.0, c14: 150.73, c23: 135.48, c32: 120.22, c25: 135.48, c35: 122.82, c42: 113.95, c50: 103.82 } 
     },
     { 
@@ -59,21 +47,9 @@ const SHAPETRACK_PRODUCTS = [
         prices: { consumer: 80.0, c14: 62.57, c23: 57.5, c32: 52.43, c25: 57.5, c35: 53.29, c42: 50.34, c50: 46.97 } 
     },
     { 
-        sku: "061K", name: "HERBAL CONCENTRATE 102G - CANELA", category: "energia", 
+        sku: "HERBAL-102", name: "HERBAL CONCENTRATE 102G (TODOS OS SABORES)", category: "energia", 
         desc: "Versão econômica do acelerador diário, +60 porções. Auxilia na hidratação, queima de calorias e combate ao inchaço.", 
-        flavors: "Canela", pv: 37.6, 
-        prices: { consumer: 364.0, c14: 283.95, c23: 255.21, c32: 226.47, c25: 255.21, c35: 231.36, c42: 214.66, c50: 195.58 } 
-    },
-    { 
-        sku: "062K", name: "HERBAL CONCENTRATE 102G - LARANJA", category: "energia", 
-        desc: "Versão econômica do acelerador diário, +60 porções. Auxilia na hidratação, queima de calorias e combate ao inchaço.", 
-        flavors: "Laranja e Especiarias", pv: 37.6, 
-        prices: { consumer: 364.0, c14: 283.95, c23: 255.21, c32: 226.47, c25: 255.21, c35: 231.36, c42: 214.66, c50: 195.58 } 
-    },
-    { 
-        sku: "059K", name: "HERBAL CONCENTRATE 102G - ORIGINAL", category: "energia", 
-        desc: "Versão econômica do acelerador diário, +60 porções. Auxilia na hidratação, queima de calorias e combate ao inchaço.", 
-        flavors: "Original", pv: 37.6, 
+        flavors: "Original, Canela, Laranja e Especiarias", pv: 37.6, 
         prices: { consumer: 364.0, c14: 283.95, c23: 255.21, c32: 226.47, c25: 255.21, c35: 231.36, c42: 214.66, c50: 195.58 } 
     },
     { 
@@ -83,15 +59,9 @@ const SHAPETRACK_PRODUCTS = [
         prices: { consumer: 1072.0, c14: 886.7, c23: 796.96, c32: 707.21, c25: 796.96, c35: 722.47, c42: 670.33, c50: 610.74 } 
     },
     { 
-        sku: "063K", name: "HERBAL CONCENTRATE 51G - LIMÃO", category: "energia", 
+        sku: "HERBAL-51", name: "HERBAL CONCENTRATE 51G (TODOS OS SABORES)", category: "energia", 
         desc: "O seu acelerador botânico diário. Rica em antioxidantes e cafeína, acelera temporariamente o metabolismo.", 
-        flavors: "Limão", pv: 21.45, 
-        prices: { consumer: 222.0, c14: 171.41, c23: 154.06, c32: 136.71, c25: 154.06, c35: 139.66, c42: 129.58, c50: 118.06 } 
-    },
-    { 
-        sku: "060K", name: "HERBAL CONCENTRATE 51G - ORIGINAL", category: "energia", 
-        desc: "O seu acelerador botânico diário. Rica em antioxidantes e cafeína, acelera temporariamente o metabolismo.", 
-        flavors: "Original", pv: 21.45, 
+        flavors: "Original, Limão", pv: 21.45, 
         prices: { consumer: 222.0, c14: 171.41, c23: 154.06, c32: 136.71, c25: 154.06, c35: 139.66, c42: 129.58, c50: 118.06 } 
     },
     { 
@@ -107,15 +77,9 @@ const SHAPETRACK_PRODUCTS = [
         prices: { consumer: 79.0, c14: 65.83, c23: 62.06, c32: 58.29, c25: 62.06, c35: 58.93, c42: 56.74, c50: 54.24 } 
     },
     { 
-        sku: "0951", name: "SHAKE BAUNILHA CREMOSO", category: "emagrecimento", 
+        sku: "SHAKE-550", name: "SHAKE 550G (TODOS OS SABORES)", category: "emagrecimento", 
         desc: "A sua refeição inteligente e prática. ~19g de proteína de alta qualidade, 23 vitaminas e minerais.", 
-        flavors: "Baunilha Cremoso", pv: 25.75, 
-        prices: { consumer: 246.0, c14: 191.42, c23: 172.04, c32: 152.67, c25: 172.04, c35: 155.96, c42: 144.71, c50: 131.84 } 
-    },
-    { 
-        sku: "3144", name: "SHAKE CHOCOLATE SENSATION", category: "emagrecimento", 
-        desc: "A sua refeição inteligente e prática. ~19g de proteína de alta qualidade, 23 vitaminas e minerais.", 
-        flavors: "Chocolate Sensation", pv: 25.75, 
+        flavors: "Baunilha, Chocolate, Cookies, Morango, Doce de Leite, Coco, Maracujá, Banana, Paçoca", pv: 25.75, 
         prices: { consumer: 246.0, c14: 191.42, c23: 172.04, c32: 152.67, c25: 172.04, c35: 155.96, c42: 144.71, c50: 131.84 } 
     },
     { 
