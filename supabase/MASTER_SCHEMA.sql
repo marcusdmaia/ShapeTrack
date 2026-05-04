@@ -210,6 +210,7 @@ BEGIN
     COALESCE((NULLIF(new.raw_user_meta_data->>'discount_level', ''))::integer, 0)
   )
   ON CONFLICT (id) DO UPDATE SET
+    role = EXCLUDED.role,
     whatsapp = EXCLUDED.whatsapp,
     birthday = EXCLUDED.birthday,
     height = EXCLUDED.height,
