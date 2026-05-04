@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     notes TEXT,
     target_weight FLOAT,
     next_assessment_date DATE,
+    discount_level INTEGER DEFAULT 0,
     google_refresh_token TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
