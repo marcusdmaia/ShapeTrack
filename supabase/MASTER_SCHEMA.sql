@@ -42,6 +42,9 @@ ON profiles FOR SELECT USING (auth.uid() = mentor_id);
 CREATE POLICY "Mentores podem gerenciar seus alunos" 
 ON profiles FOR ALL USING (auth.uid() = mentor_id);
 
+CREATE POLICY "Usuários podem atualizar seu próprio perfil" 
+ON profiles FOR UPDATE USING (auth.uid() = id);
+
 CREATE POLICY "Inserção pública para cadastro via link" 
 ON profiles FOR INSERT WITH CHECK (true);
 
