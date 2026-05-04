@@ -193,56 +193,34 @@ ON shared_videos FOR ALL USING (target_mentor_id = auth.uid());
 -- 10. TRIGGER: Sincronismo Auth -> Profile
 ---------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS trigger AS $$
 BEGIN
-  INSERT INTO public.profiles (
-    id, 
-    full_name, 
-    email, 
-    role, 
-    mentor_id, 
-    discount_level,
-    whatsapp,
-    birthday,
-    gender,
-    height,
-    goal,
-    is_active
-  )
+  INSERT INTO public.profiles (id, email, full_name, role, mentor_id, whatsapp, birthday, height, gender, goal, discount_level)
   VALUES (
-    new.id, 
-    COALESCE(new.raw_user_meta_data->>'full_name', 'Novo Usuário'), 
+    new.id,
     new.email,
+    COALESCE(new.raw_user_meta_data->>'full_name', 'Novo Usuário'),
     COALESCE(new.raw_user_meta_data->>'role', 'aluno'),
-    CASE 
-      WHEN new.raw_user_meta_data->>'mentor_id' IS NOT NULL 
-      THEN (new.raw_user_meta_data->>'mentor_id')::uuid 
-      ELSE NULL 
-    END,
-    COALESCE((new.raw_user_meta_data->>'discount_level')::int, 0),
+    (NULLIF(new.raw_user_meta_data->>'mentor_id', ''))::uuid,
     new.raw_user_meta_data->>'whatsapp',
-    CASE 
-      WHEN new.raw_user_meta_data->>'birthday' IS NOT NULL AND new.raw_user_meta_data->>'birthday' <> ''
-      THEN (new.raw_user_meta_data->>'birthday')::date 
-      ELSE NULL 
-    END,
+    (NULLIF(new.raw_user_meta_data->>'birthday', ''))::date,
+    (NULLIF(new.raw_user_meta_data->>'height', ''))::numeric,
     new.raw_user_meta_data->>'gender',
-    COALESCE((new.raw_user_meta_data->>'height')::float, 0),
     new.raw_user_meta_data->>'goal',
-    true
+    COALESCE((NULLIF(new.raw_user_meta_data->>'discount_level', ''))::integer, 0)
   )
   ON CONFLICT (id) DO UPDATE SET
-    full_name = EXCLUDED.full_name,
-    role = EXCLUDED.role,
-    mentor_id = EXCLUDED.mentor_id,
-    discount_level = EXCLUDED.discount_level,
     whatsapp = EXCLUDED.whatsapp,
     birthday = EXCLUDED.birthday,
-    gender = EXCLUDED.gender,
     height = EXCLUDED.height,
-    goal = EXCLUDED.goal;
-    
-  RETURN NEW;
+    gender = EXCLUDED.gender,
+    goal = EXCLUDED.goal,
+    discount_level = EXCLUDED.discount_level;
+  RETURN new;
+EXCEPTION WHEN OTHERS THEN
+  INSERT INTO public.profiles (id, email, full_name, role)
+  VALUES (new.id, new.email, COALESCE(new.raw_user_meta_data->>'full_name', 'Novo Usuário (FailSafe)'), 'aluno');
+  RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
