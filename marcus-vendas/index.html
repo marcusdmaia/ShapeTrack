@@ -170,36 +170,63 @@
 
         function renderProducts() {
             const container = document.getElementById('product-grid');
-            container.innerHTML = STORE_PRODUCTS.map(p => `
-                <div class="product-card">
-                    <div class="p-cat">${p.category}</div>
-                    <div class="p-name">${p.name}</div>
-                    <div class="p-desc">${p.desc}</div>
-                    <div class="p-price">
-                        <div class="price-de">De R$ ${p.priceDe.toFixed(2)}</div>
-                        <div class="price-por"><small>R$</small> ${p.pricePor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
-                        <button class="btn-buy" onclick="addToCart(${p.id})">
-                            COMPRAR AGORA
-                            <i class="ph-bold ph-arrow-right"></i>
-                        </button>
+            container.innerHTML = STORE_PRODUCTS.map(p => {
+                const hasFlavors = p.flavors.length > 1;
+                return `
+                    <div class="product-card">
+                        <div class="p-cat">${p.category}</div>
+                        <div class="p-name">${p.name}</div>
+                        <div class="p-desc">${p.desc}</div>
+                        
+                        ${hasFlavors ? `
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label style="font-size: 0.6rem; margin-bottom: 6px;">ESCOLHA O SABOR</label>
+                                <select id="flavor-${p.id}" style="padding: 10px; border-radius: 10px; font-size: 0.75rem; background: #F1F5F9; border: 1px solid var(--glass-border); font-weight: 700;">
+                                    ${p.flavors.map(f => `<option value="${f}">${f.toUpperCase()}</option>`).join('')}
+                                </select>
+                            </div>
+                        ` : `<div style="height: 10px;"></div>`}
+
+                        <div class="p-price">
+                            <div class="price-de">De R$ ${p.priceDe.toFixed(2)}</div>
+                            <div class="price-por"><small>R$</small> ${p.pricePor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                            <button class="btn-buy" onclick="addToCart(${p.id})">
+                                COMPRAR AGORA
+                                <i class="ph-bold ph-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function addToCart(id) {
             const p = STORE_PRODUCTS.find(x => x.id === id);
-            cart.push(p);
+            const flavorSelect = document.getElementById(`flavor-${id}`);
+            const selectedFlavor = flavorSelect ? flavorSelect.value : p.flavors[0];
+            
+            cart.push({ ...p, selectedFlavor });
             document.getElementById('cart-count').textContent = cart.length;
-            showToast('Item adicionado!');
+            showToast(`ADICIONADO: ${p.name} (${selectedFlavor})`);
         }
 
         async function openCheckout() {
             if (cart.length === 0) return;
             document.getElementById('modal-checkout').classList.add('active');
             const total = cart.reduce((s, i) => s + i.pricePor, 0);
+            
+            let itemsHtml = cart.map(i => `
+                <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 8px; color: var(--text-dim);">
+                    <span>${i.name} (${i.selectedFlavor})</span>
+                    <span>R$ ${i.pricePor.toFixed(2)}</span>
+                </div>
+            `).join('');
+
             document.getElementById('checkout-summary').innerHTML = `
-                <div style="display: flex; justify-content: space-between; font-weight: 800;">
+                <div style="margin-bottom: 20px; max-height: 150px; overflow-y: auto; padding-right: 10px;">
+                    ${itemsHtml}
+                </div>
+                <div style="display: flex; justify-content: space-between; font-weight: 800; border-top: 1px solid #F1F5F9; padding-top: 16px;">
                     <span style="font-size: 0.8rem; color: var(--text-dim);">TOTAL A PAGAR</span>
                     <span style="color: var(--accent); font-size: 1.2rem;">R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
                 </div>
@@ -211,16 +238,20 @@
             const settings = {
                 initialization: { amount: amount, payer: { email: "" } },
                 customization: {
-                    visual: { style: { theme: 'default' } }, // Estilo claro para combinar
+                    visual: { style: { theme: 'default' } },
                     paymentMethods: { maxInstallments: 12, types: { excluded: ['ticket'] } }
                 },
                 callbacks: {
                     onSubmit: ({ formData }) => {
                         return new Promise((resolve, reject) => {
+                            const description = cart.map(i => `${i.name} (${i.selectedFlavor})`).join(', ');
                             fetch("/api/process_payment", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify(formData),
+                                body: JSON.stringify({
+                                    ...formData,
+                                    description: `Loja Marcus Maia: ${description}`
+                                }),
                             })
                             .then(r => r.json())
                             .then(res => {
