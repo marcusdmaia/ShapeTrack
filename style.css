@@ -93,16 +93,19 @@ body::after {
 }
 
 .nav-logo {
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -0.04em;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: -0.05em;
     color: var(--text-primary);
     text-decoration: none;
     margin-bottom: 48px;
-    padding-left: 12px;
+    display: block;
+    text-transform: uppercase;
 }
 
-.nav-logo span { color: var(--accent); }
+.nav-logo span {
+    color: var(--accent);
+}
 
 .nav-links {
     display: flex;

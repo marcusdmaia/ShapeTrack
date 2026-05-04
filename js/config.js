@@ -168,29 +168,7 @@ App.logout = () => {
     sb.auth.signOut().then(() => window.location.href='index.html');
 };
 
-async function signInWithGoogle() {
-    // Save intended role to apply after redirect
-    const role = typeof selectedRole !== 'undefined' ? selectedRole : 'aluno';
-    localStorage.setItem('st_intended_role', role);
-
-    const { data, error } = await sb.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-            queryParams: {
-                access_type: 'offline',
-                prompt: 'consent'
-            },
-            // REMOVED calendar scope to prevent 400 errors if app not verified.
-            // Calendar connection is handled separately in settings.
-            redirectTo: window.location.origin + window.location.pathname
-        }
-    });
-
-    if (error) {
-        console.error('Google Sign-In Error:', error);
-        showToast('Erro ao entrar com Google: ' + error.message, 'error');
-    }
-}
+// Google Login removed to maintain atomic email/password flow
 
 // 3. Reveal Observer for Premium Animations
 document.addEventListener('DOMContentLoaded', () => {

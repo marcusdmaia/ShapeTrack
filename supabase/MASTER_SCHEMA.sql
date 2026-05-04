@@ -31,10 +31,10 @@ CREATE TABLE IF NOT EXISTS profiles (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- RLS para profiles
+-- 2. POLÍTICAS RLS (Row Level Security)
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Usuários podem ver seu próprio perfil" 
+CREATE POLICY "Perfil visível para o próprio usuário" 
 ON profiles FOR SELECT USING (auth.uid() = id);
 
 CREATE POLICY "Mentores podem ver seus alunos" 
@@ -46,8 +46,7 @@ ON profiles FOR ALL USING (auth.uid() = mentor_id);
 CREATE POLICY "Usuários podem atualizar seu próprio perfil" 
 ON profiles FOR UPDATE USING (auth.uid() = id);
 
-CREATE POLICY "Inserção pública para cadastro via link" 
-ON profiles FOR INSERT WITH CHECK (true);
+-- NOTA: Inserção é gerenciada via TRIGGER SECURITY DEFINER no Auth
 
 ---------------------------------------------------------
 -- 3. TABELA: assessments (Bioimpedância)
@@ -203,6 +202,11 @@ BEGIN
     role, 
     mentor_id, 
     discount_level,
+    whatsapp,
+    birthday,
+    gender,
+    height,
+    goal,
     is_active
   )
   VALUES (
@@ -216,14 +220,33 @@ BEGIN
       ELSE NULL 
     END,
     COALESCE((new.raw_user_meta_data->>'discount_level')::int, 0),
+    new.raw_user_meta_data->>'whatsapp',
+    CASE 
+      WHEN new.raw_user_meta_data->>'birthday' IS NOT NULL AND new.raw_user_meta_data->>'birthday' <> ''
+      THEN (new.raw_user_meta_data->>'birthday')::date 
+      ELSE NULL 
+    END,
+    new.raw_user_meta_data->>'gender',
+    COALESCE((new.raw_user_meta_data->>'height')::float, 0),
+    new.raw_user_meta_data->>'goal',
     true
   )
-  ON CONFLICT (id) DO NOTHING;
+  ON CONFLICT (id) DO UPDATE SET
+    full_name = EXCLUDED.full_name,
+    role = EXCLUDED.role,
+    mentor_id = EXCLUDED.mentor_id,
+    discount_level = EXCLUDED.discount_level,
+    whatsapp = EXCLUDED.whatsapp,
+    birthday = EXCLUDED.birthday,
+    gender = EXCLUDED.gender,
+    height = EXCLUDED.height,
+    goal = EXCLUDED.goal;
+    
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Ativação do Trigger (O passo que faltava)
+-- Ativação do Trigger
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users

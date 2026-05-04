@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="style.css?v=3.9">
+    <script src="js/products.js?v=4.0"></script>
     <style>
         .shop-hero { height: 200px; border-radius: 24px; background: url('shapetrack_shop_hero_1777738131128.png') center/cover; margin-bottom: 32px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; border: 1px solid var(--glass-border); }
         .shop-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)); }
@@ -89,59 +90,16 @@
     </div>
 
     <script src="js/config.js?v=3.9"></script>
-    <script>
-        const allProducts = [
-            // 🟢 EMAGRECIMENTO E NUTRIÇÃO
-            { id:1, category:'emagrecimento', name:'Shake Fórmula 1 (550g)', desc:'A sua refeição inteligente e prática. ~19g de proteína de alta qualidade, fibras e 23 vitaminas e minerais com apenas ~200 calorias. Ideal para substituir até 2 refeições, garantindo saciedade prolongada e nutrição completa.', flavors:'Banana Caramelizada, Baunilha Cremoso, Chocolate Sensation, Cookies & Cream, Coco, Doce de Leite, Frapê de Abacaxi, Morango Cremoso, Torta de Limão, Pistache', price:246, pv:25.75 },
-            { id:2, category:'emagrecimento', name:'NutreV (672g)', desc:'A alternativa perfeita ao leite. Bebida vegetal à base de proteína isolada de soja, fortificada com cálcio e rica em fibras prebióticas (inulina). Zero lactose e zero colesterol — ideal para deixar seu Shake mais cremoso e proteico.', flavors:'Original / Lácteo', price:79, pv:7.40 },
-            { id:3, category:'emagrecimento', name:'Nutri Soup (416g)', desc:'O conforto de uma sopa quentinha com a ciência de uma refeição completa. 17g de proteínas de alto valor biológico, fibras e 23 vitaminas e minerais. Ideal para substituir o jantar e acordar desinchado.', flavors:'Frango com Legumes, Creme Verde', price:246, pv:25.75 },
-
-            // 🔥 ENERGIA E METABOLISMO
-            { id:4, category:'energia', name:'Herbal Concentrate (51g)', desc:'O seu acelerador botânico diário. Blend de chá verde, chá preto, hibisco, malva e cardamomo. Rica em antioxidantes e cafeína, acelera temporariamente o metabolismo e auxilia na redução de retenção de líquidos.', flavors:'Limão, Original', price:222, pv:21.45 },
-            { id:5, category:'energia', name:'Herbal Concentrate (102g)', desc:'Versão econômica do acelerador diário, +60 porções. Auxilia na hidratação, queima de calorias (termogênese) e combate ao inchaço.', flavors:'Laranja e Especiarias, Canela, Original', price:364, pv:37.60 },
-            { id:6, category:'energia', name:'N-R-G Pó (60g)', desc:'Energia e foco inabaláveis. Cafeína limpa do guaraná autêntico. Eleva o estado de alerta e a concentração sem causar picos de fadiga.', flavors:'Original', price:159, pv:15.85 },
-            { id:7, category:'energia', name:'N-R-G Pó (100g)', desc:'Foco e energia por mais tempo na versão 100g. Mantém a hidratação e a disposição em alta para quem tem estilo de vida ativo.', flavors:'Guaraná Tropical, Original', price:252, pv:24.45 },
-            { id:8, category:'energia', name:'Liftoff (15 sachês)', desc:'A ignição mental para dias intensos. Taurina, cafeína e vitaminas B e C. Foco extremo, perfeito como pré-treino efervescente de baixas calorias.', flavors:'Amora Intenso, Limão Siciliano, Limão Abacaxi', price:196, pv:20.20 },
-            { id:9, category:'energia', name:'Shape Control (30 cápsulas)', desc:'A ciência a favor da redução de medidas. Extrato de Laranja Moro (Morosil) e Picolinato de Cromo. Atua no metabolismo de gorduras e ajuda a reduzir gordura abdominal.', flavors:'Cápsulas', price:338, pv:35.35 },
-
-            // 🛡️ SAÚDE E BELEZA
-            { id:10, category:'saude', name:'Fiber Concentrate (450ml)', desc:'A faxina interna refrescante. Regula o trânsito intestinal e auxilia na hidratação, 3g de fibras por porção. A versão Limão e Mel (Immune) blinda a imunidade com Zinco, Vitamina C e Selênio.', flavors:'Uva, Manga, Limão com Mel (Immune)', price:206, pv:20.30 },
-            { id:11, category:'saude', name:'Beauty Booster Colágeno (240g)', desc:'Estética e firmeza de dentro para fora. Colágeno Verisol, Whey Protein, vitaminas A, B, C, D e E. Reduz rugas finas, aumenta elasticidade e fortalece unhas e cabelos com ~45 calorias.', flavors:'Frutas Vermelhas', price:301, pv:27.80 },
-            { id:12, category:'saude', name:'Herbalifeline (Ômega-3)', desc:'O poderoso desinflamatório. Ômega-3 de óleos de peixes de águas profundas e livres de contaminação. Protege o sistema cardiovascular, função cognitiva e defesa das células.', flavors:'Cápsulas em gel', price:281, pv:27.70 },
-            { id:13, category:'saude', name:'OnActive Drink (264g)', desc:'Nutrição focada na juventude celular. Luteína, Zeaxantina, 9g de proteína e 23 vitaminas essenciais. Apoia saúde da visão, flexibilidade cognitiva e blinda músculos e ossos.', flavors:'Chocolate', price:176, pv:19.45 },
-            { id:14, category:'saude', name:'Multivitaminas e Minerais (90 tabletes)', desc:'Complementa a rotina com 22 vitaminas e minerais essenciais. Mantém o sistema imune e o funcionamento do organismo em plenitude, evitando carências nutricionais.', flavors:'Tabletes', price:122, pv:10.75 },
-            { id:15, category:'saude', name:'Xtra-Cal (60 tabletes)', desc:'Previne perda óssea e osteoporose. Altas concentrações de Cálcio, Magnésio e Vitamina D. Essencial para estrutura do corpo e evitar cãibras.', flavors:'Tabletes', price:109, pv:11.00 },
-
-            // 💪 PERFORMANCE
-            { id:16, category:'performance', name:'Barras de Proteína (7 un)', desc:'O lanche prático que reduz os picos de fome. ~10g de proteínas com deliciosa cobertura. Corta a vontade de doce sem sabotar a dieta.', flavors:'Baunilha com Amêndoas, Limão Citrus', price:110, pv:10.40 },
-            { id:17, category:'performance', name:'Sopa Instantânea Snack (7 sachês)', desc:'A sua pausa salgada e proteica. Cremosa, fonte de vitaminas e minerais com ~90 calorias. Saciedade e nutrição nas tardes corridas.', flavors:'Frango com Legumes, Creme de Cebola', price:87, pv:9.35 },
-            { id:18, category:'performance', name:'Protein Powder (240g)', desc:'Aumenta o aporte de proteína e saciedade sem açúcar ou gorduras. Perfeito para adicionar em shakes, sucos e pratos do dia a dia.', flavors:'Neutro', price:221, pv:19.30 },
-            { id:19, category:'performance', name:'Protein Powder (480g)', desc:'Versão econômica. Aumenta o aporte de proteína e saciedade sem açúcar ou gorduras. Perfeito para adicionar em shakes, sucos e pratos do dia a dia.', flavors:'Neutro', price:401, pv:39.25 },
-            { id:20, category:'performance', name:'Whey Protein 3W (510g)', desc:'O combustível da reconstrução muscular. Blend de 25g de proteínas (Whey isolado, concentrado e hidrolisado) para absorção imediata e sustentada após o treino.', flavors:'Chocolate, Baunilha', price:256, pv:24.55 },
-            { id:21, category:'performance', name:'Creatina Premium (150g)', desc:'O suplemento mais estudado para rendimento atlético e preservação de força. 100% creatina pura monohidratada para auxiliar contra a perda de massa magra.', flavors:'Neutro', price:181, pv:18.45 },
-            { id:22, category:'performance', name:'CR7 Drive', desc:'A bebida dos campeões. Equilíbrio perfeito de eletrólitos (sódio, potássio, magnésio), 4 carboidratos de ação escalonada e vitaminas B. Hidrata e gera energia constante no exercício.', flavors:'Berry Mix (Frutas Silvestres)', price:243, pv:26.75 },
-
-            // 🍦 LANCHES GOURMET E COMPLEMENTOS
-            { id:23, category:'gourmet', name:'Protein Ice Cream (Sorvete Proteico)', desc:'O seu sorvete saudável, cremoso e sem culpa! Ótimo aporte de proteínas de alta qualidade e fibras, com baixíssima caloria e quase nada de açúcar comparado aos sorvetes tradicionais. Perfeito para matar a vontade de doce como lanche ou sobremesa inteligente.', flavors:'Chocolate, Baunilha', price:473, pv:59.80 },
-            { id:24, category:'gourmet', name:'Protein Crunch (Crispies de Proteína)', desc:'O toque crocante para as suas receitas! Bolinhas crocantes de proteína para salpicar no Shake, iogurte ou frutas. Deixa a refeição mais gostosa e adiciona saciedade e nutrientes sem estragar a dieta.', flavors:'Chocolate', price:112, pv:12.30 },
-            { id:25, category:'gourmet', name:'Fiber Powder (275g)', desc:'A fibra invisível que transforma qualquer refeição. Sem sabor, pode ser adicionada em shakes, sucos ou na comida para atingir a meta diária de fibras. A chave para um intestino regulado e fome controlada por muito mais tempo.', flavors:'Neutro', price:243, pv:24.65 },
-
-            // 🏋️ NUTRIÇÃO ESPORTIVA AVANÇADA (H24)
-            { id:26, category:'h24', name:'BCAA 5:1:1 (120 tabletes)', desc:'A proteção que o seu músculo exige. Aminoácidos essenciais (Leucina, Isoleucina e Valina) e Vitamina B6. Previne fadiga muscular e acelera a recuperação para quem pega pesado no treino.', flavors:'Tabletes', price:264, pv:25.85 },
-            { id:27, category:'h24', name:'Glutamina (150g)', desc:'Aliada da recuperação e vitalidade. L-Glutamina pura para reconstrução e recuperação muscular após treinos intensos. Amplamente reconhecida por apoiar o intestino e o sistema imune.', flavors:'Neutro', price:80, pv:9.10 },
-            { id:28, category:'h24', name:'Tri-Core Protein Blend (1.010kg)', desc:'Nutrição completa para atletas de resistência. Blend de proteínas, carboidratos inteligentes para reposição de glicogênio, cálcio, ferro e vitaminas. Recuperação total após atividades exaustivas e de longa duração.', flavors:'Chocolate', price:467, pv:46.80 },
-
-            // 📦 EMBALAGENS ECONÔMICAS
-            { id:29, category:'economica', name:'Shake Embalagem Econômica', desc:'O seu Shake preferido em tamanho gigante para a família toda! Muito mais porções da refeição inteligente para não correr o risco de ficar sem no meio do mês.', flavors:'Baunilha Cremoso, Doce de Leite, Morango Cremoso', price:786, pv:102.00 },
-            { id:30, category:'economica', name:'Shake Chocolate Sensation (Grande)', desc:'O Shake Chocolate Sensation em tamanho família com valor promocional diferenciado. Mais porções para garantir o mês todo.', flavors:'Chocolate Sensation', price:786, pv:96.90 },
-            { id:31, category:'economica', name:'Herbal Concentrate (357g - Família)', desc:'O acelerador do metabolismo no formato de maior rendimento. Mais de 200 porções do blend de chás para manter a família toda com energia, desinchada e focada.', flavors:'Original', price:1072, pv:138.05 },
-            { id:32, category:'economica', name:'N-R-G Pó (330g - Família)', desc:'A fonte inesgotável de foco e estado de alerta diário. Melhor rendimento nos estudos e trabalho na versão econômica de altíssimo rendimento.', flavors:'Guaraná Tropical', price:668, pv:84.80 },
-
-            // ✨ NUTRIÇÃO EXTERNA
-            { id:33, category:'estetica', name:'Linha Skin', desc:'Tecnologia e cuidado botânico livre de parabenos e sulfatos. Reduz visivelmente os sinais de envelhecimento, limpando, tonificando e trazendo luminosidade e saúde para o rosto.', flavors:'Consultar via WhatsApp', price:0, pv:0 },
-            { id:34, category:'estetica', name:'Linha Corporal Soft Green', desc:'Energia e bem-estar do Chá Verde. Desodorante, sabonetes e loção corporal com pH fisiológico e dermatologicamente testados. Hidrata sem agredir a pele com perfume leve e refrescante.', flavors:'Consultar via WhatsApp', price:0, pv:0 },
-            { id:35, category:'estetica', name:'Linha Herbal Aloe', desc:'Fortificação e beleza natural para os cabelos. Shampoos e condicionadores que reduzem fios quebradiços em 90%, deixando o cabelo 10x mais forte na primeira aplicação.', flavors:'Consultar via WhatsApp', price:0, pv:0 }
-        ];
+        const allProducts = SHAPETRACK_PRODUCTS.map((p, idx) => ({
+            id: idx + 1,
+            sku: p.sku,
+            category: p.category,
+            name: p.name,
+            desc: p.desc,
+            flavors: p.flavors,
+            price: p.prices.consumer,
+            pv: p.pv
+        }));
 
         let cart = [];
         let userDiscount = 0;
