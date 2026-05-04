@@ -195,7 +195,10 @@
                 const hasFlavors = p.flavors.length > 1;
                 return `
                     <div class="product-card">
-                        <div class="p-img"><img src="${p.image}" alt="${p.name}"></div>
+                        <div class="p-img">
+                            <img src="${p.image}" alt="${p.name}" 
+                                 onerror="this.src='https://images.tcdn.com.br/img/editor/up/1066708/placeholder_hb.png'; this.style.opacity='0.5';">
+                        </div>
                         <div class="p-cat">${p.category}</div>
                         <div class="p-name">${p.name}</div>
                         <div class="p-desc">${p.desc}</div>
