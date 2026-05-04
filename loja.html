@@ -43,21 +43,7 @@
             <div class="card-core">
                 <div class="shop-hero">
                     <h1>CATÁLOGO <span class="text-gradient">EXCLUSIVO</span></h1>
-                </div>
-
-                <div class="category-tab" id="category-tabs">
-                    <div class="tab-item active" onclick="filterCategory('all')">TODOS</div>
-                    <div class="tab-item" onclick="filterCategory('emagrecimento')">EMAGRECIMENTO</div>
-                    <div class="tab-item" onclick="filterCategory('energia')">ENERGIA</div>
-                    <div class="tab-item" onclick="filterCategory('saude')">SAÚDE & BELEZA</div>
-                    <div class="tab-item" onclick="filterCategory('performance')">PERFORMANCE</div>
-                    <div class="tab-item" onclick="filterCategory('gourmet')">GOURMET</div>
-                    <div class="tab-item" onclick="filterCategory('h24')">H24 SPORT</div>
-                    <div class="tab-item" onclick="filterCategory('economica')">ECONÔMICAS</div>
-                    <div class="tab-item" onclick="filterCategory('estetica')">ESTÉTICA</div>
-                </div>
-
-                <div class="product-grid" id="product-list">
+                </div>                <div class="product-grid" id="product-list">
                     <!-- Products injected here -->
                 </div>
             </div>
@@ -117,14 +103,13 @@
                 mentorWhatsApp = mentor?.whatsapp || '';
             }
 
-            renderProducts('all');
+            renderProducts();
         }
 
-        function renderProducts(cat) {
+        function renderProducts() {
             const container = document.getElementById('product-list');
-            const filtered = cat === 'all' ? allProducts : allProducts.filter(p => p.category === cat);
             
-            container.innerHTML = filtered.map(p => {
+            container.innerHTML = allProducts.map(p => {
                 const finalPrice = p.price * (1 - (userDiscount / 100));
                 const isConsultar = p.price === 0;
                 return `
@@ -154,12 +139,7 @@
                 `;
             }).join('');
         }
-
-        function filterCategory(cat) {
-            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            renderProducts(cat);
-        }
+    }
 
         function addToCart(id) {
             const p = allProducts.find(x => x.id === id);
