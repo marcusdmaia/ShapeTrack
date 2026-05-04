@@ -195,8 +195,28 @@ ON shared_videos FOR ALL USING (target_mentor_id = auth.uid());
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, full_name, email)
-  VALUES (new.id, COALESCE(new.raw_user_meta_data->>'full_name', 'Novo Usuário'), new.email)
+  INSERT INTO public.profiles (
+    id, 
+    full_name, 
+    email, 
+    role, 
+    mentor_id, 
+    discount_level,
+    is_active
+  )
+  VALUES (
+    new.id, 
+    COALESCE(new.raw_user_meta_data->>'full_name', 'Novo Usuário'), 
+    new.email,
+    COALESCE(new.raw_user_meta_data->>'role', 'aluno'),
+    CASE 
+      WHEN new.raw_user_meta_data->>'mentor_id' IS NOT NULL 
+      THEN (new.raw_user_meta_data->>'mentor_id')::uuid 
+      ELSE NULL 
+    END,
+    COALESCE((new.raw_user_meta_data->>'discount_level')::int, 0),
+    true
+  )
   ON CONFLICT (id) DO NOTHING;
   RETURN NEW;
 END;

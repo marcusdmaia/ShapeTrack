@@ -140,7 +140,18 @@
             const { data, error } = await sb.auth.signUp({ 
                 email, 
                 password,
-                options: { data: { full_name: name } }
+                options: { 
+                    data: { 
+                        full_name: name,
+                        role: 'aluno',
+                        mentor_id: finalMentorId,
+                        whatsapp: document.getElementById('whatsapp').value,
+                        birthday: document.getElementById('birthday').value,
+                        height: parseFloat(document.getElementById('height').value),
+                        gender: document.getElementById('gender').value,
+                        goal: document.getElementById('goal').value
+                    } 
+                }
             });
 
             if (error) {
@@ -157,25 +168,6 @@
             }
 
             if (data.user) {
-                const profileData = { 
-                    full_name: name,
-                    email: email,
-                    whatsapp: document.getElementById('whatsapp').value,
-                    birthday: document.getElementById('birthday').value,
-                    height: parseFloat(document.getElementById('height').value),
-                    gender: document.getElementById('gender').value,
-                    goal: document.getElementById('goal').value,
-                    role: 'aluno', 
-                    mentor_id: finalMentorId,
-                    is_active: true
-                };
-
-                const { error: profileError } = await sb.from('profiles').upsert({ id: data.user.id, ...profileData });
-
-                if (profileError) {
-                    console.error('Profile link error:', profileError);
-                }
-                
                 msg.style.color = '#2ecc71';
                 msg.textContent = 'CONTA CRIADA! REDIRECIONANDO...';
                 setTimeout(() => { window.location.href = 'relatorio.html'; }, 1500);

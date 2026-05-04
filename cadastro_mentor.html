@@ -84,7 +84,13 @@
             const { data, error } = await sb.auth.signUp({ 
                 email, 
                 password,
-                options: { data: { full_name: name } }
+                options: { 
+                    data: { 
+                        full_name: name,
+                        role: 'mentor',
+                        discount_level: parseInt(document.getElementById('mentor_level').value)
+                    } 
+                }
             });
 
             if (error) {
@@ -96,22 +102,6 @@
             }
 
             if (data.user) {
-                // Pequeno delay para garantir que o trigger do Supabase terminou de criar o perfil básico
-                await new Promise(r => setTimeout(r, 500));
-
-                const { error: profileError } = await sb.from('profiles').update({ 
-                    full_name: name,
-                    role: 'mentor',
-                    discount_level: parseInt(document.getElementById('mentor_level').value),
-                    is_active: true
-                }).eq('id', data.user.id);
-
-                if (profileError) {
-                    console.error('Erro ao atualizar perfil:', profileError);
-                    // Mesmo se der erro no perfil, o usuário foi criado no Auth.
-                    // Tentamos seguir para o dashboard onde o App.init tentará recuperar.
-                }
-                
                 msg.style.color = '#2ecc71';
                 msg.textContent = 'CONTA CRIADA! REDIRECIONANDO PARA O DASHBOARD...';
                 setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
