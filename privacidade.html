@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidade // ShapeTrack Premium</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=3.9">
+    <style>
+        body {
+            background: #F1F5F9;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        .privacy-container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 40px;
+            background: #FFF;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid var(--glass-border);
+        }
+        h1 { font-size: 2rem; margin-bottom: 32px; color: var(--text-primary); }
+        h2 { font-size: 1.2rem; margin: 32px 0 16px; color: var(--accent); }
+        p { margin-bottom: 16px; font-size: 0.95rem; color: var(--text-secondary); }
+        ul { margin-bottom: 16px; padding-left: 20px; }
+        li { margin-bottom: 8px; font-size: 0.9rem; color: var(--text-secondary); }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <div class="privacy-container reveal">
+        <a href="index.html" class="back-link"><i class="ph-bold ph-arrow-left"></i> VOLTAR PARA O ACESSO</a>
+        
+        <h1>POLÍTICA DE PRIVACIDADE</h1>
+        <p>Última atualização: Maio de 2026</p>
+
+        <p>A ShapeTrack ("nós", "nosso") valoriza a sua privacidade. Esta política descreve como coletamos, usamos e protegemos suas informações ao utilizar nossa plataforma de mentoria premium.</p>
+
+        <h2>1. INFORMAÇÕES QUE COLETAMOS</h2>
+        <p>Coletamos informações necessárias para a gestão de performance e saúde, incluindo:</p>
+        <ul>
+            <li>Dados de Identificação: Nome, e-mail e WhatsApp.</li>
+            <li>Dados Biométricos: Peso, altura, percentual de gordura e medidas corporais (fornecidos pelo mentor ou aluno).</li>
+            <li>Dados de Integração Google: Caso você opte por conectar sua conta Google, coletaremos permissões para criar e gerenciar eventos em seu Calendário.</li>
+        </ul>
+
+        <h2>2. USO DO GOOGLE CALENDAR API</h2>
+        <p>O ShapeTrack utiliza os escopos do Google Calendar API (calendar.events) exclusivamente para:</p>
+        <ul>
+            <li>Criar lembretes de avaliações físicas para seus alunos.</li>
+            <li>Sincronizar datas de retorno de protocolos diretamente na sua agenda de mentor.</li>
+        </ul>
+        <p><strong>Não compartilhamos, vendemos ou utilizamos seus dados de agenda para qualquer outra finalidade além da automação de agendamentos dentro da nossa plataforma.</strong></p>
+
+        <h2>3. SEGURANÇA DOS DADOS</h2>
+        <p>Utilizamos a infraestrutura de segurança do Supabase e criptografia de ponta a ponta para garantir que seus dados biométricos e tokens de acesso estejam protegidos contra acessos não autorizados.</p>
+
+        <h2>4. SEUS DIREITOS</h2>
+        <p>Você pode, a qualquer momento:</p>
+        <ul>
+            <li>Solicitar a exclusão total dos seus dados da nossa plataforma.</li>
+            <li>Desconectar sua conta Google através do painel de Configurações, o que resultará na exclusão imediata dos tokens de acesso de nossos servidores.</li>
+        </ul>
+
+        <h2>5. CONTATO</h2>
+        <p>Para dúvidas sobre sua privacidade, entre em contato com nosso administrador através do e-mail de suporte associado à sua rede.</p>
+        
+        <div style="margin-top: 60px; padding-top: 40px; border-top: 1px solid #EEE; text-align: center;">
+            <p style="font-size: 0.8rem;">ShapeTrack // Premium Performance Ecosystem</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
+        });
+    </script>
+</body>
+</html>
