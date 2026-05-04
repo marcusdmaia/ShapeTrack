@@ -180,12 +180,16 @@ async function signInWithGoogle() {
                 access_type: 'offline',
                 prompt: 'consent'
             },
-            scopes: 'https://www.googleapis.com/auth/calendar.events',
-            redirectTo: window.location.origin + (window.location.pathname.includes('index.html') ? window.location.pathname : '/index.html')
+            // REMOVED calendar scope to prevent 400 errors if app not verified.
+            // Calendar connection is handled separately in settings.
+            redirectTo: window.location.origin + window.location.pathname
         }
     });
 
-    if (error) showToast(error.message, 'error');
+    if (error) {
+        console.error('Google Sign-In Error:', error);
+        showToast('Erro ao entrar com Google: ' + error.message, 'error');
+    }
 }
 
 // 3. Reveal Observer for Premium Animations

@@ -82,6 +82,21 @@
 - **Verificação Completa:** Realizado sweep em todo o ecossistema para eliminar variáveis órfãs (`aluno_id`, `student_id`).
 - **PWA Health:** Validado o funcionamento do Manifesto e Service Worker nas rotas de relatório e dashboard.
 
+## 🛠️ MODIFICAÇÕES REALIZADAS (VERSÃO 4.5.0 - AUTH & CALENDAR)
+
+### 🔐 Destravamento de Login (index.html / config.js)
+- **Hotfix de Escopo:** Removida a exigência de calendário no login inicial. Isso resolve o erro de "Acesso Bloqueado" que impedia usuários de entrarem no sistema.
+- **Login Híbrido:** O login agora é focado 100% em identidade (E-mail/Perfil). Permissões extras são solicitadas apenas quando necessário.
+
+### 📅 Integração Total Google Calendar
+- **Conexão Independente:** Refatorada a página `configuracoes.html` para permitir conectar e desconectar a agenda de forma segura, com feedback visual em tempo real.
+- **Edge Function `google-calendar-sync`:** Criada nova função no Supabase para gerenciar a criação de eventos no calendário do mentor usando Refresh Tokens.
+- **Agendamento Automático:** Implementada lógica em `lancar_avaliacao.html` que cria automaticamente um evento na agenda do Google do mentor quando uma data de "Próximo Retorno" é definida para um aluno.
+
+### 🛡️ Robustez Técnica
+- **Gestão de Tokens:** O sistema agora armazena e renova tokens do Google de forma transparente via Edge Functions.
+- **Redirecionamento:** Otimizada a lógica de `redirectTo` para funcionar perfeitamente em ambientes Localhost e Produção (Vercel).
+
 ---
 *Assinado: Antigravity AI Console*
 

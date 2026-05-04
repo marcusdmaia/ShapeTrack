@@ -193,15 +193,33 @@
 
             if (profile.google_refresh_token) {
                 status.innerHTML = '<span style="color:#2ecc71;"><i class="ph-fill ph-check-circle"></i> CONEXÃO ATIVA</span>';
-                btn.innerHTML = 'RECONECTAR AGENDA <div class="btn-icon" style="background: rgba(0,0,0,0.1);"><i class="ph-light ph-arrows-clockwise"></i></div>';
+                btn.innerHTML = 'DESCONECTAR AGENDA <div class="btn-icon" style="background: rgba(0,0,0,0.1);"><i class="ph-light ph-link-break"></i></div>';
+                btn.style.background = '#ff4d4d';
+                btn.onclick = disconnectGoogle;
             } else {
                 status.innerHTML = '<span style="color:var(--text-secondary);"><i class="ph-light ph-x-circle"></i> STATUS: DESCONECTADO</span>';
+                btn.innerHTML = 'CONECTAR GOOGLE CALENDAR <div class="btn-icon" style="background: rgba(0,0,0,0.1);"><i class="ph-light ph-link"></i></div>';
+                btn.style.background = '#4285F4';
+                btn.onclick = startGoogleAuth;
+            }
+        }
+
+        async function disconnectGoogle() {
+            if (!confirm('Deseja realmente desconectar sua agenda do Google?')) return;
+            const { error } = await sb.from('profiles').update({ google_refresh_token: null }).eq('id', App.profile.id);
+            if (error) showToast(error.message, 'error');
+            else {
+                showToast('Agenda desconectada');
+                location.reload();
             }
         }
 
         function startGoogleAuth() {
             const scope = 'https://www.googleapis.com/auth/calendar.events';
-            window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
+            // Garante que o REDIRECT_URI seja exatamente o que está no console do Google
+            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
+            console.log('Redirecting to:', authUrl);
+            window.location.href = authUrl;
         }
 
         async function handleGoogleCallback(code, userId) {
@@ -210,12 +228,20 @@
                 const { data, error } = await sb.functions.invoke('google-auth-exchange', {
                     body: { code, redirect_uri: REDIRECT_URI }
                 });
-                if (error) throw error;
+                
+                if (error || data.error) throw new Error(error?.message || data.error);
+                
                 if (data.refresh_token) {
                     await sb.from('profiles').update({ google_refresh_token: data.refresh_token }).eq('id', userId);
-                    window.location.href = 'configuracoes.html';
+                    showToast('Agenda conectada com sucesso!');
+                    setTimeout(() => window.location.href = 'configuracoes.html', 1500);
+                } else {
+                    throw new Error('Nenhum refresh token recebido. Tente deslogar do Google e tentar novamente.');
                 }
-            } catch (err) { showToast('Erro na sincronização', 'error'); }
+            } catch (err) { 
+                console.error('Google Auth Error:', err);
+                showToast('Erro na sincronização: ' + err.message, 'error'); 
+            }
         }
 
         async function handleLogout() {

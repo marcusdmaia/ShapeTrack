@@ -206,6 +206,26 @@
                 }
 
                 showToast('Dados sincronizados com sucesso!');
+
+                // --- GOOGLE CALENDAR SYNC ---
+                if (nextDate && App.profile.google_refresh_token) {
+                    try {
+                        const { data: student } = await sb.from('profiles').select('full_name').eq('id', activeStudentId).single();
+                        await sb.functions.invoke('google-calendar-sync', {
+                            body: {
+                                refresh_token: App.profile.google_refresh_token,
+                                summary: `Avaliação: ${student.full_name}`,
+                                description: `Retorno de Bioimpedância para o aluno ${student.full_name}. Registrado via ShapeTrack.`,
+                                start_date: nextDate
+                            }
+                        });
+                        showToast('Agendado no Google Calendar!');
+                    } catch (syncErr) {
+                        console.error('Calendar Sync Error:', syncErr);
+                    }
+                }
+                // ----------------------------
+
                 setTimeout(() => window.location.href = 'relatorio.html?aluno=' + activeStudentId, 1500);
             } catch (err) { 
                 showToast(err.message, 'error'); 
