@@ -128,7 +128,12 @@
 
     <header>
         <div class="container header-wrap">
-            <div class="logo">MARCUS<span>MAIA</span></div>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div class="logo">MARCUS<span>MAIA</span></div>
+                <a href="https://www.instagram.com/clubeshapehouse" target="_blank" style="color: var(--text-dim); font-size: 1.4rem; display: flex; align-items: center; transition: 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'">
+                    <i class="ph-bold ph-instagram-logo"></i>
+                </a>
+            </div>
             <div class="cart-trigger" onclick="openCheckout()">
                 <i class="ph-bold ph-shopping-bag" style="color: var(--accent);"></i>
                 <div class="cart-count" id="cart-count">0</div>
@@ -147,6 +152,17 @@
 
         <div class="grid" id="product-grid"></div>
     </div>
+
+    <footer style="background: #FFF; border-top: 1px solid var(--glass-border); padding: 40px 0; text-align: center;">
+        <div class="container">
+            <div class="logo" style="margin-bottom: 20px; font-size: 1rem;">MARCUS<span>MAIA</span></div>
+            <p style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 24px;">© 2026 Marcus Maia. Todos os direitos reservados.</p>
+            <a href="https://www.instagram.com/clubeshapehouse" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-main); font-weight: 800; font-size: 0.8rem; padding: 12px 24px; border: 1px solid var(--glass-border); border-radius: 50px; transition: 0.3s;">
+                <i class="ph-bold ph-instagram-logo" style="font-size: 1.2rem; color: var(--accent);"></i>
+                @CLUBESHAPEHOUSE
+            </a>
+        </div>
+    </footer>
 
     <div id="modal-checkout">
         <div class="checkout-card">
