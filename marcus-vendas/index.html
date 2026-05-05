@@ -69,6 +69,30 @@
             margin-bottom: 24px;
         }
 
+        /* Filter Tabs */
+        .filter-tabs { 
+            display: flex; gap: 12px; margin-bottom: 40px; 
+            overflow-x: auto; padding-bottom: 10px;
+            scrollbar-width: none;
+        }
+        .filter-tabs::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            padding: 12px 24px; border-radius: 50px;
+            background: #FFF; border: 1px solid var(--glass-border);
+            font-size: 0.75rem; font-weight: 700; color: var(--text-dim);
+            cursor: pointer; white-space: nowrap; transition: 0.3s;
+        }
+        .tab-btn.active { background: var(--accent); color: #FFF; border-color: var(--accent); box-shadow: 0 10px 20px var(--accent-glow); }
+
+        /* Combo Styling */
+        .product-card.is-combo { border: 2px solid var(--accent); position: relative; }
+        .combo-badge {
+            position: absolute; top: 12px; right: 12px;
+            background: var(--accent); color: #FFF;
+            padding: 4px 10px; border-radius: 8px;
+            font-size: 0.6rem; font-weight: 800;
+        }
+
         /* Product Grid */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-bottom: 80px; }
         
@@ -153,8 +177,17 @@
                 <i class="ph-fill ph-sparkle"></i> bronze premium • 14% OFF
             </div>
             <h1>Sua Nutrição com <br> <span style="color: var(--accent);">Vantagem Exclusiva.</span></h1>
-            <p>Aproveite seu desconto de 14% em todo o catálogo oficial. <br> Pagamento seguro e entrega prioritária.</p>
+            <p>Aproveite seu desconto de 14% em produtos individuais ou **23% nos Combos Estratégicos**. <br> Pagamento seguro e entrega prioritária.</p>
         </section>
+
+        <div class="filter-tabs">
+            <button class="tab-btn active" onclick="filterProducts('all', this)">VER TUDO</button>
+            <button class="tab-btn" onclick="filterProducts('combos-emagrecimento', this)">EMAGRECIMENTO</button>
+            <button class="tab-btn" onclick="filterProducts('combos-ganho', this)">GANHO DE MASSA</button>
+            <button class="tab-btn" onclick="filterProducts('combos-energia', this)">ENERGIA & FOCO</button>
+            <button class="tab-btn" onclick="filterProducts('combos-saude', this)">SAÚDE & IMUNIDADE</button>
+            <button class="tab-btn" onclick="filterProducts('individual', this)">PRODUTOS INDIVIDUAIS</button>
+        </div>
 
         <div class="grid" id="product-grid"></div>
     </div>
@@ -190,17 +223,23 @@
         let cart = [];
         let bricksBuilder = mp.bricks();
 
-        function renderProducts() {
+        function renderProducts(filter = 'all') {
             const container = document.getElementById('product-grid');
-            container.innerHTML = STORE_PRODUCTS.map(p => {
+            const filtered = filter === 'all' ? STORE_PRODUCTS : STORE_PRODUCTS.filter(p => p.category === filter);
+            
+            container.innerHTML = filtered.map(p => {
                 const hasFlavors = p.flavors.length > 1;
+                const isCombo = p.isCombo === true;
+                const discount = isCombo ? "23% OFF" : "14% OFF";
+                
                 return `
-                    <div class="product-card">
+                    <div class="product-card ${isCombo ? 'is-combo' : ''}">
+                        ${isCombo ? `<div class="combo-badge">COMBO VIP</div>` : ''}
                         <div class="p-img">
                             <img src="${p.image}" alt="${p.name}" 
                                  onerror="this.src='https://images.tcdn.com.br/img/editor/up/1066708/placeholder_hb.png'; this.style.opacity='0.5';">
                         </div>
-                        <div class="p-cat">${p.category}</div>
+                        <div class="p-cat">${p.category.replace('combos-', '').toUpperCase()}</div>
                         <div class="p-name">${p.name}</div>
                         <div class="p-desc">${p.desc}</div>
                         
@@ -215,15 +254,25 @@
 
                         <div class="p-price">
                             <div class="price-de">De R$ ${p.priceDe.toFixed(2)}</div>
-                            <div class="price-por"><small>R$</small> ${p.pricePor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+                            <div class="price-por">
+                                <small>R$</small> ${p.pricePor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+                                <div style="font-size: 0.65rem; color: #10B981; font-weight: 800; margin-top: 4px;">PAGAMENTO SEGURO • ${discount}</div>
+                            </div>
                             <button class="btn-buy" onclick="addToCart(${p.id})">
-                                COMPRAR AGORA
-                                <i class="ph-bold ph-arrow-right"></i>
+                                ADICIONAR AO PEDIDO
+                                <i class="ph-bold ph-shopping-cart-simple"></i>
                             </button>
                         </div>
                     </div>
                 `;
             }).join('');
+        }
+
+        function filterProducts(category, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderProducts(category);
+            window.scrollTo({ top: document.querySelector('.filter-tabs').offsetTop - 100, behavior: 'smooth' });
         }
 
         function addToCart(id) {
