@@ -243,6 +243,20 @@
                         <div class="p-name">${p.name}</div>
                         <div class="p-desc">${p.desc}</div>
                         
+                        ${isCombo ? `
+                            <div style="margin-bottom: 20px; padding: 12px; background: rgba(16, 185, 129, 0.05); border-radius: 12px; border: 1px dashed rgba(16, 185, 129, 0.2);">
+                                <div style="font-size: 0.6rem; font-weight: 800; color: #059669; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">O que você vai receber:</div>
+                                <ul style="list-style: none; padding: 0;">
+                                    ${p.items.map(item => `
+                                        <li style="font-size: 0.7rem; color: var(--text-main); font-weight: 600; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                                            <i class="ph-bold ph-check-circle" style="color: #10B981;"></i>
+                                            ${item}
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+
                         ${hasFlavors ? `
                             <div class="form-group" style="margin-bottom: 20px;">
                                 <label style="font-size: 0.6rem; margin-bottom: 6px;">ESCOLHA O SABOR</label>
