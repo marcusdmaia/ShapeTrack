@@ -145,22 +145,26 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Banner Slider Full Width */
+        /* Banner Slider Full Width & Auto-Height */
         .hero-slider {
-            width: 100%; height: 500px;
+            width: 100%; 
+            aspect-ratio: 1920 / 600; /* Proporção padrão de banner largo */
             position: relative; overflow: hidden;
-            margin-bottom: 0;
-            background: #000;
+            background: #F8FAFC;
         }
         .slide {
             position: absolute; inset: 0;
             opacity: 0; transition: opacity 1s ease-in-out;
-            background-size: cover; background-position: center;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         .slide.active { opacity: 1; }
 
         @media (max-width: 768px) {
-            .hero-slider { height: 280px; }
+            .hero-slider { 
+                aspect-ratio: 16 / 9; /* Proporção mais adequada para mobile */
+            }
         }
     </style>
 </head>
@@ -187,7 +191,7 @@
     </div>
 
     <div class="container">
-        <section class="hero">
+        <section class="hero" style="padding-top: 40px;">
             <div class="badge-vip">
                 <i class="ph-fill ph-sparkle"></i> bronze premium • 14% OFF
             </div>
