@@ -265,7 +265,7 @@
                     <div class="product-card ${isCombo ? 'is-combo' : ''}">
                         ${isCombo ? `<div class="combo-badge">COMBO VIP</div>` : ''}
                         <div class="p-img">
-                            <img src="${p.image}" alt="${p.name}" 
+                            <img src="${encodeURI(p.image)}" alt="${p.name}" 
                                  onerror="this.src='https://images.tcdn.com.br/img/editor/up/1066708/placeholder_hb.png'; this.style.opacity='0.5';">
                         </div>
                         <div class="p-cat">${p.category.replace('combos-', '').toUpperCase()}</div>

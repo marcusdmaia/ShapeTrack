@@ -6,7 +6,7 @@ const STORE_PRODUCTS = [
         items: ["1x Shake (Fórmula 1 - 550g)", "1x Herbal Concentrate (51g)"],
         priceDe: 468.0, pricePor: 360.36, isCombo: true,
         flavors: ["Escolha os sabores no checkout"],
-        image: "assets/shake.png" 
+        image: "assets/Combo Start (O Básico que Funciona).png" 
     },
     { 
         id: 102, sku: "COMBO-SECA", name: "Combo Seca Barriga (Aceleração e Limpeza)", category: "combos-emagrecimento", 
@@ -14,7 +14,7 @@ const STORE_PRODUCTS = [
         items: ["1x Shake (550g)", "1x NutreV", "1x Herbal Concentrate (51g)", "1x Fiber Concentrate (Líquido)"],
         priceDe: 753.0, pricePor: 579.81, isCombo: true,
         flavors: ["Escolha os sabores no checkout"],
-        image: "assets/fiber.png"
+        image: "assets/Combo Seca Barriga (Aceleração e Limpeza).png"
     },
     { 
         id: 103, sku: "COMBO-T30", name: "Combo Transformação Definitiva (T30 Premium)", category: "combos-emagrecimento", 
@@ -22,7 +22,7 @@ const STORE_PRODUCTS = [
         items: ["2x Shakes (550g)", "2x NutreV", "1x Herbal Concentrate (102g)", "1x Shape Control (Cápsulas)"],
         priceDe: 1352.0, pricePor: 1041.04, isCombo: true,
         flavors: ["Escolha os sabores no checkout"],
-        image: "assets/shapecontrol.png"
+        image: "assets/Combo Transformação Definitiva (T30 Premium).png"
     },
 
     // 💪 COMBOS PARA GANHO DE MASSA MAGRA (HIPERTROFIA) (23% OFF)
@@ -32,7 +32,7 @@ const STORE_PRODUCTS = [
         items: ["1x Whey Protein 3W (510g)", "1x Creatina Premium (150g)"],
         priceDe: 437.0, pricePor: 336.49, isCombo: true,
         flavors: ["Chocolate / Neutro"],
-        image: "assets/whey3w.png"
+        image: "assets/Combo Construtor Diário (Recuperação e Força).png"
     },
     { 
         id: 105, sku: "COMBO-ATLETA", name: "Combo Atleta de Alta Performance (Linha H24 Completa)", category: "combos-ganho", 
@@ -40,7 +40,7 @@ const STORE_PRODUCTS = [
         items: ["1x Whey Protein 3W", "1x Creatina Premium", "1x CR7 Drive", "1x Glutamina"],
         priceDe: 760.0, pricePor: 585.20, isCombo: true,
         flavors: ["Chocolate / Berry / Neutro"],
-        image: "assets/tricore.png"
+        image: "assets/Combo Atleta de Alta Performance (Linha H24 Completa).png"
     },
 
     // ⚡ COMBOS PARA ENERGIA EXTREMA E FOCO (23% OFF)
@@ -50,7 +50,7 @@ const STORE_PRODUCTS = [
         items: ["1x N-R-G (Pó)", "1x Liftoff"],
         priceDe: 463.0, pricePor: 356.51, isCombo: true,
         flavors: ["Guaraná / Amora"],
-        image: "assets/liftoff.png"
+        image: "assets/Combo Foco e Produtividade Mental.png"
     },
     { 
         id: 107, sku: "COMBO-HYPE", name: "Combo Hype Drink (A Bebida Fenômeno)", category: "combos-energia", 
@@ -58,7 +58,7 @@ const STORE_PRODUCTS = [
         items: ["1x Liftoff", "1x N-R-G (Pó)", "1x Herbal Concentrate (51g)", "1x CR7 Drive"],
         priceDe: 928.0, pricePor: 714.56, isCombo: true,
         flavors: ["Tropical / Guaraná / Berry"],
-        image: "assets/nrg.png"
+        image: "assets/Combo Hype Drink (A Bebida Fenômeno).png"
     },
 
     // 🛡️ COMBOS PARA MELHORAR O INTESTINO E A IMUNIDADE (23% OFF)
@@ -68,7 +68,7 @@ const STORE_PRODUCTS = [
         items: ["1x Fiber Concentrate", "1x Fiber Powder"],
         priceDe: 449.0, pricePor: 345.73, isCombo: true,
         flavors: ["Uva / Neutro"],
-        image: "assets/fiberpowder.png"
+        image: "assets/Combo Faxina Refrescante (Saúde Digestiva).png"
     },
     { 
         id: 109, sku: "COMBO-BLINDAGEM", name: "Combo Blindagem e Desinflamação Celular", category: "combos-saude", 
@@ -76,7 +76,7 @@ const STORE_PRODUCTS = [
         items: ["1x Fiber Concentrate Immune", "1x Glutamina", "1x Herbalifeline (Ômega-3)"],
         priceDe: 572.0, pricePor: 440.44, isCombo: true,
         flavors: ["Limão e Mel / Neutro"],
-        image: "assets/fiberimmune.png"
+        image: "assets/Combo Blindagem e Desinflamação Celular.png"
     },
 
     // 🛍️ PRODUTOS INDIVIDUAIS (14% OFF - BRONZE)
