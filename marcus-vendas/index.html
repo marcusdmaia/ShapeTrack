@@ -385,8 +385,18 @@
             const settings = {
                 initialization: { amount: amount, payer: { email: "" } },
                 customization: {
-                    visual: { style: { theme: 'default' } },
-                    paymentMethods: { maxInstallments: 12, types: { excluded: ['ticket'] } }
+                    visual: { 
+                        theme: 'default',
+                        texts: {
+                            paymentsTitle: 'Escolha como pagar'
+                        }
+                    },
+                    paymentMethods: { 
+                        maxInstallments: 12,
+                        types: { 
+                            // Habilita tudo por padrão: card, bank_transfer (pix), ticket (boleto)
+                        } 
+                    }
                 },
                 callbacks: {
                     onSubmit: ({ formData }) => {
