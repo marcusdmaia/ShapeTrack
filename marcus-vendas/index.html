@@ -392,7 +392,10 @@
                         theme: 'default'
                     },
                     paymentMethods: { 
-                        maxInstallments: 12
+                        maxInstallments: 12,
+                        types: {
+                            included: ['credit_card', 'debit_card', 'bank_transfer', 'ticket']
+                        }
                     }
                 },
                 callbacks: {
