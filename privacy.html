@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidade // ShapeTrack Premium</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css?v=4.0">
+    <style>
+        .public-container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 24px;
+            width: 100%;
+        }
+        .content-section {
+            margin-bottom: 40px;
+        }
+        .content-section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .content-section p {
+            line-height: 1.7;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+        .content-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .content-section ul li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .content-section ul li::before {
+            content: "\f120"; /* phosphor check icon code if needed or just dot */
+            font-family: "@phosphor-icons/web";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+            transition: 0.3s;
+        }
+        .back-link:hover {
+            color: var(--accent);
+        }
+
+        /* Override bento margin for public pages */
+        .bento-grid {
+            margin-left: auto;
+            width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .public-container {
+                margin: 30px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="public-container">
+        <a href="index.html" class="back-link">
+            <i class="ph ph-arrow-left"></i> VOLTAR PARA O LOGIN
+        </a>
+
+        <div class="card-shell reveal">
+            <div class="card-core">
+                <div class="header-content" style="margin-bottom: 48px; text-align: center;">
+                    <span class="eyebrow">Transparência & Segurança</span>
+                    <h1 style="font-size: 2rem; font-weight: 900; margin-bottom: 12px;">POLÍTICA DE PRIVACIDADE</h1>
+                    <p class="text-secondary">Última atualização: 07 de Maio de 2026</p>
+                </div>
+
+                <div class="content-section">
+                    <h2><i class="ph-fill ph-shield-check" style="color: var(--accent);"></i> COMPROMISSO COM A PRIVACIDADE</h2>
+                    <p>O ShapeTrack Premium valoriza a segurança dos seus dados. Esta política descreve como tratamos suas informações dentro do nosso ecossistema de alta performance.</p>
+                </div>
+
+                <div class="content-section">
+                    <h2><i class="ph-fill ph-google-logo" style="color: #4285F4;"></i> INTEGRAÇÃO GOOGLE CALENDAR</h2>
+                    <p>Nossa plataforma oferece integração opcional com o Google Calendar para facilitar a gestão de seus protocolos. Ao autorizar o acesso:</p>
+                    <ul>
+                        <li>Solicitamos permissão apenas para criar e gerenciar eventos relacionados às suas avaliações.</li>
+                        <li>Os dados de sua agenda não são lidos para outros fins que não sejam o sincronismo dos seus retornos ShapeTrack.</li>
+                        <li>Você pode revogar este acesso a qualquer momento através das configurações do sistema ou do console do Google.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h2><i class="ph-fill ph-database" style="color: var(--accent);"></i> USO DOS DADOS</h2>
+                    <p>Seus dados biométricos e de progresso são utilizados exclusivamente para:</p>
+                    <ul>
+                        <li>Geração de relatórios de evolução personalizados.</li>
+                        <li>Facilitar a comunicação e acompanhamento entre Mentor e Aluno.</li>
+                        <li>Sincronização de datas de retorno na sua agenda vinculada.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h2><i class="ph-fill ph-lock" style="color: var(--accent);"></i> SEGURANÇA E COMPARTILHAMENTO</h2>
+                    <p>Garantimos que nenhum dado pessoal, biométrico ou de agenda é compartilhado com terceiros para fins comerciais ou publicitários. A infraestrutura é protegida por protocolos de segurança atômicos e criptografia.</p>
+                </div>
+
+                <div class="content-section">
+                    <h2><i class="ph-fill ph-envelope-simple" style="color: var(--accent);"></i> SUPORTE E CONTATO</h2>
+                    <p>Para dúvidas sobre seus dados ou solicitações de exclusão de conta, entre em contato através do nosso canal oficial de suporte:</p>
+                    <div style="background: var(--bg-dark); padding: 16px; border-radius: 12px; border: 1px solid var(--glass-border); display: inline-block;">
+                        <span style="font-weight: 700; color: var(--text-primary);">suporte@shapetrack.com.br</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -9,6 +9,7 @@ Finalizamos a auditoria profunda e aplicamos as correções críticas para estab
 3. **Catálogo Unificado (SSoT):** Criado o arquivo `js/products.js` como única fonte da verdade para SKUs, Preços e Descrições. `vendas.html` e `loja.html` agora estão sincronizados.
 4. **Padronização Visual:** Logo `SHAPETRACK` ajustado para estética bold premium (`1.8rem`, `900`) em todo o sistema.
 5. **Limpeza de Autenticação:** Removidas referências mortas ao Google Login no `config.js`. Verificado via browser subagent que o `index.html` está limpo.
+6. **Páginas Públicas:** Criadas as páginas `privacy.html` e `terms.html` com os termos de uso e política de privacidade exigidos para integração com Google.
 
 ---
 
